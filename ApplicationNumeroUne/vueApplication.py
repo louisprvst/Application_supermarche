@@ -9,7 +9,7 @@ class vueApplication(QMainWindow):
         super().__init__()
         self.__chemin = chemin
         self.setWindowTitle("Application supermarché")
-        self.setWindowIcon(QIcon(sys.path[0] + '/icones/cadie.png'))
+        self.setWindowIcon(QIcon(sys.path[0] + '/icones/cadie.jpg'))
         self.setGeometry(100, 100, 500, 300)
 
         # barre de menu
