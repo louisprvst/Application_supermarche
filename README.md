@@ -24,5 +24,5 @@ Membres :
 - 7/05/2024 de 14h30 à 17h30 :
 - Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis, DEMOL Alexis
 - FARDEL Mathéïs : Avancement de la vue de la première appli (menu déroulant des menu avec les articles du JSON + affichage du plan dans une zone défini)
-- PREVOST Louis :
+- PREVOST Louis : Avancement vue seconde appli (barre d'outils et ouverture de fichiers)
 - DEMOL Alexis
