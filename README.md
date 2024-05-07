@@ -25,4 +25,4 @@ Membres :
 - Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis, DEMOL Alexis
 - FARDEL Mathéïs : Avancement de la vue de la première appli (menu déroulant des menu avec les articles du JSON + affichage du plan dans une zone défini)
 - PREVOST Louis : Avancement vue seconde appli (barre d'outils et ouverture de fichiers)
-- DEMOL Alexis
+- DEMOL Alexis: Progrès réalisés sur le code provisoire ; le quadrillage est désormais fonctionnel et chaque case est cliquable. On a besoin encore de quelques ajustements et assembler le code de Mathéïs et le mien qui est nécessaires.
