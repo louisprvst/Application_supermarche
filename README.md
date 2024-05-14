@@ -30,6 +30,6 @@ Membres :
 - 14/05/2024 de 16h à 17h30 :
 - Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis, DEMOL Alexis, CAPON Ethan
 - FARDEL Mathéïs : Tente de réparer le bug du Dock pour lequel le contenu disparaît si l'on clique dessus
-- PREVOST Louis :
+- PREVOST Louis : Début du menu de création de liste de course
 - DEMOL Alexis :
 - CAPON Ethan :
