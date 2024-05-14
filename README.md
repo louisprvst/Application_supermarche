@@ -31,5 +31,5 @@ Membres :
 - Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis, DEMOL Alexis, CAPON Ethan
 - FARDEL Mathéïs : Tente de réparer le bug du Dock pour lequel le contenu disparaît si l'on clique dessus
 - PREVOST Louis : Début du menu de création de liste de course
-- DEMOL Alexis :
+- DEMOL Alexis : Résolution du problème de taille pour certaines images trop grande pour certains écran(exemple: image 7-9)
 - CAPON Ethan : Raccourci clavier app2 + début auto complétion dans un fichier test.

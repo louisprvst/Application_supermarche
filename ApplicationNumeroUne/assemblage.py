@@ -10,11 +10,10 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWid
 from PyQt6.QtGui import QPixmap, QIcon, QAction, QPainter, QPen
 from PyQt6.QtCore import Qt, QPoint
 
-
 # --- class widget: hérite de QLabel ------------------------------------------
 class Image(QLabel):
 
-    def __init__(self, chemin: str): 
+    def __init__(self, chemin: str):
         '''Constructeur de la classe'''
 
         # appel au constructeur de la classe mère
@@ -22,16 +21,16 @@ class Image(QLabel):
         
         self.image = QPixmap(chemin)
         self.setPixmap(self.image)
-        
+
 class Plateau(QWidget):
     def __init__(self):
         super().__init__()
 
         layout = QVBoxLayout(self)
-        self.pixmap = QPixmap()
         self.image_label = QLabel(self)
         layout.addWidget(self.image_label, alignment=Qt.AlignmentFlag.AlignCenter)
         self.setLayout(layout)
+        self.pixmap = QPixmap()  
 
         # connecter le clic a une fonction 
         self.image_label.mousePressEvent = self.ouvrirFenetre
@@ -39,37 +38,41 @@ class Plateau(QWidget):
     def chargerImage(self, chemin: str):
         if chemin:
             self.pixmap.load(chemin)
+            self.pixmap = self.pixmap.scaled(1200, 720, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)  # Permet de bien redimensionner l'image / Normalement adapté avec une bonne partie des tailles d'écran
             self.image_label.setPixmap(self.pixmap)
+        else:
+            print("Chemin de l'image non valide:", chemin)
 
     # créer un quadrillage avec les lignes, colonnes et les dimensions X et Y
     # J'ai du recréer la fonction pour créer le quadrillage pour permettre de créer le projet puis afficher le quadrillage, avec l'ancienne fonction cela ne voulait pas, j'ai du donc changer de maniére
     def createQuadrillage(self, lgn, cols, dimX, dimY):
-
-        # permet de dessiner le quadrillage 
-        painter = QPainter(self.pixmap)
-        pen = QPen(Qt.GlobalColor.black)
-        pen.setWidth(1)
-        painter.setPen(pen)
-        
-        larg = self.pixmap.width()
-        haut = self.pixmap.height()
-        
-        # permet de calculer les cases 
-        cellLarge = larg / cols
-        cellHaut = haut / lgn
-        
-        # lignes verticales
-        for i in range(1, cols):
-            x = int(dimX + i * cellLarge)
-            painter.drawLine(x, dimY, x, haut + dimY)
-        
-        # lignes horizontales
-        for j in range(1, lgn):
-            y = int(dimY + j * cellHaut)
-            painter.drawLine(dimX, y, larg + dimX, y)
-        
-        painter.end()
-        self.image_label.setPixmap(self.pixmap)
+        if not self.pixmap.isNull():  # on vérifie d'abord si le pixmap peut etre valide
+            painter = QPainter(self.pixmap)
+            pen = QPen(Qt.GlobalColor.black)
+            pen.setWidth(1)
+            painter.setPen(pen)
+            
+            larg = self.pixmap.width()
+            haut = self.pixmap.height()
+            
+            # permet de calculer les cases 
+            cellLarge = larg / cols
+            cellHaut = haut / lgn
+            
+            # lignes verticales
+            for i in range(1, cols):
+                x = int(dimX + i * cellLarge)
+                painter.drawLine(x, dimY, x, haut + dimY)
+            
+            # lignes horizontales
+            for j in range(1, lgn):
+                y = int(dimY + j * cellHaut)
+                painter.drawLine(dimX, y, larg + dimX, y)
+            
+            painter.end()
+            self.image_label.setPixmap(self.pixmap)
+        else:
+            print("Aucune image chargée.")
 
     # ouverture fenetre 
     def ouvrirFenetre(self, event):
@@ -174,7 +177,6 @@ class MainWindow(QMainWindow):
 
         layout_menu_articles.addWidget(menu_categorie)
         dock_articles.setWidget(widget_menu_articles)
-            
 
         self.plateau = Plateau() # crée l'instance du plateau
         central_widget = QWidget(self)
