@@ -1,5 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QApplication,QMainWindow,QToolBar,QFileDialog
+from PyQt6.QtWidgets import QApplication,QMainWindow,QToolBar,QFileDialog,QInputDialog
 from PyQt6.QtGui import QIcon, QAction, QShortcut
 from PyQt6.QtCore import Qt, pyqtSignal
 
@@ -32,7 +32,7 @@ class vueApplication(QMainWindow):
         menu_Listes = menu_bar.addMenu('&Listes')
         
         liste_new = QAction(QIcon(sys.path[0] + '/icones/plus.png'), 'Nouvelle liste', self)
-        ##liste_new.triggered.connect(self.liste_new)
+        liste_new.triggered.connect(self.liste_new)
         liste_new.setShortcut("Ctrl+L")
         menu_Listes.addAction(liste_new)
         
@@ -65,6 +65,23 @@ class vueApplication(QMainWindow):
 
     def open_liste(self):
         fichier_liste = QFileDialog.getOpenFileName(self, "Choisir un fichier liste :")
+        
+    def liste_new(self):
+        infos = []
+        
+        nom, validation = QInputDialog.getText(self, "Nouvelle liste", "Nom de la liste :")
+        infos.append(nom)
+        
+        auteur, validation = QInputDialog.getText(self, "Nouvelle liste", "Auteur de la liste :")
+        infos.append(auteur)
+        
+        date, validation = QInputDialog.getText(self, "Nouvelle liste", "Date de la liste :")
+        infos.append(date)
+        
+        item, validation = QInputDialog.getMultiLineText(self, "Nouvelle liste", "Item :")
+        infos.append(item)
+        
+        print("Informations de la nouvelle liste :", infos)
 
 
 #Main pour tester la vue
