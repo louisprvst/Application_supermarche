@@ -32,4 +32,4 @@ Membres :
 - FARDEL Mathéïs : Tente de réparer le bug du Dock pour lequel le contenu disparaît si l'on clique dessus
 - PREVOST Louis : Début du menu de création de liste de course
 - DEMOL Alexis :
-- CAPON Ethan :
+- CAPON Ethan : Raccourci clavier app2 + début auto complétion dans un fichier test.
