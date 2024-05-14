@@ -26,3 +26,10 @@ Membres :
 - FARDEL Mathéïs : Avancement de la vue de la première appli (menu déroulant des menu avec les articles du JSON + affichage du plan dans une zone défini)
 - PREVOST Louis : Avancement vue seconde appli (barre d'outils et ouverture de fichiers)
 - DEMOL Alexis: Progrès réalisés sur le code provisoire ; le quadrillage est désormais fonctionnel et chaque case est cliquable. On a besoin encore de quelques ajustements et assembler le code de Mathéïs et le mien qui est nécessaires.
+
+- 14/05/2024 de 16h à 17h30 :
+- Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis, DEMOL Alexis, CAPON Ethan
+- FARDEL Mathéïs : Tente de réparer le bug du Dock pour lequel le contenu disparaît si l'on clique dessus
+- PREVOST Louis :
+- DEMOL Alexis :
+- CAPON Ethan :

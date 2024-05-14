@@ -32,9 +32,12 @@ class vueApplication(QMainWindow):
 
         # Barre de Menu
         menu_bar = self.menuBar()
-        menu_theme = menu_bar.addMenu('&Projet')
-        menu_theme.addAction('Nouveau projet')
-        menu_theme.addAction('Ouvrir projet')
+        menu_projet = menu_bar.addMenu('&Projet')
+        menu_projet.addAction('Nouveau projet')
+        menu_projet.addAction('Ouvrir projet')
+        menu_theme = menu_bar.addMenu('&Thème')
+        menu_theme.addAction('Thème clair', self.theme1)
+        menu_theme.addAction('Thème sombre', self.theme2)
 
         # Dock contenant tous les différents types d'articles
         dock_articles = QDockWidget('Articles')
@@ -76,6 +79,21 @@ class vueApplication(QMainWindow):
         self.setCentralWidget(central_widget)
 
         self.showMaximized()
+        
+#--------------------------------------------------------------------------------------------------------------------------------------------------------
+#                                                           zone de méthodes
+#--------------------------------------------------------------------------------------------------------------------------------------------------------      
+        
+    # Méthodes pour changer le thème de l'application /!\ AJOUTER D'AUTRES THEMES / LES MODIFIER
+    def theme2(self):
+        fichier_style = open(sys.path[0] + "/fichiers_qss/Diffnes.qss", 'r')
+        with fichier_style :
+            qss = fichier_style.read()
+            self.setStyleSheet(qss)
+
+    def theme1(self):
+        qss = ""
+        self.setStyleSheet(qss)
 
 # Main pour tester la vue
 if __name__ == "__main__":

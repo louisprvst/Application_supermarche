@@ -145,7 +145,7 @@ class NewProjetDialog(QDialog):
             'dimY': int(self.dimY.text())
         }
 
-# Vue principale de l'appli
+#---------------------------------------------------------------- vue de l'application ------------------------------------------------------------------------
 class MainWindow(QMainWindow):
     def __init__(self, chemin: str = None):
         super().__init__()
@@ -174,6 +174,7 @@ class MainWindow(QMainWindow):
 
         layout_menu_articles.addWidget(menu_categorie)
         dock_articles.setWidget(widget_menu_articles)
+            
 
         self.plateau = Plateau() # crée l'instance du plateau
         central_widget = QWidget(self)
