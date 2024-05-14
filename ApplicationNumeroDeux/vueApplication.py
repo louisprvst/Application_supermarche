@@ -1,6 +1,6 @@
 import sys
 from PyQt6.QtWidgets import QApplication,QMainWindow,QToolBar,QFileDialog
-from PyQt6.QtGui import QIcon, QAction
+from PyQt6.QtGui import QIcon, QAction, QShortcut
 from PyQt6.QtCore import Qt, pyqtSignal
 
 class vueApplication(QMainWindow):
@@ -24,6 +24,7 @@ class vueApplication(QMainWindow):
         
         fic_ouvrir = QAction(QIcon(sys.path[0] + '/icones/map.png'), 'Choisir un magasin', self)
         ##fic_ouvrir.triggered.connect(self.fic_ouvrir)
+        fic_ouvrir.setShortcut("Ctrl+O")
         menu_Fichiers.addAction(fic_ouvrir)
         
     #Menu Listes :
@@ -32,9 +33,11 @@ class vueApplication(QMainWindow):
         
         liste_new = QAction(QIcon(sys.path[0] + '/icones/plus.png'), 'Nouvelle liste', self)
         ##liste_new.triggered.connect(self.liste_new)
+        liste_new.setShortcut("Ctrl+L")
         menu_Listes.addAction(liste_new)
         
         liste_open = QAction(QIcon(sys.path[0] + '/icones/list.png'), 'Ouvrir une liste', self)
+        liste_open.setShortcut("Ctrl+P")
         liste_open.triggered.connect(self.open_liste)
         menu_Listes.addAction(liste_open)
         
@@ -43,6 +46,7 @@ class vueApplication(QMainWindow):
         menu_help = menu_bar.addMenu('&Aides')
         
         help_info = QAction(QIcon(sys.path[0] + '/icones/question.png'), 'A propos', self)
+        help_info.setShortcut("Ctrl+I")
         menu_help.addAction(help_info)    
         
     #Tool Bar 

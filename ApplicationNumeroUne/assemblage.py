@@ -14,7 +14,7 @@ from PyQt6.QtCore import Qt, QPoint
 # --- class widget: hérite de QLabel ------------------------------------------
 class Image(QLabel):
 
-    def __init__(self, chemin: str):
+    def __init__(self, chemin: str): 
         '''Constructeur de la classe'''
 
         # appel au constructeur de la classe mère
