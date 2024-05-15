@@ -1,8 +1,52 @@
-import sys
-from PyQt6.QtWidgets import QApplication,QMainWindow,QToolBar,QFileDialog,QInputDialog
+import sys , json
+from PyQt6.QtWidgets import QApplication,QMainWindow,QToolBar,QFileDialog,QWidget,QVBoxLayout,QLabel,QLineEdit,QDateEdit,QPushButton
 from PyQt6.QtGui import QIcon, QAction, QShortcut
 from PyQt6.QtCore import Qt, pyqtSignal
 
+
+class popup_new_liste(QWidget):
+    
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Création de liste')
+        self.setGeometry(100, 100, 300, 150)
+
+        layout = QVBoxLayout()
+
+        self.nom_label = QLabel('Nom de la liste :')
+        self.nom_input = QLineEdit()
+
+        self.date_label = QLabel('Date de vos courses :')
+        self.date_input = QDateEdit()
+        
+        self.valider_button = QPushButton('Créer la liste')
+        self.valider_button.clicked.connect(self.save_to_json)
+
+        layout.addWidget(self.nom_label)
+        layout.addWidget(self.nom_input)
+        layout.addWidget(self.date_label)
+        layout.addWidget(self.date_input)
+        layout.addWidget(self.valider_button)
+
+        self.setLayout(layout)
+        
+    def save_to_json(self):
+        
+        nom = self.nom_input.text()
+        date = self.date_input.text()
+        
+        filename = f"{nom}.json"
+        data = {
+            'listname': nom,
+            'listdate': date
+        }
+
+        with open(filename, 'w') as file:
+            json.dump(data, file, indent=4)
+            
+        self.close()
+        
+        
 class vueApplication(QMainWindow):
 
     def __init__(self):
@@ -67,21 +111,8 @@ class vueApplication(QMainWindow):
         fichier_liste = QFileDialog.getOpenFileName(self, "Choisir un fichier liste :")
         
     def liste_new(self):
-        infos = []
-        
-        nom, validation = QInputDialog.getText(self, "Nouvelle liste", "Nom de la liste :")
-        infos.append(nom)
-        
-        auteur, validation = QInputDialog.getText(self, "Nouvelle liste", "Auteur de la liste :")
-        infos.append(auteur)
-        
-        date, validation = QInputDialog.getText(self, "Nouvelle liste", "Date de la liste :")
-        infos.append(date)
-        
-        item, validation = QInputDialog.getMultiLineText(self, "Nouvelle liste", "Item :")
-        infos.append(item)
-        
-        print("Informations de la nouvelle liste :", infos)
+        self.popup = popup_new_liste()
+        self.popup.show()
 
 
 #Main pour tester la vue

@@ -33,3 +33,10 @@ Membres :
 - PREVOST Louis : Début du menu de création de liste de course
 - DEMOL Alexis : Résolution du problème de taille pour certaines images trop grande pour certains écran(exemple: image 7-9)
 - CAPON Ethan : Raccourci clavier app2 + début auto complétion dans un fichier test.
+
+- 15/05/2024 de 10h à 11h30 :
+- Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis, DEMOL Alexis, CAPON Ethan
+- FARDEL Mathéïs :
+- PREVOST Louis : Suite du menu de création de liste et sauvegarde en json.
+- DEMOL Alexis :
+- CAPON Ethan :
