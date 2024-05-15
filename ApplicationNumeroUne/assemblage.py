@@ -6,7 +6,7 @@
 import json
 import os
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QDialog, QFileDialog, QDialogButtonBox, QMessageBox, QToolBar, QDockWidget, QMenu,  QLineEdit, QPushButton
+from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QDialog, QFileDialog, QDialogButtonBox, QMessageBox, QToolBar, QDockWidget, QMenu,  QLineEdit, QPushButton, QTextEdit, QCalendarWidget
 from PyQt6.QtGui import QPixmap, QIcon, QAction, QPainter, QPen
 from PyQt6.QtCore import Qt, QPoint
 
@@ -102,7 +102,7 @@ class NewProjetDialog(QDialog):
         
         self.nomProjet = QLineEdit()
         self.auteurProjet = QLineEdit()
-        self.dateCreationProjet = QLineEdit()
+        self.dateCreationProjet = QCalendarWidget()
         self.nomMagasin = QLineEdit()
         self.adresseMagasin = QLineEdit()
         self.lgn = QLineEdit()
@@ -139,7 +139,7 @@ class NewProjetDialog(QDialog):
         return {
             'nomProjet': self.nomProjet.text(),
             'auteurProjet': self.auteurProjet.text(),
-            'dateCreationProjet': self.dateCreationProjet.text(),
+            'dateCreationProjet': self.dateCreationProjet.selectedDate().toString(Qt.DateFormat.ISODate),
             'nomMagasin': self.nomMagasin.text(),
             'adresse_magasin': self.adresseMagasin.text(),
             'lgn':  int(self.lgn.text()),
@@ -161,6 +161,7 @@ class MainWindow(QMainWindow):
         with open(chemin_json, 'r') as f:
             data = json.load(f)
 
+        # Ajout d'un premier dock pour les articles 
         dock_articles = QDockWidget('Articles')
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, dock_articles)
         dock_articles.setMaximumWidth(200)
@@ -183,6 +184,14 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout(central_widget)
         layout.addWidget(self.plateau)
         self.setCentralWidget(central_widget) # met le plateau en screen principale
+
+        # Ajout d'un deuxième dock pour les info du magasin sur la droite
+        dock_info_magasin = QDockWidget('Informations Magasin')
+        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock_info_magasin)
+        dock_info_magasin.setMaximumWidth(200)
+
+        self.info_magasin_texte = QTextEdit()  
+        dock_info_magasin.setWidget(self.info_magasin_texte)  
 
         # ajout d'une barre d'outils 
         menu_bar = self.menuBar()
@@ -213,11 +222,20 @@ class MainWindow(QMainWindow):
             if chemin_image:
                 self.chargerImage(chemin_image)
                 self.changDimQuadrillage(details_projet)
+                self.afficherInfosMagasin(details_projet)  # permet d'afficher les infos sur le magasins
                 QMessageBox.information(self, "Nouveau Projet", "Nouveau projet créé avec succès !")
 
     # changer les dimensions du quadrillage avec les dimensions spécifié avec la création du projet 
     def changDimQuadrillage(self, details_projet):
         self.plateau.createQuadrillage(details_projet['lgn'], details_projet['cols'], details_projet['dimX'], details_projet['dimY'])
+
+    # Fonction qui nous permet d'afficher les informations utile du magasins 
+    def afficherInfosMagasin(self, details_projet):
+        info_magasin = f"Nom du magasin: {details_projet['nomMagasin']}\n"
+        info_magasin += f"Adresse du magasin: {details_projet['adresse_magasin']}\n"
+        info_magasin += f"Auteur du projet: {details_projet['auteurProjet']}\n"
+        info_magasin += f"Date de création du projet: {details_projet['dateCreationProjet']}\n"
+        self.info_magasin_texte.setText(info_magasin)
 
     def enregistrer(self):
         boite = QFileDialog()
