@@ -1,11 +1,16 @@
+
+# ============================================================================================================================================================
+#                                   ASSEMBLAGE DE TEST.PY ET VUE.PY (à répartir dans M,V,C ensuite)
+#                                           Fait par FARDEL Mathéïs et DEMOL Alexis
+#=============================================================================================================================================================
+
 import json
 import os
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QDialog, QFileDialog, QDialogButtonBox, QMessageBox, QToolBar, QDockWidget, QMenu,  QLineEdit, QPushButton, QTextEdit, QCalendarWidget
-from PyQt6.QtGui import QPixmap, QIcon, QAction, QPainter, QPen
-from PyQt6.QtCore import Qt, QPoint, pyqtSignal
+from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QDialog, QFileDialog, QDialogButtonBox, QMessageBox, QDockWidget, QLineEdit, QTextEdit, QCalendarWidget, QTreeWidget, QTreeWidgetItem
+from PyQt6.QtGui import QPixmap, QIcon, QAction, QPainter, QPen, QFont
+from PyQt6.QtCore import Qt
 
-# --- class widget: hérite de QLabel ------------------------------------------
 class Image(QLabel):
 
     def __init__(self, chemin: str):
@@ -35,7 +40,7 @@ class Plateau(QWidget):
     def chargerImage(self, chemin: str):
         if chemin:
             self.pixmap.load(chemin)
-            self.pixmap = self.pixmap.scaled(1200, 720, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)  # Permet de bien redimensionner l'image / Normalement adapté avec une bonne partie des tailles d'écran
+            self.pixmap = self.pixmap.scaled(1200, 720, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
             self.image_label.setPixmap(self.pixmap)
         else:
             print("Chemin de l'image non valide:", chemin)
@@ -43,7 +48,7 @@ class Plateau(QWidget):
     # créer un quadrillage avec les lignes, colonnes et les dimensions X et Y
     # J'ai du recréer la fonction pour créer le quadrillage pour permettre de créer le projet puis afficher le quadrillage, avec l'ancienne fonction cela ne voulait pas, j'ai du donc changer de maniére
     def createQuadrillage(self, lgn, cols, dimX, dimY):
-        if not self.pixmap.isNull():  # on vérifie d'abord si le pixmap peut etre valide
+        if not self.pixmap.isNull():
             painter = QPainter(self.pixmap)
             pen = QPen(Qt.GlobalColor.black)
             pen.setWidth(1)
@@ -159,22 +164,16 @@ class MainWindow(QMainWindow):
             data = json.load(f)
 
         # Ajout d'un premier dock pour les articles 
-        dock_articles = QDockWidget('Articles')
-        self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, dock_articles)
-        dock_articles.setMaximumWidth(200)
-
-        widget_menu_articles = QWidget()
-        layout_menu_articles = QVBoxLayout(widget_menu_articles)
-
-        menu_categorie = QMenu("Catégories", self)
-        for categorie, articles in data.items():
-            sous_menu_categorie = menu_categorie.addMenu(categorie)
-            for article in articles:
-                action = QAction(article, self)
-                sous_menu_categorie.addAction(action)
-
-        layout_menu_articles.addWidget(menu_categorie)
-        dock_articles.setWidget(widget_menu_articles)
+        self.dock_articles = QDockWidget('Articles', self)
+        self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.dock_articles)
+        self.dock_articles.setMaximumWidth(200)
+        
+        self.objets_widget = QTreeWidget()
+        self.objets_widget.setHeaderHidden(True)
+        self.objets_widget.setIndentation(20)
+        self.objets_widget.setStyleSheet("QTreeWidget::item { margin-top: 10px; margin-bottom: 10px; }")
+        self.listeObjets(self.data)
+        self.dock_articles.setWidget(self.objets_widget)
 
         self.plateau = Plateau() # crée l'instance du plateau
         central_widget = QWidget(self)
@@ -183,12 +182,11 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central_widget) # met le plateau en screen principale
 
         # Ajout d'un deuxième dock pour les info du magasin sur la droite
-        dock_info_magasin = QDockWidget('Informations Magasin')
-        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock_info_magasin)
-        dock_info_magasin.setMaximumWidth(200)
-
-        self.info_magasin_texte = QTextEdit()  
-        dock_info_magasin.setWidget(self.info_magasin_texte)  
+        self.dock_info_magasin = QDockWidget('Informations Magasin', self)
+        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.dock_info_magasin)
+        self.dock_info_magasin.setMaximumWidth(200)
+        self.info_magasin_texte = QTextEdit(self)
+        self.dock_info_magasin.setWidget(self.info_magasin_texte)
 
         # Bouton modifier dans le deuxiéme docker pour les infos du magasins 
         modifier_button = QPushButton("Modifier")
@@ -212,7 +210,19 @@ class MainWindow(QMainWindow):
 
         self.showMaximized()
 
-    # Permet de charger l'image 
+    #permet de créer la liste des articles en déroulant
+    def listeObjets(self, data):
+        for categorie, articles in data.items():
+            parent = QTreeWidgetItem([categorie])
+            parent.setFont(0, QFont('Arial', 14, QFont.Weight.Bold))
+            for article in articles:
+                child = QTreeWidgetItem([article])
+                child.setFont(0, QFont('Arial', 12))
+                parent.addChild(child)
+            self.objets_widget.addTopLevelItem(parent)
+
+
+    # permet de charger l'image
     def chargerImage(self, chemin: str):
         if chemin:
             self.plateau.chargerImage(chemin)
@@ -220,7 +230,7 @@ class MainWindow(QMainWindow):
         else:
             print("Chemin de l'image non valide:", chemin)
 
-    # créer un nouveau projet 
+    # permet de créer un nouveau projet
     def createNewProject(self):
         dialogue = NewProjetDialog(self)
         if dialogue.exec():
@@ -232,11 +242,9 @@ class MainWindow(QMainWindow):
                 self.afficherInfosMagasin(details_projet)  # permet d'afficher les infos sur le magasins
                 QMessageBox.information(self, "Nouveau Projet", "Nouveau projet créé avec succès !")
 
-    # changer les dimensions du quadrillage avec les dimensions spécifié avec la création du projet 
     def changDimQuadrillage(self, details_projet):
         self.plateau.createQuadrillage(details_projet['lgn'], details_projet['cols'], details_projet['dimX'], details_projet['dimY'])
 
-    # Fonction qui nous permet d'afficher les informations utile du magasins 
     def afficherInfosMagasin(self, details_projet):
         info_magasin = f"Nom du magasin: {details_projet['nomMagasin']}\n"
         info_magasin += f"Adresse du magasin: {details_projet['adresse_magasin']}\n"
@@ -247,7 +255,7 @@ class MainWindow(QMainWindow):
     # fonction de test pour enregister le projet (Pas fonctionnel)
     def enregistrer(self):
         boite = QFileDialog()
-        chemin, validation = boite.getSaveFileName(directory = sys.path[0])
+        chemin, validation = boite.getSaveFileName(directory=sys.path[0])
         if validation:
             self.__chemin = chemin
 
