@@ -198,9 +198,11 @@ class MainWindow(QMainWindow):
         menu_fichier = menu_bar.addMenu('&Fichier')
 
         action_new_projet = QAction('Nouveau Projet', self)
+        action_new_projet.setShortcut('Ctrl+N')
         action_new_projet.triggered.connect(self.createNewProject)
         menu_fichier.addAction(action_new_projet)
         action_engresitrer_projet = QAction('Enregister un Projet', self)
+        action_engresitrer_projet.setShortcut('Ctrl+S')
         menu_fichier.addAction(action_engresitrer_projet)
 
         self.showMaximized()
