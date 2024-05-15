@@ -1,14 +1,9 @@
-# Code provisoire assemblage et modifications du code test.py et de la vue fait par Mathéïs
-
-# Alexis Demol TPB - Version du 12-05-24
-# Assemblage avec le code de Mathéïs
-
 import json
 import os
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QDialog, QFileDialog, QDialogButtonBox, QMessageBox, QToolBar, QDockWidget, QMenu,  QLineEdit, QPushButton, QTextEdit, QCalendarWidget
 from PyQt6.QtGui import QPixmap, QIcon, QAction, QPainter, QPen
-from PyQt6.QtCore import Qt, QPoint
+from PyQt6.QtCore import Qt, QPoint, pyqtSignal
 
 # --- class widget: hérite de QLabel ------------------------------------------
 class Image(QLabel):
@@ -25,6 +20,8 @@ class Image(QLabel):
 class Plateau(QWidget):
     def __init__(self):
         super().__init__()
+
+        articleSelected = pyqtSignal(str) 
 
         layout = QVBoxLayout(self)
         self.image_label = QLabel(self)
@@ -193,6 +190,14 @@ class MainWindow(QMainWindow):
         self.info_magasin_texte = QTextEdit()  
         dock_info_magasin.setWidget(self.info_magasin_texte)  
 
+        # Bouton modifier dans le deuxiéme docker pour les infos du magasins 
+        modifier_button = QPushButton("Modifier")
+        dock_info_magasin.setTitleBarWidget(modifier_button)
+        modifier_button.clicked.connect(self.activerModificationInfosMagasin)
+
+        # mettre le texte en lecture seul 
+        self.info_magasin_texte.setReadOnly(True)  
+
         # ajout d'une barre d'outils 
         menu_bar = self.menuBar()
         menu_fichier = menu_bar.addMenu('&Fichier')
@@ -222,8 +227,8 @@ class MainWindow(QMainWindow):
             details_projet = dialogue.getProjetDetails()
             chemin_image, _ = QFileDialog.getOpenFileName(self, "Charger le plan", "", "Images (*.png *.jpg *.jpeg *.gif)")
             if chemin_image:
-                self.chargerImage(chemin_image)
-                self.changDimQuadrillage(details_projet)
+                self.chargerImage(chemin_image) # charger l'image quand on a créer le projet 
+                self.changDimQuadrillage(details_projet) # changer les dimensions du quadrillage après la création du projet 
                 self.afficherInfosMagasin(details_projet)  # permet d'afficher les infos sur le magasins
                 QMessageBox.information(self, "Nouveau Projet", "Nouveau projet créé avec succès !")
 
@@ -239,11 +244,19 @@ class MainWindow(QMainWindow):
         info_magasin += f"Date de création du projet: {details_projet['dateCreationProjet']}\n"
         self.info_magasin_texte.setText(info_magasin)
 
+    # fonction de test pour enregister le projet (Pas fonctionnel)
     def enregistrer(self):
         boite = QFileDialog()
         chemin, validation = boite.getSaveFileName(directory = sys.path[0])
         if validation:
             self.__chemin = chemin
+
+    # permettre la modification du docker avec les informations du magasins
+    def activerModificationInfosMagasin(self):
+        if self.info_magasin_texte.isReadOnly():
+            self.info_magasin_texte.setReadOnly(False)
+        else:
+            self.info_magasin_texte.setReadOnly(True)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
