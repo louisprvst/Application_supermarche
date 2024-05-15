@@ -11,6 +11,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWid
 from PyQt6.QtGui import QPixmap, QIcon, QAction, QPainter, QPen, QFont
 from PyQt6.QtCore import Qt, pyqtSignal
 
+# -------------------------------------- classe herité de QLabel permettant d'afficher une image (repris du cours) -------------------------------------------
 class Image(QLabel):
 
     def __init__(self, chemin: str):
@@ -21,7 +22,7 @@ class Image(QLabel):
         
         self.image = QPixmap(chemin)
         self.setPixmap(self.image)
-
+# ----------------------------------- classe Plateau pour gérer l'affichage de l'image et l'ajout d'un quadrillage --------------------------------------------
 class Plateau(QWidget):
     def __init__(self):
         super().__init__()
@@ -37,6 +38,7 @@ class Plateau(QWidget):
         # connecter le clic a une fonction 
         self.image_label.mousePressEvent = self.ouvrirFenetre
 
+    # Charger une image et la redimensionner
     def chargerImage(self, chemin: str):
         if chemin:
             self.pixmap.load(chemin)
@@ -81,7 +83,7 @@ class Plateau(QWidget):
         fenetreModal = FenetreTexte("\n Légumes")
         fenetreModal.exec()
 
-
+# ----------------------------------------- classe FenetreTexte pour afficher une fenêtre modale avec un texte ----------------------------------------------------
 class FenetreTexte(QDialog):
     def __init__(self, text):
         super().__init__()
@@ -95,7 +97,7 @@ class FenetreTexte(QDialog):
         self.setFixedSize(800, 400)
 
 
-# Nous permet de créer un nouveau projet
+# ---------------------------------------------------- classe NewProjetDialog pour créer un nouveau projet --------------------------------------------------------
 class NewProjetDialog(QDialog):
     def __init__(self, parent):
         super().__init__(parent)
@@ -137,6 +139,7 @@ class NewProjetDialog(QDialog):
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
 
+    # Récupérer les détails du projet
     def getProjetDetails(self):
         return {
             'nomProjet': self.nomProjet.text(),
@@ -160,6 +163,7 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon(sys.path[0] + '/icones/cadie.jpg'))
         self.setGeometry(100, 100, 500, 300)
         
+        # Charger les données du JSON
         chemin_json = os.path.join(sys.path[0], "liste_produits.json")
         with open(chemin_json, 'r') as f:
             self.data = json.load(f)
@@ -167,7 +171,7 @@ class MainWindow(QMainWindow):
         # Ajout d'un premier dock pour les articles 
         self.dock_articles = QDockWidget('Articles', self)
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.dock_articles)
-        self.dock_articles.setMaximumWidth(200)
+        self.dock_articles.setFixedWidth(350)
         
         self.objets_widget = QTreeWidget()
         self.objets_widget.setHeaderHidden(True)
@@ -185,14 +189,27 @@ class MainWindow(QMainWindow):
         # Ajout d'un deuxième dock pour les info du magasin sur la droite
         self.dock_info_magasin = QDockWidget('Informations Magasin', self)
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.dock_info_magasin)
-        self.dock_info_magasin.setMaximumWidth(200)
+        self.dock_info_magasin.setMaximumWidth(250)
         self.info_magasin_texte = QTextEdit(self)
         self.dock_info_magasin.setWidget(self.info_magasin_texte)
 
-        # Bouton modifier dans le deuxiéme docker pour les infos du magasins 
-        modifier_button = QPushButton("Modifier")
-        self.dock_info_magasin.setTitleBarWidget(modifier_button)
-        modifier_button.clicked.connect(self.activerModificationInfosMagasin)
+        # Conteneur pour les boutons "Modifier" et "Valider"
+        button_container = QWidget()
+        button_layout = QVBoxLayout(button_container)
+
+        # Bouton modifier et valider dans le deuxième dock pour les infos du magasin 
+        self.modifier_button = QPushButton("Modifier")
+        self.valider_button = QPushButton("Valider")
+        self.valider_button.hide()  # Cacher le bouton Valider au début
+
+        button_layout.addWidget(self.modifier_button)
+        button_layout.addWidget(self.valider_button)
+
+        self.dock_info_magasin.setTitleBarWidget(button_container)
+
+        # Signaux pour activer les modifications du QTextEdit
+        self.modifier_button.clicked.connect(self.activerModificationInfosMagasin)
+        self.valider_button.clicked.connect(self.desactiverModificationInfosMagasin)
 
         # mettre le texte en lecture seul 
         self.info_magasin_texte.setReadOnly(True)  
@@ -201,6 +218,7 @@ class MainWindow(QMainWindow):
         menu_bar = self.menuBar()
         menu_fichier = menu_bar.addMenu('&Fichier')
 
+        #Action de "Nouveau Projet" et "Enregistrer Projet"
         action_new_projet = QAction('Nouveau Projet', self)
         action_new_projet.setShortcut('Ctrl+N')
         action_new_projet.triggered.connect(self.createNewProject)
@@ -245,9 +263,11 @@ class MainWindow(QMainWindow):
                 self.afficherInfosMagasin(self.details_projet)  # permet d'afficher les infos sur le magasins
                 QMessageBox.information(self, "Nouveau Projet", "Nouveau projet créé avec succès !")
 
+    # permet de changer la dimension du quadrillage
     def changDimQuadrillage(self, details_projet):
         self.plateau.createQuadrillage(details_projet['lgn'], details_projet['cols'], details_projet['dimX'], details_projet['dimY'])
 
+    # permet d'afficher les infos du magasin
     def afficherInfosMagasin(self, details_projet):
         info_magasin = f"Nom du magasin: {details_projet['nomMagasin']}\n"
         info_magasin += f"Adresse du magasin: {details_projet['adresse_magasin']}\n"
@@ -272,11 +292,18 @@ class MainWindow(QMainWindow):
 
     # permettre la modification du docker avec les informations du magasins
     def activerModificationInfosMagasin(self):
-        if self.info_magasin_texte.isReadOnly():
-            self.info_magasin_texte.setReadOnly(False)
-        else:
-            self.info_magasin_texte.setReadOnly(True)
+        self.info_magasin_texte.setReadOnly(False)
+        self.modifier_button.hide()
+        self.valider_button.show()
 
+    # retirer la permission de modification du docker avec les infos du magasin
+    def desactiverModificationInfosMagasin(self):
+        self.info_magasin_texte.setReadOnly(True)
+        self.modifier_button.show()
+        self.valider_button.hide()
+
+
+# ------------------------------------------------------------------- MAIN POUR TESTER ------------------------------------------------------------------------
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
