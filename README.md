@@ -38,7 +38,7 @@ Membres :
 - Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis, DEMOL Alexis, CAPON Ethan
 - FARDEL Mathéïs : tentative de réglage du bug du dock, étant donné que je ne réussis pas je passerai à autre chose prochaine heure.
 - PREVOST Louis : Suite du menu de création de liste et sauvegarde en json.
-- DEMOL Alexis :
+- DEMOL Alexis : Ajout bouton modifier dans le docker pour les infos du magasins + fonctions + ajout de commentaire
 - CAPON Ethan :
 
 - 15/05/2024 de 14h30 à 17h30 :
@@ -46,4 +46,6 @@ Membres :
 - FARDEL Mathéïs : Changement de la façon de faire le déroulant et utilisation d'un QTreeWidget (bien mieux et + beau sans bug) donc plus de bug, réalisation du bouton Modifier/Valider sur le dock des infos du magasin
 - PREVOST Louis : Suite du menu de création de liste : affichage dans un doc sur le coté et zone de texte pour les articles.
 - DEMOL Alexis :
+- PREVOST Louis :
+- DEMOL Alexis : Enregister un projet et l'ouvrir + ajout commentaire 
 - CAPON Ethan : 

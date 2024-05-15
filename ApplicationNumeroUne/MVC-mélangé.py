@@ -287,24 +287,24 @@ class MainWindow(QMainWindow):
 
         chemin_fichier, _ = QFileDialog.getSaveFileName(self, "Enregistrer le projet", "", "JSON Files (*.json)")
         if chemin_fichier:
-            try:
+            try: # gére les exceptions (comme en java avec les try)
                 with open(chemin_fichier, 'w') as f:
                     json.dump(self.details_projet, f, indent=4)
                 QMessageBox.information(self, "Enregistrement du Projet", "Projet enregistré avec succès.")
-            except Exception as e: # gére les soucis qu'il peut y avoir en cas d'erreur, et envoie un Message Box
+            except Exception as e: # gére les soucis qu'il peut y avoir en cas d'erreur, et envoie un Message Box si c'est good ou non 
                 QMessageBox.critical(self, "Enregistrement du Projet", f"Erreur lors de l'enregistrement du projet: {e}")
 
     def ouvrirProjet(self):
         chemin_fichier, _ = QFileDialog.getOpenFileName(self, "Ouvrir le projet", "", "JSON Files (*.json)")
         if chemin_fichier:
-            try: # gére les exceptions 
+            try: # gére les exceptions (comme en java avec les try)
                 with open(chemin_fichier, 'r') as f:
                     self.details_projet = json.load(f)
                 self.chargerImage(self.details_projet['chemin_image'])
                 self.changDimQuadrillage(self.details_projet)
                 self.afficherInfosMagasin(self.details_projet)
                 QMessageBox.information(self, "Ouverture du Projet", "Projet ouvert avec succès.")
-            except Exception as e:
+            except Exception as e: # gére les soucis qu'il peut y avoir en cas d'erreur, et envoie un Message Box si c'est good ou non 
                 QMessageBox.critical(self, "Ouverture du Projet", f"Erreur lors de l'ouverture du projet: {e}")
 
 
