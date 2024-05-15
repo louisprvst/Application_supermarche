@@ -7,9 +7,9 @@
 import json
 import os
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QDialog, QFileDialog, QDialogButtonBox, QMessageBox, QDockWidget, QLineEdit, QTextEdit, QCalendarWidget, QTreeWidget, QTreeWidgetItem
+from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QDialog, QFileDialog, QDialogButtonBox, QMessageBox, QDockWidget, QLineEdit, QTextEdit, QCalendarWidget, QTreeWidget, QTreeWidgetItem, QPushButton
 from PyQt6.QtGui import QPixmap, QIcon, QAction, QPainter, QPen, QFont
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal
 
 class Image(QLabel):
 
@@ -26,7 +26,7 @@ class Plateau(QWidget):
     def __init__(self):
         super().__init__()
 
-        articleSelected = pyqtSignal(str) 
+        self.articleSelected = pyqtSignal(str) 
 
         layout = QVBoxLayout(self)
         self.image_label = QLabel(self)
@@ -155,13 +155,14 @@ class MainWindow(QMainWindow):
     def __init__(self, chemin: str = None):
         super().__init__()
         self.__chemin = chemin
+        self.details_projet = {}
         self.setWindowTitle("Application supermarché")
         self.setWindowIcon(QIcon(sys.path[0] + '/icones/cadie.jpg'))
         self.setGeometry(100, 100, 500, 300)
         
         chemin_json = os.path.join(sys.path[0], "liste_produits.json")
         with open(chemin_json, 'r') as f:
-            data = json.load(f)
+            self.data = json.load(f)
 
         # Ajout d'un premier dock pour les articles 
         self.dock_articles = QDockWidget('Articles', self)
@@ -190,7 +191,7 @@ class MainWindow(QMainWindow):
 
         # Bouton modifier dans le deuxiéme docker pour les infos du magasins 
         modifier_button = QPushButton("Modifier")
-        dock_info_magasin.setTitleBarWidget(modifier_button)
+        self.dock_info_magasin.setTitleBarWidget(modifier_button)
         modifier_button.clicked.connect(self.activerModificationInfosMagasin)
 
         # mettre le texte en lecture seul 
@@ -206,6 +207,7 @@ class MainWindow(QMainWindow):
         menu_fichier.addAction(action_new_projet)
         action_engresitrer_projet = QAction('Enregister un Projet', self)
         action_engresitrer_projet.setShortcut('Ctrl+S')
+        action_engresitrer_projet.triggered.connect(self.enregistrerProjet)
         menu_fichier.addAction(action_engresitrer_projet)
 
         self.showMaximized()
@@ -234,12 +236,13 @@ class MainWindow(QMainWindow):
     def createNewProject(self):
         dialogue = NewProjetDialog(self)
         if dialogue.exec():
-            details_projet = dialogue.getProjetDetails()
+            self.details_projet = dialogue.getProjetDetails()
             chemin_image, _ = QFileDialog.getOpenFileName(self, "Charger le plan", "", "Images (*.png *.jpg *.jpeg *.gif)")
             if chemin_image:
+                self.details_projet['chemin_image'] = chemin_image
                 self.chargerImage(chemin_image) # charger l'image quand on a créer le projet 
-                self.changDimQuadrillage(details_projet) # changer les dimensions du quadrillage après la création du projet 
-                self.afficherInfosMagasin(details_projet)  # permet d'afficher les infos sur le magasins
+                self.changDimQuadrillage(self.details_projet) # changer les dimensions du quadrillage après la création du projet 
+                self.afficherInfosMagasin(self.details_projet)  # permet d'afficher les infos sur le magasins
                 QMessageBox.information(self, "Nouveau Projet", "Nouveau projet créé avec succès !")
 
     def changDimQuadrillage(self, details_projet):
@@ -252,12 +255,20 @@ class MainWindow(QMainWindow):
         info_magasin += f"Date de création du projet: {details_projet['dateCreationProjet']}\n"
         self.info_magasin_texte.setText(info_magasin)
 
-    # fonction de test pour enregister le projet (Pas fonctionnel)
-    def enregistrer(self):
-        boite = QFileDialog()
-        chemin, validation = boite.getSaveFileName(directory=sys.path[0])
-        if validation:
-            self.__chemin = chemin
+    # Fonction qui permet l'enregistrement des informations du projet en format json
+    def enregistrerProjet(self):
+        if not self.details_projet:
+            QMessageBox.warning(self, "Enregistrement du Projet !", "Il y a aucun projet à enregistrer !")
+            return
+
+        chemin_fichier, _ = QFileDialog.getSaveFileName(self, "Enregistrer le projet", "", "JSON Files (*.json)")
+        if chemin_fichier:
+            try:
+                with open(chemin_fichier, 'w') as f:
+                    json.dump(self.details_projet, f, indent=4)
+                QMessageBox.information(self, "Enregistrement du Projet", "Projet enregistré avec succès.")
+            except Exception as e: # gére les soucis qu'il peut y avoir en cas d'erreur, et envoie un Message Box
+                QMessageBox.critical(self, "Enregistrement du Projet", f"Erreur lors de l'enregistrement du projet: {e}")
 
     # permettre la modification du docker avec les informations du magasins
     def activerModificationInfosMagasin(self):
