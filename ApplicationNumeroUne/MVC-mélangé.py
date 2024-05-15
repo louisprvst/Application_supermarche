@@ -227,6 +227,10 @@ class MainWindow(QMainWindow):
         action_engresitrer_projet.setShortcut('Ctrl+S')
         action_engresitrer_projet.triggered.connect(self.enregistrerProjet)
         menu_fichier.addAction(action_engresitrer_projet)
+        action_ouvrir_projet = QAction('Ouvrir Projet', self)
+        action_ouvrir_projet.setShortcut('Ctrl+O')
+        menu_fichier.addAction(action_ouvrir_projet)
+        action_ouvrir_projet.triggered.connect(self.ouvrirProjet)
 
         self.showMaximized()
 
@@ -289,6 +293,20 @@ class MainWindow(QMainWindow):
                 QMessageBox.information(self, "Enregistrement du Projet", "Projet enregistré avec succès.")
             except Exception as e: # gére les soucis qu'il peut y avoir en cas d'erreur, et envoie un Message Box
                 QMessageBox.critical(self, "Enregistrement du Projet", f"Erreur lors de l'enregistrement du projet: {e}")
+
+    def ouvrirProjet(self):
+        chemin_fichier, _ = QFileDialog.getOpenFileName(self, "Ouvrir le projet", "", "JSON Files (*.json)")
+        if chemin_fichier:
+            try: # gére les exceptions 
+                with open(chemin_fichier, 'r') as f:
+                    self.details_projet = json.load(f)
+                self.chargerImage(self.details_projet['chemin_image'])
+                self.changDimQuadrillage(self.details_projet)
+                self.afficherInfosMagasin(self.details_projet)
+                QMessageBox.information(self, "Ouverture du Projet", "Projet ouvert avec succès.")
+            except Exception as e:
+                QMessageBox.critical(self, "Ouverture du Projet", f"Erreur lors de l'ouverture du projet: {e}")
+
 
     # permettre la modification du docker avec les informations du magasins
     def activerModificationInfosMagasin(self):
