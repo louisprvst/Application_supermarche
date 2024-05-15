@@ -58,5 +58,5 @@ Utilisation exclusive des bibliothèques vues en cours
 - Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis, DEMOL Alexis, CAPON Ethan :
 - FARDEL Mathéïs : Changement de la façon de faire le déroulant et utilisation d'un QTreeWidget (bien mieux et + beau sans bug) donc plus de bug, réalisation du bouton Modifier/Valider sur le dock des infos du magasin
 - PREVOST Louis : Suite du menu de création de liste : affichage dans un dock sur le coté et zone de texte pour les articles.
-- DEMOL Alexis : Enregister un projet et l'ouvrir + ajout commentaire 
+- DEMOL Alexis : Enregister un projet et l'ouvrir + ajout commentaire + Ajout fonction pour sauvegarder les infos du docker + tentative test pour faire crash / bug le programme (aucun soucis détécté)
 - CAPON Ethan : Avancement auto complétion pour les listes ( fini mais modification du json a faire).

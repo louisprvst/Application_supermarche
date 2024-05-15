@@ -286,10 +286,12 @@ class MainWindow(QMainWindow):
             return
 
         chemin_fichier, _ = QFileDialog.getSaveFileName(self, "Enregistrer le projet", "", "JSON Files (*.json)")
+        if not chemin_fichier.endswith(".json"): # si le fichier n'a pas l'extension .json on lui rajoute, cela empeche les erreurs
+            chemin_fichier = chemin_fichier + '.json'
         if chemin_fichier:
             try: # gére les exceptions (comme en java avec les try)
                 with open(chemin_fichier, 'w') as f:
-                    json.dump(self.details_projet, f, indent=4)
+                    json.dump(self.details_projet, f, indent= 4) # le indent qui permet de mieux lire et de mieux gérer pour la sauvegarde des données 
                 QMessageBox.information(self, "Enregistrement du Projet", "Projet enregistré avec succès.")
             except Exception as e: # gére les soucis qu'il peut y avoir en cas d'erreur, et envoie un Message Box si c'est good ou non 
                 QMessageBox.critical(self, "Enregistrement du Projet", f"Erreur lors de l'enregistrement du projet: {e}")
@@ -316,9 +318,20 @@ class MainWindow(QMainWindow):
 
     # retirer la permission de modification du docker avec les infos du magasin
     def desactiverModificationInfosMagasin(self):
+        self.saveInfosMagasin()
         self.info_magasin_texte.setReadOnly(True)
         self.modifier_button.show()
         self.valider_button.hide()
+
+     # Permet d'enregister les infos du magasins quand on les a modif
+    def saveInfosMagasin(self):
+        info_magasin = self.info_magasin_texte.toPlainText().split('\n')  # on prend le texte et on le divise en lignes, mieux pour la suite
+        self.details_projet['nomMagasin'] = info_magasin[0].replace("Nom du magasin: ", "") # Remplace et met a jour les infos dans un dico en fonction de ce qu'on a saisit dans le dock 2
+        self.details_projet['adresse_magasin'] = info_magasin[1].replace("Adresse du magasin: ", "")
+        self.details_projet['auteurProjet'] = info_magasin[2].replace("Auteur du projet: ", "")
+        self.details_projet['dateCreationProjet'] = info_magasin[3].replace("Date de création du projet: ", "")
+        QMessageBox.information(self, "Informations Magasin", "Informations du magasin enregistrées avec succès.")
+        self.activerModificationInfosMagasin()  # Désactivation de la modif et on masque le button valider 
 
 
 # ------------------------------------------------------------------- MAIN POUR TESTER ------------------------------------------------------------------------
