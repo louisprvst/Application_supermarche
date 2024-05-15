@@ -1,7 +1,7 @@
 import sys , json
-from PyQt6.QtWidgets import QApplication,QMainWindow,QToolBar,QFileDialog,QWidget,QVBoxLayout,QLabel,QLineEdit,QDateEdit,QPushButton
-from PyQt6.QtGui import QIcon, QAction, QShortcut
-from PyQt6.QtCore import Qt, pyqtSignal
+from PyQt6.QtWidgets import QApplication,QMainWindow,QToolBar,QFileDialog,QWidget,QVBoxLayout,QLabel,QLineEdit,QDateEdit,QDialogButtonBox,QDockWidget,QTextEdit
+from PyQt6.QtGui import QIcon, QAction
+from PyQt6.QtCore import Qt
 
 
 class popup_new_liste(QWidget):
@@ -19,14 +19,15 @@ class popup_new_liste(QWidget):
         self.date_label = QLabel('Date de vos courses :')
         self.date_input = QDateEdit()
         
-        self.valider_button = QPushButton('Créer la liste')
-        self.valider_button.clicked.connect(self.save_to_json)
+        self.buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel, Qt.Orientation.Horizontal, self)
+        self.buttons.accepted.connect(self.save_to_json)
+        self.buttons.rejected.connect(self.close)
 
         layout.addWidget(self.nom_label)
         layout.addWidget(self.nom_input)
         layout.addWidget(self.date_label)
         layout.addWidget(self.date_input)
-        layout.addWidget(self.valider_button)
+        layout.addWidget(self.buttons)
 
         self.setLayout(layout)
         
@@ -102,14 +103,55 @@ class vueApplication(QMainWindow):
         toolbar.addSeparator()
         toolbar.addAction(liste_new)
         toolbar.addAction(liste_open)
+        
+    ########################## DOCK ##########################
 
+        self.dock_list = QDockWidget('Ma liste :', self)
+        
+        self.json_display = QTextEdit()
+        self.json_display.setPlaceholderText("Veuillez choisir un fichier liste.json ou en créer un ...")
+        self.json_display.setReadOnly(True)
+        
+        self.dock_list.setWidget(self.json_display)
+        
+        self.dock_list.setMaximumWidth(200)
+        
+        self.titre = QLabel("Entrez vos articles :")
+        
+        self.user_input = QTextEdit()
+        self.user_input.setPlaceholderText("Entrez votre liste ici...")
+        self.user_input.setMinimumHeight(700)
+        self.user_input.setMaximumHeight(700)
+        
+        layout = QVBoxLayout()
+        layout.addWidget(self.json_display)
+        layout.addWidget(self.titre)
+        layout.addWidget(self.user_input)
+        
+        widget = QWidget()
+        widget.setLayout(layout)
+        self.dock_list.setWidget(widget)
+        
+        self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.dock_list)
+        self.dock_list.setMinimumWidth(200)
+        
+        
+        
+        
+        
         self.showMaximized()
-    
+        
     ######################### SIGNAUX #########################
 
     def open_liste(self):
-        fichier_liste = QFileDialog.getOpenFileName(self, "Choisir un fichier liste :")
-        
+        filename, _ = QFileDialog.getOpenFileName(self, "Choisir un fichier liste :", filter="JSON (*.json)")
+
+        if filename:
+            with open(filename, 'r') as file:
+                data = json.load(file)
+                formatted_data = f"\n Nom : {data['listname']} \n\n Date : {data['listdate']}"
+                self.json_display.setPlainText(formatted_data)
+    
     def liste_new(self):
         self.popup = popup_new_liste()
         self.popup.show()

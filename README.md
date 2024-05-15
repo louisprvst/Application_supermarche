@@ -44,6 +44,6 @@ Membres :
 - 15/05/2024 de 14h30 à 17h30 :
 - Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis, DEMOL Alexis, CAPON Ethan :
 - FARDEL Mathéïs : Changement de la façon de faire le déroulant et utilisation d'un QTreeWidget (bien mieux et + beau sans bug) donc plus de bug, réalisation du bouton Modifier/Valider sur le dock des infos du magasin
-- PREVOST Louis :
+- PREVOST Louis : Suite du menu de création de liste : affichage dans un doc sur le coté et zone de texte pour les articles.
 - DEMOL Alexis :
 - CAPON Ethan : 
