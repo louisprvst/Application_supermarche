@@ -36,7 +36,7 @@ Membres :
 
 - 15/05/2024 de 10h à 11h30 :
 - Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis, DEMOL Alexis, CAPON Ethan
-- FARDEL Mathéïs :
+- FARDEL Mathéïs : tentative de réglage du bug du dock, étant donné que je ne réussis pas je passerai à autre chose prochaine heure.
 - PREVOST Louis : Suite du menu de création de liste et sauvegarde en json.
 - DEMOL Alexis :
 - CAPON Ethan :
