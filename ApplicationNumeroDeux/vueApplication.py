@@ -3,6 +3,15 @@ from PyQt6.QtWidgets import QApplication,QMainWindow,QToolBar,QFileDialog,QWidge
 from PyQt6.QtGui import QIcon, QAction
 from PyQt6.QtCore import Qt
 
+class popup_info(QWidget):
+    
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('A propos')
+        self.setGeometry(100, 100, 300, 150)
+        
+        self.name = QLabel("Application item finder.")
+
 
 class popup_new_liste(QWidget):
     
@@ -86,11 +95,17 @@ class vueApplication(QMainWindow):
         liste_open.triggered.connect(self.open_liste)
         menu_Listes.addAction(liste_open)
         
+        liste_save = QAction(QIcon(sys.path[0] + '/icones/list.png'), 'Sauvegarder une liste', self)
+        liste_save.setShortcut("Ctrl+A")
+        liste_save.triggered.connect(self.save_liste)
+        menu_Listes.addAction(liste_save)
+        
     #Menu Aides :
         
         menu_help = menu_bar.addMenu('&Aides')
         
         help_info = QAction(QIcon(sys.path[0] + '/icones/question.png'), 'A propos', self)
+        help_info.triggered.connect(self.info)
         help_info.setShortcut("Ctrl+I")
         menu_help.addAction(help_info)    
         
@@ -143,19 +158,42 @@ class vueApplication(QMainWindow):
         
     ######################### SIGNAUX #########################
 
-    def open_liste(self):
+    def open_liste(self):        
         filename, _ = QFileDialog.getOpenFileName(self, "Choisir un fichier liste :", filter="JSON (*.json)")
-
+        
         if filename:
+            
+            self.currentfile : str = filename
+            
             with open(filename, 'r') as file:
-                data = json.load(file)
-                formatted_data = f"\n Nom : {data['listname']} \n\n Date : {data['listdate']}"
+                self.data = json.load(file)  # Charger les données existantes depuis le fichier JSON
+                formatted_data = f"\n Nom : {self.data['listname']} \n\n Date : {self.data['listdate']}"
                 self.json_display.setPlainText(formatted_data)
     
     def liste_new(self):
         self.popup = popup_new_liste()
         self.popup.show()
-
+        
+    def info(self):
+        self.popup = popup_info()
+        self.popup.show()
+        
+    def save_liste(self):
+        # Ajouter les nouveaux mots entrés par l'utilisateur aux données existantes
+        new_items = [item.strip() for item in self.user_input.toPlainText().split(",")]
+        
+        # Initialiser self.data s'il n'est pas déjà initialisé
+        if "Liste des articles" not in self.data:
+            self.data["Liste des articles"] = []
+            
+        self.data["Liste des articles"].extend(new_items)
+        
+        # Supprimer les doublons
+        self.data["Liste des articles"] = list(set(self.data["Liste des articles"]))
+        
+        # Enregistrer les données mises à jour dans le fichier JSON
+        with open(self.currentfile, "w") as json_file:
+            json.dump(self.data, json_file, indent=4)
 
 #Main pour tester la vue
 if __name__ == "__main__":
