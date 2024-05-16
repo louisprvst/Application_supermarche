@@ -323,7 +323,7 @@ class MainWindow(QMainWindow):
         self.modifier_button.show()
         self.valider_button.hide()
 
-     # Permet d'enregister les infos du magasins quand on les a modif
+    # Permet d'enregister les infos du magasins quand on les a modif
     def saveInfosMagasin(self):
         info_magasin = self.info_magasin_texte.toPlainText().split('\n')  # on prend le texte et on le divise en lignes, mieux pour la suite
         self.details_projet['nomMagasin'] = info_magasin[0].replace("Nom du magasin: ", "") # Remplace et met a jour les infos dans un dico en fonction de ce qu'on a saisit dans le dock 2
@@ -332,7 +332,6 @@ class MainWindow(QMainWindow):
         self.details_projet['dateCreationProjet'] = info_magasin[3].replace("Date de création du projet: ", "")
         QMessageBox.information(self, "Informations Magasin", "Informations du magasin enregistrées avec succès.")
         self.activerModificationInfosMagasin()  # Désactivation de la modif et on masque le button valider 
-
 
 # ------------------------------------------------------------------- MAIN POUR TESTER ------------------------------------------------------------------------
 if __name__ == "__main__":
