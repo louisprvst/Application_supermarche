@@ -63,7 +63,7 @@ Utilisation exclusive des bibliothèques vues en cours
 
 ### 16/05/2024 de 10h à 11h30 :
 - Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis, DEMOL Alexis :
-- FARDEL Mathéïs :
+- FARDEL Mathéïs : Mise en place du modèle MVC pour l'app 1 (tout était dans le même fichier avant car souci de compréhension de la méthode) Aujourd'hui + Hier soir
 - PREVOST Louis : Suite du menu de création de liste : sauvegarde des objets ajouté disponible , plus qu'a ajouté l'auto complétion.
 - DEMOL Alexis : 
 
