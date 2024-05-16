@@ -60,3 +60,10 @@ Utilisation exclusive des bibliothèques vues en cours
 - PREVOST Louis : Suite du menu de création de liste : affichage dans un dock sur le coté et zone de texte pour les articles.
 - DEMOL Alexis : Enregister un projet et l'ouvrir + ajout commentaire + Ajout fonction pour sauvegarder les infos du docker + tentative test pour faire crash / bug le programme (aucun soucis détécté)
 - CAPON Ethan : Avancement auto complétion pour les listes ( fini mais modification du json a faire).
+
+### 16/05/2024 de 10h à 11h30 :
+- Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis, DEMOL Alexis :
+- FARDEL Mathéïs :
+- PREVOST Louis : Suite du menu de création de liste : sauvegarde des objets ajouté disponible , plus qu'a ajouté l'auto complétion.
+- DEMOL Alexis : 
+
