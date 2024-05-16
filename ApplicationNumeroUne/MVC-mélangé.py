@@ -218,31 +218,18 @@ class MainWindow(QMainWindow):
         menu_bar = self.menuBar()
         menu_fichier = menu_bar.addMenu('&Fichier')
 
-        # Toutes les actions dans le menue "Fichier"
-        # Action qui connecte le bouton Nouveau Projet et la fonction et aussi avec un raccourci (Ctrl+N)
         action_new_projet = QAction('Nouveau Projet', self)
         action_new_projet.setShortcut('Ctrl+N')
         action_new_projet.triggered.connect(self.createNewProject)
         menu_fichier.addAction(action_new_projet)
-        
-        # Action qui connecte le bouton Enregister Projet et la fonction et aussi avec un raccourci (Ctrl+S)
         action_engresitrer_projet = QAction('Enregister un Projet', self)
         action_engresitrer_projet.setShortcut('Ctrl+S')
         action_engresitrer_projet.triggered.connect(self.enregistrerProjet)
         menu_fichier.addAction(action_engresitrer_projet)
-        
-        # Action qui connecte le bouton Ouvrir Projet et la fonction et aussi avec un raccourci (Ctrl+O)
         action_ouvrir_projet = QAction('Ouvrir Projet', self)
         action_ouvrir_projet.setShortcut('Ctrl+O')
         menu_fichier.addAction(action_ouvrir_projet)
         action_ouvrir_projet.triggered.connect(self.ouvrirProjet)
-        
-        # Action qui connecte le bouton Supprimer Projet et la fonction et aussi avec un raccourci (Ctrl+Suppr)
-        action_supprimer_projet = QAction('Supprimer Projet', self)
-        action_supprimer_projet.setShortcut('Ctrl+Delete')
-        menu_fichier.addAction(action_supprimer_projet)
-        action_supprimer_projet.triggered.connect(self.supprimerProjet)
-
         self.showMaximized()
 
     #permet de créer la liste des articles en déroulant
@@ -320,16 +307,6 @@ class MainWindow(QMainWindow):
             except Exception as e: # gére les soucis qu'il peut y avoir en cas d'erreur, et envoie un Message Box si c'est good ou non 
                 QMessageBox.critical(self, "Ouverture du Projet", f"Erreur lors de l'ouverture du projet: {e}")
                 
-    # Fonction qui permet de supprimer un projet             
-    def supprimerProjet(self):
-        verif = QMessageBox.question(self, "Supprimer Projet", "Voulez vous vraiment supprimer le projet ? Attention cette action est irréversible !", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
-        if verif == QMessageBox.StandardButton.No:
-            return None
-        if verif == QMessageBox.StandardButton.Yes:
-            self.details_projet
-            # pas finit 
-            return 
-
     # permettre la modification du docker avec les informations du magasins
     def activerModificationInfosMagasin(self):
         self.info_magasin_texte.setReadOnly(False)
@@ -343,7 +320,7 @@ class MainWindow(QMainWindow):
         self.modifier_button.show()
         self.valider_button.hide()
 
-     # Permet d'enregister les infos du magasins quand on les a modif
+    # Permet d'enregister les infos du magasins quand on les a modif
     def saveInfosMagasin(self):
         info_magasin = self.info_magasin_texte.toPlainText().split('\n')  # on prend le texte et on le divise en lignes, mieux pour la suite
         self.details_projet['nomMagasin'] = info_magasin[0].replace("Nom du magasin: ", "") # Remplace et met a jour les infos dans un dico en fonction de ce qu'on a saisit dans le dock 2
@@ -352,7 +329,6 @@ class MainWindow(QMainWindow):
         self.details_projet['dateCreationProjet'] = info_magasin[3].replace("Date de création du projet: ", "")
         QMessageBox.information(self, "Informations Magasin", "Informations du magasin enregistrées avec succès.")
         self.activerModificationInfosMagasin()  # Désactivation de la modif et on masque le button valider 
-
 
 # ------------------------------------------------------------------- MAIN POUR TESTER ------------------------------------------------------------------------
 if __name__ == "__main__":
