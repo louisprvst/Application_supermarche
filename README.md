@@ -68,5 +68,7 @@ Utilisation exclusive des bibliothèques vues en cours
 - DEMOL Alexis : Installation de GitHub sur windows pour pouvoir travailler plus rapidement + configuration. Quelque modif et création d'une branch (j'ai pas encore push les changements sur cette branch)
 
 ### 17/05/2024 de 8h30 à 11h30 :
-- Membres présents physiquement : Aucuns
+- Membres présents physiquement : Aucuns (seul cours de la journée donc travail a distance)
 - FARDEL Mathéïs : "Ouvrir projet" debug + message d'erreur si on save alors qu'on a pas de projet en cours + si on modifie le dock des infos magasin, le json se met à jour + debug logo app qui n'apparait pas
+- Demol Alexis : Fonction pour supprimer un projet + Tentative de débogage des parties de l'image qui ne sont pas dans les cases mais qui sont clickable (Pas trouvé encore) 
+
