@@ -4,6 +4,7 @@
 #=============================================================================================================================================================
 
 import json
+import os 
 
 # ----------------------------------------------------------- classe ProjetModel -----------------------------------------------------------------------------
 class ProjetModel:
@@ -40,3 +41,14 @@ class ProjetModel:
             return details_projet
         except Exception as e:
             raise IOError(f"Erreur lors du chargement du projet: {e}")
+        
+    def supp_projet(self, chemin_fichier):
+        try:
+            if os.path.exists(chemin_fichier):
+                os.remove(chemin_fichier)
+                return True, "Projet supprimé avec succès."
+            else:
+                return False, "Le fichier de projet n'existe pas."
+        except Exception as e:
+            raise IOError(f"Erreur lors de la suppression du projet: {e}")
+

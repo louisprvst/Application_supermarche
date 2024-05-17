@@ -5,7 +5,7 @@
 
 import sys
 import os
-from PyQt6.QtWidgets import QApplication, QFileDialog, QMessageBox
+from PyQt6.QtWidgets import QApplication, QFileDialog, QMessageBox, QGraphicsScene
 from modeleApplication import ProjetModel
 from vueApplication import MainWindow, NewProjetDialog
 
@@ -20,6 +20,7 @@ class Controller:
         self.view.action_engresitrer_projet.triggered.connect(self.enregistrer_projet)
         self.view.action_ouvrir_projet.triggered.connect(self.ouvrir_projet)
         self.view.valider_button.clicked.connect(self.sauvegarder_infos_magasin)
+        self.view.action_supprimer_projet.triggered.connect(self.supprimer_projet)
         
         # Charger les données initiales du Modèle
         self.charger_produits()
@@ -73,6 +74,28 @@ class Controller:
                 QMessageBox.information(self.view, "Ouverture du Projet", "Projet ouvert avec succès.")
             except IOError as e:
                 QMessageBox.critical(self.view, "Ouverture du Projet", str(e))
+
+    # Fonction qui permet de supprimer un projet             
+    def supprimer_projet(self):
+        msg = QMessageBox(self.view)
+        msg.setWindowTitle("Supprimer Projet")
+        msg.setText("Voulez-vous vraiment supprimer le projet ? Attention cette action est irréversible !")
+        msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        yes = msg.button(QMessageBox.StandardButton.Yes)
+        no = msg.button(QMessageBox.StandardButton.No)
+        yes.setText("Oui") # Met le bouton "Yes" en "Oui"
+        no.setText("Non")
+        verif = msg.exec()
+
+        if verif == QMessageBox.StandardButton.No:
+
+            return None 
+        if verif == QMessageBox.StandardButton.Yes:
+            
+            self.model.details_projet = {}
+            self.view.plateau.image_label.clear()  # permet de vider l'image du plateau
+            self.view.info_magasin_texte.clear()  # permet de vider les infos du magasin
+            QMessageBox.information(self.view, "Suppression du Projet", "Le projet a été supprimé avec succès.")
 
     # Sauvegarder les informations du magasin
     def sauvegarder_infos_magasin(self):

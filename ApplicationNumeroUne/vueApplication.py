@@ -184,9 +184,13 @@ class MainWindow(QMainWindow):
         self.action_engresitrer_projet.setShortcut('Ctrl+S')
         menu_fichier.addAction(self.action_engresitrer_projet)
         #Action pour ouvrir un projet
-        self.action_ouvrir_projet = QAction('Ouvrir Projet', self)
+        self.action_ouvrir_projet = QAction('Ouvrir un Projet', self)
         self.action_ouvrir_projet.setShortcut('Ctrl+O')
         menu_fichier.addAction(self.action_ouvrir_projet)
+        #Action pour supprimer un projet
+        self.action_supprimer_projet = QAction('Supprimer un Projet', self)
+        self.action_supprimer_projet.setShortcut('Ctrl+DELETE') 
+        menu_fichier.addAction(self.action_supprimer_projet)
         
         #Show(tailleMax de l'écran)
         self.showMaximized()
