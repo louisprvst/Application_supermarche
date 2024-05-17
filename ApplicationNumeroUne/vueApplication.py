@@ -5,7 +5,7 @@
 
 import sys, os
 from PyQt6.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QWidget, QDialog, QDialogButtonBox, QDockWidget, QLineEdit, QTextEdit, QCalendarWidget, QTreeWidget, QTreeWidgetItem, QPushButton, QFileDialog, QMessageBox, QMenu, QApplication, QApplication
-from PyQt6.QtGui import QPixmap, QIcon, QPainter, QPen, QFont, QAction
+from PyQt6.QtGui import QPixmap, QIcon, QPainter, QPen, QFont, QAction, QMouseEvent
 from PyQt6.QtCore import Qt, pyqtSignal
 
 # --------------------------------------------------------------- classe Image ------------------------------------------------------------------------------
@@ -20,21 +20,22 @@ class Plateau(QWidget):
     def __init__(self):
         super().__init__()
         self.articleSelected = pyqtSignal(str)
-        layout = QVBoxLayout(self)
+        self.layout = QVBoxLayout(self)
         self.image_label = QLabel(self)
-        layout.addWidget(self.image_label, alignment=Qt.AlignmentFlag.AlignCenter)
-        self.setLayout(layout)
+        self.layout.addWidget(self.image_label, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.setLayout(self.layout)
         self.pixmap = QPixmap()
         self.image_label.mousePressEvent = self.ouvrirFenetre
+        self.caseQuadrillage = []  # liste pour mettre toute les pos des cases 
 
-    # Permet de charger le plan du client
+
     def chargerImage(self, chemin: str):
         if chemin:
             self.pixmap.load(chemin)
             self.pixmap = self.pixmap.scaled(1200, 720, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
             self.image_label.setPixmap(self.pixmap)
 
-    # Permet de créer le quadrillage sur le plan
+
     def createQuadrillage(self, lgn, cols, dimX, dimY):
         if not self.pixmap.isNull():
             painter = QPainter(self.pixmap)
@@ -45,6 +46,9 @@ class Plateau(QWidget):
             haut = self.pixmap.height()
             cellLarge = larg / cols
             cellHaut = haut / lgn
+
+            self.caseQuadrillage = []  # permet d'effacer les dernière pos 
+
             for i in range(1, cols):
                 x = int(dimX + i * cellLarge)
                 painter.drawLine(x, dimY, x, haut + dimY)
@@ -56,16 +60,20 @@ class Plateau(QWidget):
 
     # Permet d'ouvrir la fênetre (EVENT DE TEST)
     def ouvrirFenetre(self, event):
-        fenetreModal = FenetreTexte("\n Légumes")
-        fenetreModal.exec()
-
+        posClick = event.pos()
+        for (x1, y1, x2, y2) in self.caseQuadrillage:
+            if x1 <= posClick.x() <= x2 and y1 <= posClick.y() <= y2:
+                fenetreModal = FenetreTexte(f"Contenu du rayon: ({x1}, {y1})")
+                fenetreModal = FenetreTexte("\n Légumes")
+                fenetreModal.exec()
+                break
 
 # --------------------------------------------------- classe FenetreText (EVENT TEST) ---------------------------------------------------------------
 class FenetreTexte(QDialog):
     def __init__(self, text):
         super().__init__()
         self.setWindowTitle("Fenetre texte test")
-        label = QLabel(f"Contenu du rayon: {text}")
+        label = QLabel(text)
         layout = QVBoxLayout()
         layout.addWidget(label)
         self.setLayout(layout)
