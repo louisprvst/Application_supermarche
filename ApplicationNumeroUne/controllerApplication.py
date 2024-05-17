@@ -18,6 +18,8 @@ class Controller:
         # Connecter les actions de la vue aux méthodes du contrôleur
         self.view.action_new_projet.triggered.connect(self.creer_nouveau_projet)
         self.view.action_engresitrer_projet.triggered.connect(self.enregistrer_projet)
+        self.view.action_ouvrir_projet.triggered.connect(self.ouvrir_projet)
+        self.view.valider_button.clicked.connect(self.sauvegarder_infos_magasin)
         
         # Charger les données initiales du Modèle
         self.charger_produits()
@@ -44,6 +46,10 @@ class Controller:
 
     # Enregistrer un projet
     def enregistrer_projet(self):
+        if not self.model.details_projet:
+            QMessageBox.warning(self.view, "Enregistrement du Projet", "Il n'y a aucun projet à enregistrer !")
+            return
+        
         chemin_fichier, _ = QFileDialog.getSaveFileName(self.view, "Enregistrer le projet", "", "JSON Files (*.json)")
         if chemin_fichier:
             success, message = self.model.sauvegarder_projet(chemin_fichier)
@@ -51,7 +57,34 @@ class Controller:
                 QMessageBox.information(self.view, "Enregistrement du Projet", message)
             else:
                 QMessageBox.critical(self.view, "Enregistrement du Projet", message)
+               
+    #Ouvrir un projet 
+    def ouvrir_projet(self):
+        chemin_fichier, _ = QFileDialog.getOpenFileName(self.view, "Ouvrir le projet", "", "JSON Files (*.json)")
+        print(f"Tentative d'ouverture du fichier: {chemin_fichier}")  # Débogage
+        if chemin_fichier:
+            try:
+                details_projet = self.model.charger_projet(chemin_fichier)
+                print(f"Contenu du projet chargé: {details_projet}")  # Débogage
+                self.view.plateau.chargerImage(details_projet['chemin_image'])
+                self.view.plateau.createQuadrillage(details_projet['lgn'], details_projet['cols'], details_projet['dimX'], details_projet['dimY'])
+                self.view.afficherInfosMagasin(details_projet)
+                self.model.mettre_a_jour_details(details_projet)
+                QMessageBox.information(self.view, "Ouverture du Projet", "Projet ouvert avec succès.")
+            except IOError as e:
+                QMessageBox.critical(self.view, "Ouverture du Projet", str(e))
 
+    # Sauvegarder les informations du magasin
+    def sauvegarder_infos_magasin(self):
+        infos_magasin = self.view.info_magasin_texte.toPlainText().split('\n')
+        details_projet = {
+            'nomMagasin': infos_magasin[0].replace("Nom du magasin: ", ""),
+            'adresse_magasin': infos_magasin[1].replace("Adresse du magasin: ", ""),
+            'auteurProjet': infos_magasin[2].replace("Auteur du projet: ", ""),
+            'dateCreationProjet': infos_magasin[3].replace("Date de création du projet: ", "")
+        }
+        self.model.mettre_a_jour_details(details_projet)
+        QMessageBox.information(self.view, "Informations Magasin", "Informations du magasin enregistrées avec succès.")
 
 # ------------------------------------------------------------------ MAIN ----------------------------------------------------------------------------------
 

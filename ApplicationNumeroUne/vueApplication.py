@@ -3,7 +3,7 @@
 #                                                   Fait par FARDEL Mathéïs et DEMOL Alexis
 #=============================================================================================================================================================
 
-import sys
+import sys, os
 from PyQt6.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QWidget, QDialog, QDialogButtonBox, QDockWidget, QLineEdit, QTextEdit, QCalendarWidget, QTreeWidget, QTreeWidgetItem, QPushButton, QFileDialog, QMessageBox, QMenu, QApplication, QApplication
 from PyQt6.QtGui import QPixmap, QIcon, QPainter, QPen, QFont, QAction
 from PyQt6.QtCore import Qt, pyqtSignal
@@ -131,6 +131,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Application supermarché")
+        self.setWindowIcon(QIcon(sys.path[0] + '/icones/logo_app.png'))
         self.setGeometry(100, 100, 500, 300)
         
         #Contenu du dock de gauche avec les articles
@@ -182,6 +183,10 @@ class MainWindow(QMainWindow):
         self.action_engresitrer_projet = QAction('Enregister un Projet', self)
         self.action_engresitrer_projet.setShortcut('Ctrl+S')
         menu_fichier.addAction(self.action_engresitrer_projet)
+        #Action pour ouvrir un projet
+        self.action_ouvrir_projet = QAction('Ouvrir Projet', self)
+        self.action_ouvrir_projet.setShortcut('Ctrl+O')
+        menu_fichier.addAction(self.action_ouvrir_projet)
         
         #Show(tailleMax de l'écran)
         self.showMaximized()

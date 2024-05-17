@@ -32,3 +32,11 @@ class ProjetModel:
             return True, "Projet enregistré avec succès."
         except Exception as e:
             return False, f"Erreur lors de l'enregistrement du projet: {e}"
+        
+    def charger_projet(self, chemin_fichier):
+        try:
+            with open(chemin_fichier, 'r') as f:
+                details_projet = json.load(f)
+            return details_projet
+        except Exception as e:
+            raise IOError(f"Erreur lors du chargement du projet: {e}")
