@@ -5,7 +5,7 @@
 
 import sys
 import os
-from PyQt6.QtWidgets import QApplication, QFileDialog, QMessageBox, QGraphicsScene
+from PyQt6.QtWidgets import QApplication, QFileDialog, QMessageBox
 from modeleApplication import ProjetModel
 from vueApplication import MainWindow, NewProjetDialog
 
@@ -91,7 +91,7 @@ class Controller:
 
             return None 
         if verif == QMessageBox.StandardButton.Yes:
-            
+
             self.model.details_projet = {}
             self.view.plateau.image_label.clear()  # permet de vider l'image du plateau
             self.view.info_magasin_texte.clear()  # permet de vider les infos du magasin
