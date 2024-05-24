@@ -4,7 +4,7 @@
 #=============================================================================================================================================================
 
 import sys, os
-from PyQt6.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QWidget, QDialog, QDialogButtonBox, QDockWidget, QLineEdit, QTextEdit, QCalendarWidget, QTreeWidget, QTreeWidgetItem, QPushButton, QFileDialog, QMessageBox, QMenu, QApplication, QApplication
+from PyQt6.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QWidget, QDialog, QDialogButtonBox, QDockWidget, QLineEdit, QTextEdit, QCalendarWidget, QTreeWidget, QTreeWidgetItem, QPushButton, QFileDialog, QMessageBox, QMenu, QApplication, QApplication, QToolBar
 from PyQt6.QtGui import QPixmap, QIcon, QPainter, QPen, QFont, QAction, QMouseEvent
 from PyQt6.QtCore import Qt, pyqtSignal
 
@@ -28,13 +28,11 @@ class Plateau(QWidget):
         self.image_label.mousePressEvent = self.ouvrirFenetre
         self.caseQuadrillage = []  # liste pour mettre toute les pos des cases 
 
-
     def chargerImage(self, chemin: str):
         if chemin:
             self.pixmap.load(chemin)
             self.pixmap = self.pixmap.scaled(1200, 720, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
             self.image_label.setPixmap(self.pixmap)
-
 
     def createQuadrillage(self, lgn, cols, dimX, dimY):
         if not self.pixmap.isNull():
@@ -49,22 +47,24 @@ class Plateau(QWidget):
 
             self.caseQuadrillage = []  # permet d'effacer les dernière pos 
 
-            for i in range(1, cols):
-                x = int(dimX + i * cellLarge)
-                painter.drawLine(x, dimY, x, haut + dimY)
-            for j in range(1, lgn):
-                y = int(dimY + j * cellHaut)
-                painter.drawLine(dimX, y, larg + dimX, y)
+            for i in range(cols):
+                for j in range(lgn):
+                    x1 = int(dimX + i * cellLarge)
+                    y1 = int(dimY + j * cellHaut)
+                    x2 = int(dimX + (i + 1) * cellLarge)
+                    y2 = int(dimY + (j + 1) * cellHaut)
+                    self.caseQuadrillage.append((x1, y1, x2, y2))
+                    painter.drawRect(x1, y1, x2 - x1, y2 - y1)
             painter.end()
             self.image_label.setPixmap(self.pixmap)
 
-    # Permet d'ouvrir la fênetre (EVENT DE TEST)
+    # Permet d'ouvrir la fenêtre (EVENT DE TEST)
     def ouvrirFenetre(self, event):
         posClick = event.pos()
         for (x1, y1, x2, y2) in self.caseQuadrillage:
             if x1 <= posClick.x() <= x2 and y1 <= posClick.y() <= y2:
-                fenetreModal = FenetreTexte(f"Contenu du rayon: ({x1}, {y1})")
-                fenetreModal = FenetreTexte("\n Légumes")
+                contenu = f"Contenu du rayon: ({x1}, {y1})\nLégumes"
+                fenetreModal = FenetreTexte(contenu)
                 fenetreModal.exec()
                 break
 
@@ -176,29 +176,42 @@ class MainWindow(QMainWindow):
         button_layout.addWidget(self.valider_button)
         self.dock_info_magasin.setTitleBarWidget(button_container)
         #Signaux pour les boutons
-        self.modifier_button.clicked.connect(self.activerModificationInfosMagasin)
-        self.valider_button.clicked.connect(self.desactiverModificationInfosMagasin)
+        self.modifier_button.clicked.connect(lambda: self.modifierInfosMagasin(True))
+        self.valider_button.clicked.connect(lambda: self.modifierInfosMagasin(False))
         self.info_magasin_texte.setReadOnly(True)
         
         #Barre de menu du haut contenant "Fichier"
         menu_bar = self.menuBar()
         menu_fichier = menu_bar.addMenu('&Fichier')
         #Action pour créer un nouveau projet
-        self.action_new_projet = QAction('Nouveau Projet', self)
+        self.action_new_projet = QAction(QIcon(sys.path[0] + '/icones/plus.png'), 'Nouveau Projet', self)
         self.action_new_projet.setShortcut('Ctrl+N')
         menu_fichier.addAction(self.action_new_projet)
         #Action pour enregistrer un projet
-        self.action_engresitrer_projet = QAction('Enregister un Projet', self)
+        self.action_engresitrer_projet = QAction(QIcon(sys.path[0] + '/icones/save.png'),'Enregister un Projet', self)
         self.action_engresitrer_projet.setShortcut('Ctrl+S')
         menu_fichier.addAction(self.action_engresitrer_projet)
         #Action pour ouvrir un projet
-        self.action_ouvrir_projet = QAction('Ouvrir un Projet', self)
+        self.action_ouvrir_projet = QAction(QIcon(sys.path[0] + '/icones/open.png'),'Ouvrir un Projet', self)
         self.action_ouvrir_projet.setShortcut('Ctrl+O')
         menu_fichier.addAction(self.action_ouvrir_projet)
         #Action pour supprimer un projet
-        self.action_supprimer_projet = QAction('Supprimer un Projet', self)
+        self.action_supprimer_projet = QAction(QIcon(sys.path[0] + '/icones/delete.png'),'Supprimer un Projet', self)
         self.action_supprimer_projet.setShortcut('Ctrl+DELETE') 
         menu_fichier.addAction(self.action_supprimer_projet)
+        
+        #Tool Bar 
+        toolbar = QToolBar('Tool Bar')
+        self.addToolBar(toolbar)
+        
+        toolbar.addAction(self.action_new_projet)
+        toolbar.addSeparator()
+        toolbar.addAction(self.action_engresitrer_projet)
+        toolbar.addSeparator()
+        toolbar.addAction(self.action_ouvrir_projet)
+        toolbar.addSeparator()
+        toolbar.addAction(self.action_supprimer_projet)
+        toolbar.addSeparator()
         
         #Show(tailleMax de l'écran)
         self.showMaximized()
@@ -216,23 +229,24 @@ class MainWindow(QMainWindow):
 
     #Contenu de l'affichage des informations du magasin
     def afficherInfosMagasin(self, details_projet):
-        info_magasin = f"Nom du magasin: {details_projet['nomMagasin']}\n"
-        info_magasin += f"Adresse du magasin: {details_projet['adresse_magasin']}\n"
-        info_magasin += f"Auteur du projet: {details_projet['auteurProjet']}\n"
-        info_magasin += f"Date de création du projet: {details_projet['dateCreationProjet']}\n"
+        info_magasin = (
+            f"Nom du magasin: {details_projet['nomMagasin']}\n"
+            f"Adresse du magasin: {details_projet['adresse_magasin']}\n"
+            f"Auteur du projet: {details_projet['auteurProjet']}\n"
+            f"Date de création du projet: {details_projet['dateCreationProjet']}\n"
+        )
         self.info_magasin_texte.setText(info_magasin)
     
-    #Permet au clic de "Modifier" de pouvoir modifier le contenu      
-    def activerModificationInfosMagasin(self):
-        self.info_magasin_texte.setReadOnly(False)
-        self.modifier_button.hide()
-        self.valider_button.show()
-
-    #Permet au clic de "Valider" de ne plus pouvoir modifier le contenu
-    def desactiverModificationInfosMagasin(self):
-        self.info_magasin_texte.setReadOnly(True)
-        self.modifier_button.show()
-        self.valider_button.hide()
+    # Méthode unique pour activer ou désactiver la modification des informations du magasin
+    def modifierInfosMagasin(self, activer):
+        if activer:
+            self.info_magasin_texte.setReadOnly(False)
+            self.modifier_button.hide()
+            self.valider_button.show()
+        else:
+            self.info_magasin_texte.setReadOnly(True)
+            self.modifier_button.show()
+            self.valider_button.hide()
 
 
 
