@@ -1,3 +1,4 @@
+import os
 import sys
 import json
 from PyQt6.QtWidgets import QApplication, QLineEdit, QCompleter
@@ -21,8 +22,16 @@ app = QApplication(sys.argv)
 line_of_text = QLineEdit("")
 
 # Chargement des noms de produits depuis le fichier JSON
-liste = load_product_names("/Users/ethancapon/Desktop/but1-s2/SAÉmagasin/Application_supermarche/ApplicationNumeroDeux/liste_produitsbis.json")
+# liste = load_product_names("/Users/ethancapon/Desktop/but1-s2/SAÉmagasin/Application_supermarche/ApplicationNumeroDeux/liste_produitsbis.json")
 
+# Obtenir le chemin absolu du répertoire du script
+script_dir = os.path.dirname(__file__)
+
+# Construire le chemin relatif au fichier JSON
+file_path = os.path.join(script_dir, 'liste_produitsbis.json')
+
+# Charger les noms de produits depuis le fichier JSON
+liste = load_product_names(file_path)
 
 # Configuration du QCompleter
 completer = QCompleter(liste)
