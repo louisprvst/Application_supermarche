@@ -73,9 +73,9 @@ Utilisation exclusive des bibliothèques vues en cours
 - PREVOST Louis : Début du tri en mvc mais beaucoup de bug a patch ( voir tout refaire ) 
 - DEMOL Alexis : Fonction pour supprimer un projet + Tentative de débogage des parties de l'image qui ne sont pas dans les cases mais qui sont clickable (Pas trouvé encore) 
 
-### 24/05/2024 de 10h à 17h30 :
+### 24/05/2024 de 10h à 11h30 et de 16h à 17h30 :
 - Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis, DEMOL Alexis, CAPON Ethan :
-- FARDEL Mathéïs :
+- FARDEL Mathéïs : Sur l'app1, en l'ouvrant tous les produits étaient dans le dock de gauche. J'ai donc permis que lors de la création du projet, il y ai un bouton pour choisir ses produits, ça ouvre une page où l'on coche les produits que l'on souhaite avoir dans notre magasin et uniquement ceux là sont présents dans le dock de gauche.
 - PREVOST Louis : J'ai refait le mvc de l'app 2 de 0 car la version de la semaine derniere ne fonctionnait pas bien. ( Presque finit )   
 - DEMOL Alexis :
 - CAPON Ethan : 
