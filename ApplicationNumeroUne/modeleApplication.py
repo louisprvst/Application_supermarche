@@ -51,4 +51,3 @@ class ProjetModel:
                 return False, "Le fichier de projet n'existe pas."
         except Exception as e:
             raise IOError(f"Erreur lors de la suppression du projet: {e}")
-
