@@ -1,31 +1,26 @@
-import json
-from PyQt6.QtCore import QObject, pyqtSignal
+import os, sys ,json
 
-class ListModel(QObject):
-    list_updated = pyqtSignal()
+################################################### APP2 MODEL ###################################################
 
-    def __init__(self):
-        super().__init__()
-        self.data = {}
+class model():
+        
 
-    def create_list(self, nom, date):
-        self.data = {
+    def save_to_json(self , nom , date , filename):
+        
+        data = {
             'listname': nom,
-            'listdate': date,
-            'items': []
+            'listdate': date
         }
-        self.save_list(f"{nom}.json")
 
-    def open_list(self, filename):
-        with open(filename, 'r') as file:
-            self.data = json.load(file)
-        self.list_updated.emit()
-
-    def save_list(self, filename):
-        with open(filename, 'w') as json_file:
-            json.dump(self.data, json_file, indent=4)
-
-    def add_items(self, items):
-        self.data['items'].extend(items)
-        self.data['items'] = list(set(self.data['items']))  # Remove duplicates
-        self.list_updated.emit()
+        with open(filename, 'w') as file:
+            json.dump(data, file, indent=4)
+            
+    def open_liste(self , filename):        
+        
+            with open(filename, 'r') as file:
+                
+                self.data = json.load(file)
+                
+                formatted_data = f"\n Nom : {self.data['listname']} \n\n Date : {self.data['listdate']}"
+                
+                return formatted_data

@@ -71,5 +71,12 @@ Utilisation exclusive des bibliothèques vues en cours
 - Membres présents physiquement : Aucuns (seul cours de la journée donc travail a distance)
 - FARDEL Mathéïs : "Ouvrir projet" debug + message d'erreur si on save alors qu'on a pas de projet en cours + si on modifie le dock des infos magasin, le json se met à jour + debug logo app qui n'apparait pas
 - PREVOST Louis : Début du tri en mvc mais beaucoup de bug a patch ( voir tout refaire ) 
-- Demol Alexis : Fonction pour supprimer un projet + Tentative de débogage des parties de l'image qui ne sont pas dans les cases mais qui sont clickable (Pas trouvé encore) 
+- DEMOL Alexis : Fonction pour supprimer un projet + Tentative de débogage des parties de l'image qui ne sont pas dans les cases mais qui sont clickable (Pas trouvé encore) 
+
+### 24/05/2024 de 10h à 17h30 :
+- Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis, DEMOL Alexis, CAPON Ethan :
+- FARDEL Mathéïs :
+- PREVOST Louis : J'ai refait le mvc de l'app 2 de 0 car la version de la semaine derniere ne fonctionnait pas bien. ( Presque finit )   
+- DEMOL Alexis :
+- CAPON Ethan : 
 
