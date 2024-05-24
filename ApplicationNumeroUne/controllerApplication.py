@@ -5,6 +5,7 @@
 
 import sys
 import os
+import json 
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMessageBox
 from modeleApplication import ProjetModel
 from vueApplication import MainWindow, NewProjetDialog
@@ -48,6 +49,7 @@ class Controller:
 
     # Enregistrer un projet
     def enregistrer_projet(self):
+        print(f"Tentative d'enregistrement du fichier.")  # Débogage
         if not self.model.details_projet:
             QMessageBox.warning(self.view, "Enregistrement du Projet", "Il n'y a aucun projet à enregistrer !")
             return
