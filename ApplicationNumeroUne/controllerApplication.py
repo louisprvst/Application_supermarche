@@ -23,27 +23,28 @@ class Controller:
         self.view.action_supprimer_projet.triggered.connect(self.supprimer_projet)
         
         # Charger les données initiales du Modèle
-        self.charger_produits()
+        self.produits = self.charger_produits()
 
     # Charger les produits du JSON pour les ajouter à la vue
     def charger_produits(self):
         chemin_json = os.path.join(sys.path[0], "liste_produits.json")
-        produits = self.model.charger_produits(chemin_json)
-        self.view.listeObjets(produits)
+        return self.model.charger_produits(chemin_json)
 
     # Créer un nouveau projet
     def creer_nouveau_projet(self):
-        dialogue = NewProjetDialog()
+        dialogue = NewProjetDialog(self.produits)
         if dialogue.exec():
             details_projet = dialogue.getProjetDetails()
-            chemin_image, _ = QFileDialog.getOpenFileName(self.view, "Charger le plan", "", "Images (*.png *.jpg *.jpeg *.gif)")
-            if chemin_image:
-                details_projet['chemin_image'] = chemin_image
-                self.view.plateau.chargerImage(chemin_image)
-                self.view.plateau.createQuadrillage(details_projet['lgn'], details_projet['cols'], details_projet['dimX'], details_projet['dimY'])
-                self.view.afficherInfosMagasin(details_projet)
-                self.model.mettre_a_jour_details(details_projet)
-                QMessageBox.information(self.view, "Nouveau Projet", "Nouveau projet créé avec succès !")
+            if details_projet:
+                chemin_image, _ = QFileDialog.getOpenFileName(self.view, "Charger le plan", "", "Images (*.png *.jpg *.jpeg *.gif)")
+                if chemin_image:
+                    details_projet['chemin_image'] = chemin_image
+                    self.view.plateau.chargerImage(chemin_image)
+                    self.view.plateau.createQuadrillage(details_projet['lgn'], details_projet['cols'], details_projet['dimX'], details_projet['dimY'])
+                    self.view.afficherInfosMagasin(details_projet)
+                    self.model.mettre_a_jour_details(details_projet)
+                    self.view.listeObjets(details_projet['produits_selectionnes'])
+                    QMessageBox.information(self.view, "Nouveau Projet", "Nouveau projet créé avec succès !")
 
     # Enregistrer un projet
     def enregistrer_projet(self):
@@ -58,19 +59,18 @@ class Controller:
                 QMessageBox.information(self.view, "Enregistrement du Projet", message)
             else:
                 QMessageBox.critical(self.view, "Enregistrement du Projet", message)
-               
-    #Ouvrir un projet 
+
+    # Ouvrir un projet
     def ouvrir_projet(self):
         chemin_fichier, _ = QFileDialog.getOpenFileName(self.view, "Ouvrir le projet", "", "JSON Files (*.json)")
-        print(f"Tentative d'ouverture du fichier: {chemin_fichier}")  # Débogage
         if chemin_fichier:
             try:
                 details_projet = self.model.charger_projet(chemin_fichier)
-                print(f"Contenu du projet chargé: {details_projet}")  # Débogage
                 self.view.plateau.chargerImage(details_projet['chemin_image'])
                 self.view.plateau.createQuadrillage(details_projet['lgn'], details_projet['cols'], details_projet['dimX'], details_projet['dimY'])
                 self.view.afficherInfosMagasin(details_projet)
                 self.model.mettre_a_jour_details(details_projet)
+                self.view.listeObjets(details_projet['produits_selectionnes'])
                 QMessageBox.information(self.view, "Ouverture du Projet", "Projet ouvert avec succès.")
             except IOError as e:
                 QMessageBox.critical(self.view, "Ouverture du Projet", str(e))
@@ -83,18 +83,17 @@ class Controller:
         msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         yes = msg.button(QMessageBox.StandardButton.Yes)
         no = msg.button(QMessageBox.StandardButton.No)
-        yes.setText("Oui") # Met le bouton "Yes" en "Oui"
+        yes.setText("Oui")
         no.setText("Non")
         verif = msg.exec()
 
         if verif == QMessageBox.StandardButton.No:
-
-            return None 
+            return None
         if verif == QMessageBox.StandardButton.Yes:
-
             self.model.details_projet = {}
-            self.view.plateau.image_label.clear()  # permet de vider l'image du plateau
-            self.view.info_magasin_texte.clear()  # permet de vider les infos du magasin
+            self.view.plateau.image_label.clear()
+            self.view.info_magasin_texte.clear()
+            self.view.objets_widget.clear()
             QMessageBox.information(self.view, "Suppression du Projet", "Le projet a été supprimé avec succès.")
 
     # Sauvegarder les informations du magasin
