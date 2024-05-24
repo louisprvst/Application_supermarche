@@ -245,7 +245,10 @@ class MainWindow(QMainWindow):
         # Signaux pour les boutons
         self.modifier_button.clicked.connect(self.activerModificationInfosMagasin)
         self.valider_button.clicked.connect(self.desactiverModificationInfosMagasin)
+
+        # Définir l'état initial
         self.info_magasin_texte.setReadOnly(True)
+        self.valider_button.hide()
         
         # Barre de menu du haut contenant "Fichier"
         menu_bar = self.menuBar()
@@ -270,19 +273,6 @@ class MainWindow(QMainWindow):
         self.action_supprimer_projet = QAction(QIcon(sys.path[0] + '/icones/delete.png'),'Supprimer un Projet', self)
         self.action_supprimer_projet.setShortcut('Ctrl+DELETE') 
         menu_fichier.addAction(self.action_supprimer_projet)
-        
-        #Tool Bar 
-        toolbar = QToolBar('Tool Bar')
-        self.addToolBar(toolbar)
-        
-        toolbar.addAction(self.action_new_projet)
-        toolbar.addSeparator()
-        toolbar.addAction(self.action_engresitrer_projet)
-        toolbar.addSeparator()
-        toolbar.addAction(self.action_ouvrir_projet)
-        toolbar.addSeparator()
-        toolbar.addAction(self.action_supprimer_projet)
-        toolbar.addSeparator()
         
         #Tool Bar 
         toolbar = QToolBar('Tool Bar')
@@ -322,9 +312,17 @@ class MainWindow(QMainWindow):
         )
         self.info_magasin_texte.setText(info_magasin)
     
+    # Méthode pour activer la modification
+    def activerModificationInfosMagasin(self):
+        self.modifierInfosMagasin(False)
+
+    # Méthode pour désactiver la modification
+    def desactiverModificationInfosMagasin(self):
+        self.modifierInfosMagasin(True)
+        
     # Méthode unique pour activer ou désactiver la modification des informations du magasin
     def modifierInfosMagasin(self, activer):
-        if activer:
+        if not activer:
             self.info_magasin_texte.setReadOnly(False)
             self.modifier_button.hide()
             self.valider_button.show()
@@ -332,3 +330,11 @@ class MainWindow(QMainWindow):
             self.info_magasin_texte.setReadOnly(True)
             self.modifier_button.show()
             self.valider_button.hide()
+
+# ------------------------------------------------------------------- MAIN POUR TESTER ------------------------------------------------------------------------
+if __name__ == "__main__":
+    print("Test de la vue")
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())
