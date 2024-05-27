@@ -67,6 +67,13 @@ class Plateau(QWidget):
                 fenetreModal = FenetreTexte(contenu)
                 fenetreModal.exec()
                 break
+            
+    def choisir_produits_pour_case(self, case):
+        produits_dialog = SelectionProduitsDialog(self.parent_controller.produits, self)
+        if produits_dialog.exec():
+            produits_selectionnes = produits_dialog.get_selected_produits()
+            self.produits_dans_cases[case] = produits_selectionnes
+            self.mettre_a_jour_case(case, produits_selectionnes)
 
 # --------------------------------------------------- classe FenetreText (EVENT TEST) ---------------------------------------------------------------
 class FenetreTexte(QDialog):
@@ -211,7 +218,7 @@ class MainWindow(QMainWindow):
         # Contenu du dock de gauche avec les articles
         self.dock_articles = QDockWidget('Articles', self)
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.dock_articles)
-        self.dock_articles.setFixedWidth(350)
+        self.dock_articles.setFixedWidth(250)
         self.objets_widget = QTreeWidget()
         self.objets_widget.setHeaderHidden(True)
         self.objets_widget.setIndentation(20)
