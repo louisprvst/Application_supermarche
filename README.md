@@ -89,3 +89,8 @@ Utilisation exclusive des bibliothèques vues en cours
 - PREVOST Louis : J'ai refait le mvc de l'app 2 de 0 car la version de la semaine derniere ne fonctionnait pas bien. ( Presque finit )
 - DEMOL Alexis : Refonte quadrillage + ajout icone + refonte fonction sauvergarder_infos_magasin + petite modif
 - CAPON Ethan : modification de l'auto complétion pour l'accès des fichiers + algo de dijkstra
+
+### 27/05/2024 de 16h à 17h30 :
+- Membres présents physiquement : FARDEL Mathéïs, DEMOL Alexis
+- FARDEL Mathéïs : Reflexion à propos de la mise en place du système pour déposer sur le plateau des objets (sans résultats concrets pour le moment)
+- DEMOL Alexis : Résolution du bug pour ouvrir un ancien projet (crash) + Réflexion et début pour ajouter des éléments dans les cases

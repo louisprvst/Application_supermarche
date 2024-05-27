@@ -5,7 +5,6 @@
 
 import sys
 import os
-import json 
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMessageBox
 from modeleApplication import ProjetModel
 from vueApplication import MainWindow, NewProjetDialog
@@ -49,7 +48,6 @@ class Controller:
 
     # Enregistrer un projet
     def enregistrer_projet(self):
-        print(f"Tentative d'enregistrement du fichier.")  # Débogage
         if not self.model.details_projet:
             QMessageBox.warning(self.view, "Enregistrement du Projet", "Il n'y a aucun projet à enregistrer !")
             return
@@ -62,28 +60,20 @@ class Controller:
             else:
                 QMessageBox.critical(self.view, "Enregistrement du Projet", message)
 
-    
     # Ouvrir un projet
     def ouvrir_projet(self):
         chemin_fichier, _ = QFileDialog.getOpenFileName(self.view, "Ouvrir le projet", "", "JSON Files (*.json)")
         if chemin_fichier:
             try:
                 details_projet = self.model.charger_projet(chemin_fichier)
-                self.view.plateau.chargerImage(details_projet.get('chemin_image', ''))
-                self.view.plateau.createQuadrillage(
-                    details_projet.get('lgn', 0), 
-                    details_projet.get('cols', 0), 
-                    details_projet.get('dimX', 0), 
-                    details_projet.get('dimY', 0)
-                )
+                self.view.plateau.chargerImage(details_projet['chemin_image'])
+                self.view.plateau.createQuadrillage(details_projet['lgn'], details_projet['cols'], details_projet['dimX'], details_projet['dimY'])
                 self.view.afficherInfosMagasin(details_projet)
                 self.model.mettre_a_jour_details(details_projet)
-                if 'produits_selectionnes' in details_projet:
-                    self.view.listeObjets(details_projet['produits_selectionnes'])
+                self.view.listeObjets(details_projet['produits_selectionnes'])
                 QMessageBox.information(self.view, "Ouverture du Projet", "Projet ouvert avec succès.")
             except IOError as e:
                 QMessageBox.critical(self.view, "Ouverture du Projet", str(e))
-
 
     # Fonction qui permet de supprimer un projet             
     def supprimer_projet(self):

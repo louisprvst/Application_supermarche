@@ -27,6 +27,7 @@ class Plateau(QWidget):
         self.pixmap = QPixmap()
         self.image_label.mousePressEvent = self.ouvrirFenetre
         self.caseQuadrillage = []  # liste pour mettre toute les pos des cases 
+        
 
     def chargerImage(self, chemin: str):
         if chemin:
@@ -74,6 +75,18 @@ class Plateau(QWidget):
             produits_selectionnes = produits_dialog.get_selected_produits()
             self.produits_dans_cases[case] = produits_selectionnes
             self.mettre_a_jour_case(case, produits_selectionnes)
+            
+    def mettre_a_jour_case(self, case, produits_selectionnes):
+        x1, y1, x2, y2 = case
+        painter = QPainter(self.pixmap)
+        pen = QPen(Qt.GlobalColor.red)
+        pen.setWidth(2)
+        painter.setPen(pen)
+        painter.drawRect(x1, y1, x2 - x1, y2 - y1)
+        painter.end()
+        self.image_label.setPixmap(self.pixmap)
+        contenu = "\n".join([f"{categorie}: {', '.join(articles)}" for categorie, articles in produits_selectionnes.items()])
+        QMessageBox.information(self, "Produits sélectionnés", f"Produits dans la case ({x1}, {y1}):\n{contenu}")
 
 # --------------------------------------------------- classe FenetreText (EVENT TEST) ---------------------------------------------------------------
 class FenetreTexte(QDialog):
@@ -225,6 +238,12 @@ class MainWindow(QMainWindow):
         self.objets_widget.setStyleSheet("QTreeWidget::item { margin-top: 10px; margin-bottom: 10px; }")
         self.dock_articles.setWidget(self.objets_widget)
         
+        # Connecter l'événement de clic pour les éléments du QTreeWidget
+        self.objets_widget.itemClicked.connect(self.selectionner_objet)
+
+        # Attribut pour stocker l'objet sélectionné
+        self.objet_selectionne = None
+        
         # Contenu du plan dans le widget central
         self.plateau = Plateau()
         central_widget = QWidget(self)
@@ -296,6 +315,9 @@ class MainWindow(QMainWindow):
         
         # Afficher la fenêtre maximisée
         self.showMaximized()
+        
+    def selectionner_objet(self, item, column):
+        self.objet_selectionne = item.text(0)
 
     # Permet d'afficher les différents Articles (+ amélioration Police)
     def listeObjets(self, produits):
