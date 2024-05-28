@@ -97,5 +97,5 @@ Utilisation exclusive des bibliothèques vues en cours
 
 ### 28/05/2024 de 14h30 à 17h30 :
 - Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis
-- FARDEL Mathéïs :
+- FARDEL Mathéïs : Possibilité de mettre les objets dans les cases + en enregistrant un projet ça sauvegarde les cases, les objets etc... et en ouvrant un projet, les cases réapparaissent en rouge et le contenu est dedans
 - PREVOST Louis : Toute les fonctions sont maintenant sous forme mvc + changement icones ect
