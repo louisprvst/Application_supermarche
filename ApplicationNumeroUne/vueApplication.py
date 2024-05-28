@@ -73,9 +73,9 @@ class Plateau(QWidget):
             if x1 <= posClick.x() <= x2 and y1 <= posClick.y() <= y2:
                 case = (x1, y1, x2, y2)
                 if case in self.produits_dans_cases:
-                    self.afficher_produits_dans_case(case)  
+                    self.afficher_produits_dans_case(case, avec_suppression=True)
                 else:
-                    self.placer_objet_dans_case(case) 
+                    self.placer_objet_dans_case(case)
                 break
             
     # Permet de placer un objet dans une case
@@ -93,7 +93,7 @@ class Plateau(QWidget):
         x1, y1, x2, y2 = case
         painter = QPainter(self.pixmap)
         pen = QPen(Qt.GlobalColor.red)
-        pen.setWidth(2)
+        pen.setWidth(1)
         painter.setPen(pen)
         painter.drawRect(x1, y1, x2 - x1, y2 - y1)
         painter.end()
@@ -103,12 +103,48 @@ class Plateau(QWidget):
             QMessageBox.information(self, "Produit placé", f"Produit dans la case ({x1}, {y1}):\n{contenu}")
 
     # Permet d'afficher le produit présent dans la case en cliquant dessus
-    def afficher_produits_dans_case(self, case): 
+    def afficher_produits_dans_case(self, case, avec_suppression=False): 
         x1, y1, x2, y2 = case
         produits = self.produits_dans_cases[case]
         contenu = "\n".join(produits)
-        QMessageBox.information(self, "Produits dans la case", f"Produits dans la case ({x1}, {y1}):\n{contenu}")
+        
+        # Création de la fenêtre modale
+        fenetre = QDialog(self)
+        fenetre.setWindowTitle("Produits dans la case")
+        layout = QVBoxLayout()
+        label = QLabel(f"Produits dans la case ({x1}, {y1}):\n{contenu}")
+        layout.addWidget(label)
+        
+        if avec_suppression:
+            bouton_supprimer = QPushButton("Supprimer le contenu")
+            bouton_supprimer.clicked.connect(self.creation_gestionnaire_suppression_contenu_case(case, fenetre))
+            layout.addWidget(bouton_supprimer)
+        
+        fenetre.setLayout(layout)
+        fenetre.exec()
 
+    def creation_gestionnaire_suppression_contenu_case(self, case, fenetre):
+        def gestion():
+            self.supprimer_contenu_case(case, fenetre)
+        return gestion
+        
+    def redessiner_case(self, case):
+        x1, y1, x2, y2 = case
+        painter = QPainter(self.pixmap)
+        pen = QPen(Qt.GlobalColor.black)
+        pen.setWidth(1)
+        painter.setPen(pen)
+        painter.drawRect(x1, y1, x2 - x1, y2 - y1)
+        painter.end()
+        self.image_label.setPixmap(self.pixmap)
+
+
+    def supprimer_contenu_case(self, case, fenetre):
+        if case in self.produits_dans_cases:
+            del self.produits_dans_cases[case]
+            self.redessiner_case(case)
+            fenetre.accept()
+            QMessageBox.information(self, "Suppression", f"Le contenu de la case ({case[0]}, {case[1]}) a été supprimé.")
 
 # --------------------------------------------------- classe FenetreText (EVENT TEST) ---------------------------------------------------------------
 class FenetreTexte(QDialog):
@@ -279,7 +315,7 @@ class MainWindow(QMainWindow):
         # Contenu du dock de droite avec les informations du magasin
         self.dock_info_magasin = QDockWidget('Informations Magasin', self)
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.dock_info_magasin)
-        self.dock_info_magasin.setMaximumWidth(250)
+        self.dock_info_magasin.setFixedWidth(250)
         self.info_magasin_texte = QTextEdit(self)
         self.dock_info_magasin.setWidget(self.info_magasin_texte)
         
@@ -324,6 +360,15 @@ class MainWindow(QMainWindow):
         self.action_supprimer_projet = QAction(QIcon(sys.path[0] + '/icones/delete.png'),'Supprimer un Projet', self)
         self.action_supprimer_projet.setShortcut('Ctrl+DELETE') 
         menu_fichier.addAction(self.action_supprimer_projet)
+        
+        # Barre de menu du haut contenant "Affichage"
+        menu_bar = self.menuBar()
+        menu_fichier = menu_bar.addMenu('&Affichage')
+        
+        # Action pour choisir les thémes
+        self.action_thèmes = QAction(QIcon(sys.path[0] + '/icones/themes.png'), 'Thèmes', self)
+        self.action_thèmes.setShortcut('Ctrl+T')
+        menu_fichier.addAction(self.action_thèmes)
         
         #Tool Bar 
         toolbar = QToolBar('Tool Bar')
@@ -386,6 +431,30 @@ class MainWindow(QMainWindow):
             self.info_magasin_texte.setReadOnly(True)
             self.modifier_button.show()
             self.valider_button.hide()
+            
+    # Fonction qui permet d'appliquer le thème sombre
+    def theme_sombre(self):
+        self.setStyleSheet("""
+            QMainWindow {
+                background-color: #2B2B2B;
+                color: #CCCCCC;
+            }
+            QLabel, QLineEdit, QTextEdit, QTreeWidget, QDockWidget, QMenuBar, QMenu, QToolBar, QToolButton {
+                background-color: #2B2B2B;
+                color: #CCCCCC;
+            }
+            QPushButton {
+                background-color: #555555;
+                color: #CCCCCC;
+            }
+            QPushButton::hover {
+                background-color: #777777;
+            }
+        """)
+
+    # Fonction qui permet d'appliquer le thème clair (pas finit)
+    def theme_clair(self):
+        self.setStyleSheet("")
 
 # ------------------------------------------------------------------- MAIN POUR TESTER ------------------------------------------------------------------------
 if __name__ == "__main__":

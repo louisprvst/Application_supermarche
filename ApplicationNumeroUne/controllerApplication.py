@@ -6,6 +6,7 @@
 import sys
 import os
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMessageBox
+from PyQt6.QtGui import QPixmap
 from modeleApplication import ProjetModel
 from vueApplication import MainWindow, NewProjetDialog
 
@@ -105,6 +106,10 @@ class Controller:
             self.view.plateau.image_label.clear()
             self.view.info_magasin_texte.clear()
             self.view.objets_widget.clear()
+            self.view.plateau.produits_dans_cases = {}
+            self.view.plateau.caseQuadrillage = []
+            self.view.plateau.pixmap = QPixmap()  
+            self.view.plateau.image_label.setPixmap(self.view.plateau.pixmap)
             QMessageBox.information(self.view, "Suppression du Projet", "Le projet a été supprimé avec succès.")
 
     # Sauvegarder les informations du magasin

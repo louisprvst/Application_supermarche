@@ -96,6 +96,7 @@ Utilisation exclusive des bibliothèques vues en cours
 - DEMOL Alexis : Résolution du bug pour ouvrir un ancien projet (crash) + Réflexion et début pour ajouter des éléments dans les cases
 
 ### 28/05/2024 de 14h30 à 17h30 :
-- Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis
+- Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis, DEMOL Alexis
 - FARDEL Mathéïs : Possibilité de mettre les objets dans les cases + en enregistrant un projet ça sauvegarde les cases, les objets etc... et en ouvrant un projet, les cases réapparaissent en rouge et le contenu est dedans
 - PREVOST Louis : Toute les fonctions sont maintenant sous forme mvc + changement icones ect
+- DEMOL Alexis: Possibilité de supprimer le contenu d'une case (avec la couleur qui se remet en noir), Correction du bug que quand on supprime le projet ca ne supprime pas la case rouge créer quand on ajoute un produit dans une case + debut de personnalisation d'affichage comme le theme sombre et le theme clair + petit changement.

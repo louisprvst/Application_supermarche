@@ -1,0 +1,24 @@
+{
+    "nomProjet": "AlexisProjet",
+    "auteurProjet": "Alexis",
+    "dateCreationProjet": "2024-05-28",
+    "nomMagasin": "Alexis Market",
+    "adresse_magasin": "Rue du test ",
+    "lgn": 30,
+    "cols": 30,
+    "dimX": 0,
+    "dimY": 0,
+    "produits_selectionnes": {
+        "L\u00e9gumes": [
+            "Brocolis",
+            "Carotte",
+            "C\u00e9leri"
+        ]
+    },
+    "chemin_image": "C:/Users/alexi/OneDrive/Documents/IUT/BUT1-INFO/Sa\u00e9/Sa\u00e9 2.01/Application_supermarche/ApplicationNumeroUne/icones/plan4.png",
+    "produits_dans_cases": {
+        "(305, 360, 331, 384)": [
+            "C\u00e9leri"
+        ]
+    }
+}
