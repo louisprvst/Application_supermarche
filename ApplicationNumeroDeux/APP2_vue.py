@@ -15,7 +15,7 @@ class popup_info(QWidget):
         self.setGeometry(100, 100, 300, 150)
         
         self.name = QLabel("Application item finder.")
-
+        
 
 ################################################### POPUP NEW LISTE ###################################################
 
@@ -78,6 +78,8 @@ class vueApplication(QMainWindow):
     
     MAINW_new_liste_signal = pyqtSignal()
     
+    MAINW_save_liste_signal = pyqtSignal(list , str)
+    
     # Constructeur :
     
     def __init__(self):
@@ -94,7 +96,7 @@ class vueApplication(QMainWindow):
         
         menu_Fichiers = menu_bar.addMenu('&Fichier')
         
-        fic_ouvrir = QAction(QIcon(sys.path[0] + '/icones/map.png'), 'Choisir un magasin', self)
+        fic_ouvrir = QAction(QIcon(sys.path[0] + '/icones/magasin.png'), 'Choisir un magasin', self)
         ##fic_ouvrir.triggered.connect(self.fic_ouvrir)
         fic_ouvrir.setShortcut("Ctrl+O")
         menu_Fichiers.addAction(fic_ouvrir)
@@ -113,7 +115,7 @@ class vueApplication(QMainWindow):
         liste_open.triggered.connect(self.open_liste)
         menu_Listes.addAction(liste_open)
         
-        liste_save = QAction(QIcon(sys.path[0] + '/icones/list.png'), 'Sauvegarder une liste', self)
+        liste_save = QAction(QIcon(sys.path[0] + '/icones/save.png'), 'Sauvegarder une liste', self)
         liste_save.setShortcut("Ctrl+A")
         liste_save.triggered.connect(self.save_liste)
         menu_Listes.addAction(liste_save)
@@ -176,7 +178,6 @@ class vueApplication(QMainWindow):
     
     def liste_new(self):
         self.MAINW_new_liste_signal.emit()
-        self.popup = popup_new_liste()
         
         
     def info(self):
@@ -199,21 +200,10 @@ class vueApplication(QMainWindow):
 
         
     def save_liste(self):
-        # Ajouter les nouveaux mots entrés par l'utilisateur aux données existantes
+        
         new_items = [item.strip() for item in self.user_input.toPlainText().split(",")]
         
-        # Initialiser self.data s'il n'est pas déjà initialisé
-        if "Liste des articles" not in self.data:
-            self.data["Liste des articles"] = []
-            
-        self.data["Liste des articles"].extend(new_items)
-        
-        # Supprimer les doublons
-        self.data["Liste des articles"] = list(set(self.data["Liste des articles"]))
-        
-        # Enregistrer les données mises à jour dans le fichier JSON
-        with open(self.currentfile, "w") as json_file:
-            json.dump(self.data, json_file, indent=4) 
+        self.MAINW_save_liste_signal.emit(new_items , self.currentfile)
         
         
         

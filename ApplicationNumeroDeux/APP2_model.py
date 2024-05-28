@@ -24,3 +24,18 @@ class model():
                 formatted_data = f"\n Nom : {self.data['listname']} \n\n Date : {self.data['listdate']}"
                 
                 return formatted_data
+            
+    def save_liste(self , new_items , current_file):
+        
+        # Initialiser self.data s'il n'est pas déjà initialisé
+        if "Liste des articles" not in self.data:
+            self.data["Liste des articles"] = []
+            
+        self.data["Liste des articles"].extend(new_items)
+        
+        # Supprimer les doublons
+        self.data["Liste des articles"] = list(set(self.data["Liste des articles"]))
+        
+        # Enregistrer les données mises à jour dans le fichier JSON
+        with open(current_file, "w") as json_file:
+            json.dump(self.data, json_file, indent=4) 

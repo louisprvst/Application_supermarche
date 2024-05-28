@@ -94,3 +94,8 @@ Utilisation exclusive des bibliothèques vues en cours
 - Membres présents physiquement : FARDEL Mathéïs, DEMOL Alexis
 - FARDEL Mathéïs : Reflexion à propos de la mise en place du système pour déposer sur le plateau des objets (sans résultats concrets pour le moment)
 - DEMOL Alexis : Résolution du bug pour ouvrir un ancien projet (crash) + Réflexion et début pour ajouter des éléments dans les cases
+
+### 28/05/2024 de 14h30 à 17h30 :
+- Membres présents physiquement : FARDEL Mathéïs, PREVOST Louis
+- FARDEL Mathéïs :
+- PREVOST Louis : Toute les fonctions sont maintenant sous forme mvc + changement icones ect

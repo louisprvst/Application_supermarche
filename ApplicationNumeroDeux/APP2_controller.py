@@ -14,15 +14,19 @@ class controller() :
         self.modele = APP2_model.model()
         self.vue = APP2_vue.vueApplication()
         
-        self.popup_info = APP2_vue.popup_info()
         self.popup_nl = APP2_vue.popup_new_liste()
     
 
-    # Signaux :
+    # Signaux de la fenetre principal :
     
         self.vue.MAINW_open_liste_signal.connect(self.open_liste)
         
         self.vue.MAINW_new_liste_signal.connect(self.new_liste)
+        
+        self.vue.MAINW_save_liste_signal.connect(self.save_liste)
+        
+        
+    # Signaux de la popup nouvelle liste :
         
         self.popup_nl.POPNL_save_signal.connect(self.save_to_json)
         
@@ -41,6 +45,9 @@ class controller() :
         formated_data = self.modele.open_liste(filename)
         
         self.vue.update_list_view(formated_data)
+        
+    def save_liste(self , new_items , current_file) :
+        self.modele.save_liste(new_items , current_file)
          
         
         
