@@ -52,6 +52,10 @@ class Controller:
             QMessageBox.warning(self.view, "Enregistrement du Projet", "Il n'y a aucun projet à enregistrer !")
             return
         
+        # Convertir les clés des cases en listes pour JSON
+        produits_dans_cases_list_keys = {str(k): v for k, v in self.view.plateau.produits_dans_cases.items()} 
+        self.model.details_projet['produits_dans_cases'] = produits_dans_cases_list_keys 
+        
         chemin_fichier, _ = QFileDialog.getSaveFileName(self.view, "Enregistrer le projet", "", "JSON Files (*.json)")
         if chemin_fichier:
             success, message = self.model.sauvegarder_projet(chemin_fichier)
@@ -71,6 +75,13 @@ class Controller:
                 self.view.afficherInfosMagasin(details_projet)
                 self.model.mettre_a_jour_details(details_projet)
                 self.view.listeObjets(details_projet['produits_selectionnes'])
+                
+                # Convertir les clés des cases de chaînes en tuples (sinon impossible d'enregistrer)
+                produits_dans_cases = {eval(k): v for k, v in details_projet.get('produits_dans_cases', {}).items()} 
+                self.view.plateau.produits_dans_cases = produits_dans_cases 
+                for case in self.view.plateau.produits_dans_cases:
+                    self.view.plateau.mettre_a_jour_case(case, afficher_message=False)
+                    
                 QMessageBox.information(self.view, "Ouverture du Projet", "Projet ouvert avec succès.")
             except IOError as e:
                 QMessageBox.critical(self.view, "Ouverture du Projet", str(e))

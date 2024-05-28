@@ -27,7 +27,11 @@ class Plateau(QWidget):
         self.pixmap = QPixmap()
         self.image_label.mousePressEvent = self.ouvrirFenetre
         self.caseQuadrillage = []  # liste pour mettre toute les pos des cases 
-        
+        self.produits_dans_cases = {}  # dictionnaire pour stocker les produits par case
+        self.objet_selectionne = None 
+    
+    def setObjetSelectionne(self, objet): 
+        self.objet_selectionne = objet
 
     def chargerImage(self, chemin: str):
         if chemin:
@@ -58,25 +62,34 @@ class Plateau(QWidget):
                     painter.drawRect(x1, y1, x2 - x1, y2 - y1)
             painter.end()
             self.image_label.setPixmap(self.pixmap)
+            
+            for case, produits in self.produits_dans_cases.items():
+                self.mettre_a_jour_case(case, afficher_message=False)
 
     # Permet d'ouvrir la fenêtre (EVENT DE TEST)
-    def ouvrirFenetre(self, event):
+    def ouvrirFenetre(self, event): 
         posClick = event.pos()
         for (x1, y1, x2, y2) in self.caseQuadrillage:
             if x1 <= posClick.x() <= x2 and y1 <= posClick.y() <= y2:
-                contenu = f"Contenu du rayon: ({x1}, {y1})\nLégumes"
-                fenetreModal = FenetreTexte(contenu)
-                fenetreModal.exec()
+                case = (x1, y1, x2, y2)
+                if case in self.produits_dans_cases:
+                    self.afficher_produits_dans_case(case)  
+                else:
+                    self.placer_objet_dans_case(case) 
                 break
             
-    def choisir_produits_pour_case(self, case):
-        produits_dialog = SelectionProduitsDialog(self.parent_controller.produits, self)
-        if produits_dialog.exec():
-            produits_selectionnes = produits_dialog.get_selected_produits()
-            self.produits_dans_cases[case] = produits_selectionnes
-            self.mettre_a_jour_case(case, produits_selectionnes)
-            
-    def mettre_a_jour_case(self, case, produits_selectionnes):
+    # Permet de placer un objet dans une case
+    def placer_objet_dans_case(self, case):  
+        if self.objet_selectionne:
+            produit = self.objet_selectionne
+            if case not in self.produits_dans_cases:
+                self.produits_dans_cases[case] = []
+            self.produits_dans_cases[case].append(produit)
+            self.mettre_a_jour_case(case)
+            self.objet_selectionne = None
+
+    # Permet de mettre à jour une case afin d'ajouter un objet dedans et que ça soit à jour
+    def mettre_a_jour_case(self, case, afficher_message=True): 
         x1, y1, x2, y2 = case
         painter = QPainter(self.pixmap)
         pen = QPen(Qt.GlobalColor.red)
@@ -85,8 +98,17 @@ class Plateau(QWidget):
         painter.drawRect(x1, y1, x2 - x1, y2 - y1)
         painter.end()
         self.image_label.setPixmap(self.pixmap)
-        contenu = "\n".join([f"{categorie}: {', '.join(articles)}" for categorie, articles in produits_selectionnes.items()])
-        QMessageBox.information(self, "Produits sélectionnés", f"Produits dans la case ({x1}, {y1}):\n{contenu}")
+        if afficher_message:
+            contenu = "\n".join(self.produits_dans_cases[case])
+            QMessageBox.information(self, "Produit placé", f"Produit dans la case ({x1}, {y1}):\n{contenu}")
+
+    # Permet d'afficher le produit présent dans la case en cliquant dessus
+    def afficher_produits_dans_case(self, case): 
+        x1, y1, x2, y2 = case
+        produits = self.produits_dans_cases[case]
+        contenu = "\n".join(produits)
+        QMessageBox.information(self, "Produits dans la case", f"Produits dans la case ({x1}, {y1}):\n{contenu}")
+
 
 # --------------------------------------------------- classe FenetreText (EVENT TEST) ---------------------------------------------------------------
 class FenetreTexte(QDialog):
@@ -251,6 +273,9 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.plateau)
         self.setCentralWidget(central_widget)
         
+        # Connecter le signal de sélection d'objet au plateau
+        self.objets_widget.itemClicked.connect(self.selectionner_objet)
+        
         # Contenu du dock de droite avec les informations du magasin
         self.dock_info_magasin = QDockWidget('Informations Magasin', self)
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.dock_info_magasin)
@@ -316,8 +341,10 @@ class MainWindow(QMainWindow):
         # Afficher la fenêtre maximisée
         self.showMaximized()
         
-    def selectionner_objet(self, item, column):
-        self.objet_selectionne = item.text(0)
+    # Permet de pouvoir sélectionner un objet
+    def selectionner_objet(self, item, column):  
+        self.objet_selectionne = item.text(0) 
+        self.plateau.setObjetSelectionne(self.objet_selectionne) 
 
     # Permet d'afficher les différents Articles (+ amélioration Police)
     def listeObjets(self, produits):
