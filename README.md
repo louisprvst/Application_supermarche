@@ -100,3 +100,8 @@ Utilisation exclusive des bibliothèques vues en cours
 - FARDEL Mathéïs : Possibilité de mettre les objets dans les cases + en enregistrant un projet ça sauvegarde les cases, les objets etc... et en ouvrant un projet, les cases réapparaissent en rouge et le contenu est dedans
 - PREVOST Louis : Toute les fonctions sont maintenant sous forme mvc + changement icones ect
 - DEMOL Alexis: Possibilité de supprimer le contenu d'une case (avec la couleur qui se remet en noir), Correction du bug que quand on supprime le projet ca ne supprime pas la case rouge créer quand on ajoute un produit dans une case + debut de personnalisation d'affichage comme le theme sombre et le theme clair + petit changement.
+
+### 30/05/2024 de 8h30 à 11h30 :
+- Membres présents physiquement : FARDEL Mathéïs, DEMOL Alexis
+- FARDEL Mathéïs : lorsque l'on supprime un projet, il y a aussi la suppression du fichier json + debug affichage plan (en fait le souci venait du fichier json... avec d'autres ça fonctionne)
+- DEMOL Alexis : 
