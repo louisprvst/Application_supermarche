@@ -102,6 +102,7 @@ Utilisation exclusive des bibliothèques vues en cours
 - DEMOL Alexis: Possibilité de supprimer le contenu d'une case (avec la couleur qui se remet en noir), Correction du bug que quand on supprime le projet ca ne supprime pas la case rouge créer quand on ajoute un produit dans une case + debut de personnalisation d'affichage comme le theme sombre et le theme clair + petit changement.
 
 ### 30/05/2024 de 8h30 à 11h30 :
-- Membres présents physiquement : FARDEL Mathéïs, DEMOL Alexis
+- Membres présents physiquement : FARDEL Mathéïs, DEMOL Alexis , PREVOST Louis
 - FARDEL Mathéïs : lorsque l'on supprime un projet, il y a aussi la suppression du fichier json + debug affichage plan (en fait le souci venait du fichier json... avec d'autres ça fonctionne)
 - DEMOL Alexis : Ajout fonction pour retirer et ajouter des colonnes après la création du projet + modif de quelque détail (Il faudras faire des changements pour modif les bug quand on modifie la taille du quadrillage quand on l'ouvre par exemple)
+- PREVOST Louis : Ajout des styles (sombre / clair /default) et message d'information ; Prochaine séance ajout de l'ouverture des projets issus de l'app 1.

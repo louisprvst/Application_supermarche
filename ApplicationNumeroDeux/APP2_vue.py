@@ -1,5 +1,5 @@
-import sys , json
-from PyQt6.QtWidgets import QApplication,QMainWindow,QToolBar,QFileDialog,QWidget,QVBoxLayout,QLabel,QLineEdit,QDateEdit,QDialogButtonBox,QDockWidget,QTextEdit
+import sys
+from PyQt6.QtWidgets import QApplication,QMainWindow,QToolBar,QFileDialog,QWidget,QVBoxLayout,QLabel,QLineEdit,QDateEdit,QDialogButtonBox,QDockWidget,QTextEdit,QMessageBox
 from PyQt6.QtGui import QIcon, QAction
 from PyQt6.QtCore import Qt , pyqtSignal
 
@@ -72,7 +72,7 @@ class popup_new_liste(QWidget):
         
 class vueApplication(QMainWindow):
     
-    # Signaux :
+# Signaux :
     
     MAINW_open_liste_signal = pyqtSignal(str)
     
@@ -80,7 +80,7 @@ class vueApplication(QMainWindow):
     
     MAINW_save_liste_signal = pyqtSignal(list , str)
     
-    # Constructeur :
+# Constructeur :
     
     def __init__(self):
         
@@ -119,6 +119,22 @@ class vueApplication(QMainWindow):
         liste_save.setShortcut("Ctrl+A")
         liste_save.triggered.connect(self.save_liste)
         menu_Listes.addAction(liste_save)
+        
+    # Menu Thèmes :
+        
+        menu_themes = menu_bar.addMenu('&Thèmes')
+        
+        theme_clair = QAction(QIcon(sys.path[0] + '/icones/'), 'Theme clair', self)
+        theme_clair.triggered.connect(self.change_theme_clair)
+        menu_themes.addAction(theme_clair)
+        
+        theme_sombre = QAction(QIcon(sys.path[0] + '/icones/'), 'Theme sombre', self)
+        theme_sombre.triggered.connect(self.change_theme_sombre)
+        menu_themes.addAction(theme_sombre)
+        
+        theme_default = QAction(QIcon(sys.path[0] + '/icones/'), 'Theme par défaut', self)
+        theme_default.triggered.connect(self.change_theme_default)
+        menu_themes.addAction(theme_default)
         
     # Menu Aides :
         
@@ -174,20 +190,25 @@ class vueApplication(QMainWindow):
         self.showMaximized()
         
         
-    # Envoie des signaux :
+# Envoie des signaux :
+    
+    # Cette fonction permet de créer une nouvelle liste
     
     def liste_new(self):
         self.MAINW_new_liste_signal.emit()
         
+    # Cette fonction affiche la popup avec les informations sur l'app
         
     def info(self):
         self.popup = popup_info()
         self.popup.show()
     
+    # Cette fonction sert a actualiser le texte afficher dans le dock gauche. ( liste des items )
     
     def update_list_view(self , formated_data):
         self.json_display.setPlainText(formated_data)
 
+    # Cette fonction permet d'ouvrir une liste
 
     def open_liste(self):        
         filename, _ = QFileDialog.getOpenFileName(self, "Choisir un fichier liste :", filter="JSON (*.json)")
@@ -197,13 +218,49 @@ class vueApplication(QMainWindow):
             self.currentfile : str = filename
             
             self.MAINW_open_liste_signal.emit(filename)
-
+            
+    # Cette fonction permet de sauvegarder une liste
         
     def save_liste(self):
         
         new_items = [item.strip() for item in self.user_input.toPlainText().split(",")]
         
         self.MAINW_save_liste_signal.emit(new_items , self.currentfile)
+            
+    # Les fonctions suivante servent a changer de theme.
+        
+    def change_theme_clair(self):
+            
+        self.setStyleSheet("""
+            QMainWindow {
+                background-color: #FFFFFF;
+                color: #000000;
+            }
+            QLabel, QLineEdit, QTextEdit, QTreeWidget, QDockWidget, QMenuBar, QMenu, QToolBar, QToolButton {
+                background-color: #FFFFFF;
+                color: #000000;
+            }""")
+    
+    def change_theme_sombre(self):
+        
+        self.setStyleSheet("""
+            QMainWindow {
+                background-color: #141414;
+                color: #FFFFFF;
+            }
+            QLabel, QLineEdit, QTextEdit, QTreeWidget, QDockWidget, QMenuBar, QMenu, QToolBar, QToolButton {
+                background-color: #141414;
+                color: #FFFFFF;
+            }""")
+                
+    def change_theme_default(self):
+        
+        self.setStyleSheet('')
+        
+    # Cette fonction permet de communiquer un message à l'utilisateur
+    
+    def new_message_info(self, titre, texte):
+        QMessageBox.information(self, titre, texte)
         
         
         
@@ -219,7 +276,7 @@ if __name__ == "__main__":
     print(f' --- main --- ')
     app = QApplication(sys.argv)
     
-    fenetre = popup_new_liste()
+    fenetre = vueApplication()
     fenetre.show()
     
     sys.exit(app.exec())

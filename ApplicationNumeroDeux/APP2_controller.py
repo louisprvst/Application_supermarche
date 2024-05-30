@@ -1,6 +1,5 @@
 import sys , APP2_model , APP2_vue
 from PyQt6.QtWidgets import QApplication
-from PyQt6.QtCore import pyqtSignal
 
 ################################################### APP2 CONTROLLER ###################################################
 
@@ -24,13 +23,13 @@ class controller() :
         self.vue.MAINW_new_liste_signal.connect(self.new_liste)
         
         self.vue.MAINW_save_liste_signal.connect(self.save_liste)
-        
-        
+
     # Signaux de la popup nouvelle liste :
         
         self.popup_nl.POPNL_save_signal.connect(self.save_to_json)
         
-
+        
+        
     # Envoie des signaux :
     
     def new_liste(self) :
@@ -39,15 +38,18 @@ class controller() :
     def save_to_json(self , nom , date , filename) :
         self.modele.save_to_json(nom , date , filename)
         self.popup_nl.close()
+        self.vue.new_message_info("Information","Nouvelle liste créer avec succès")
         
     def open_liste(self , filename):       
-    
         formated_data = self.modele.open_liste(filename)
-        
         self.vue.update_list_view(formated_data)
+        self.vue.new_message_info("Information","Liste ouverte avec succès")
+
         
     def save_liste(self , new_items , current_file) :
         self.modele.save_liste(new_items , current_file)
+        self.vue.new_message_info("Information","Liste sauvegarder avec succès")
+
          
         
         
