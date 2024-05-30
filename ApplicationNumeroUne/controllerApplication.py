@@ -15,6 +15,7 @@ class Controller:
     def __init__(self):
         self.model = ProjetModel()
         self.view = MainWindow()
+        self.chemin_projet = None
         
         # Connecter les actions de la vue aux méthodes du contrôleur
         self.view.action_new_projet.triggered.connect(self.creer_nouveau_projet)
@@ -59,6 +60,7 @@ class Controller:
         
         chemin_fichier, _ = QFileDialog.getSaveFileName(self.view, "Enregistrer le projet", "", "JSON Files (*.json)")
         if chemin_fichier:
+            self.chemin_projet = chemin_fichier
             success, message = self.model.sauvegarder_projet(chemin_fichier)
             if success:
                 QMessageBox.information(self.view, "Enregistrement du Projet", message)
@@ -83,6 +85,7 @@ class Controller:
                 for case in self.view.plateau.produits_dans_cases:
                     self.view.plateau.mettre_a_jour_case(case, afficher_message=False)
                     
+                self.chemin_projet = chemin_fichier
                 QMessageBox.information(self.view, "Ouverture du Projet", "Projet ouvert avec succès.")
             except IOError as e:
                 QMessageBox.critical(self.view, "Ouverture du Projet", str(e))
@@ -102,6 +105,14 @@ class Controller:
         if verif == QMessageBox.StandardButton.No:
             return None
         if verif == QMessageBox.StandardButton.Yes:
+            if self.chemin_projet:
+                try:
+                    if os.path.exists(self.chemin_projet):
+                        os.remove(self.chemin_projet)
+                except IOError as e:
+                    QMessageBox.critical(self.view, "Suppression du Projet", str(e))
+                    return
+                
             self.model.details_projet = {}
             self.view.plateau.image_label.clear()
             self.view.info_magasin_texte.clear()
@@ -110,6 +121,7 @@ class Controller:
             self.view.plateau.caseQuadrillage = []
             self.view.plateau.pixmap = QPixmap()  
             self.view.plateau.image_label.setPixmap(self.view.plateau.pixmap)
+            self.chemin_projet = None
             QMessageBox.information(self.view, "Suppression du Projet", "Le projet a été supprimé avec succès.")
 
     # Sauvegarder les informations du magasin
