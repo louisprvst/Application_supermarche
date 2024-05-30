@@ -22,6 +22,8 @@ class Controller:
         self.view.action_ouvrir_projet.triggered.connect(self.ouvrir_projet)
         self.view.valider_button.clicked.connect(self.sauvegarder_infos_magasin)
         self.view.action_supprimer_projet.triggered.connect(self.supprimer_projet)
+        self.view.ajouter_colonnes_button.clicked.connect(self.ajouter_colonnes)
+        self.view.retirer_colonnes_button.clicked.connect(self.retirer_colonnes)
         
         # Charger les données initiales du Modèle
         self.produits = self.charger_produits()
@@ -45,6 +47,7 @@ class Controller:
                     self.view.afficherInfosMagasin(details_projet)
                     self.model.mettre_a_jour_details(details_projet)
                     self.view.listeObjets(details_projet['produits_selectionnes'])
+                    self.view.plateau.cols = details_projet['cols']  
                     QMessageBox.information(self.view, "Nouveau Projet", "Nouveau projet créé avec succès !")
 
     # Enregistrer un projet
@@ -123,6 +126,20 @@ class Controller:
         }
         self.model.mettre_a_jour_details(details_projet)
         QMessageBox.information(self.view, "Informations Magasin", "Informations du magasin enregistrées avec succès.")
+
+    # Fonction pour ajouter des colonnes
+    def ajouter_colonnes(self):
+        self.view.plateau.cols = self.view.plateau.cols + 1
+        self.view.plateau.rechargerImage()
+
+    # Fonction pour retirer des colonnes
+    def retirer_colonnes(self):
+        cols, success = self.model.retirer_colonnes(self.view.plateau.cols)
+        if success:
+            self.view.plateau.cols = cols
+            self.view.plateau.rechargerImage()
+        else:
+            self.view.afficher_message_erreur("Impossible de réduire les colonnes", "Le nombre de colonnes ne peut pas être inférieur.")
 
 # ------------------------------------------------------------------ MAIN ----------------------------------------------------------------------------------
 

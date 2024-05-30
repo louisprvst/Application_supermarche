@@ -51,3 +51,8 @@ class ProjetModel:
                 return False, "Le fichier de projet n'existe pas."
         except Exception as e:
             raise IOError(f"Erreur lors de la suppression du projet: {e}")
+
+    def retirer_colonnes(self, cols):
+        if cols > 1:
+            return cols - 1, True
+        return cols, False

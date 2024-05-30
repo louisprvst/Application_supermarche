@@ -4,7 +4,7 @@
 #=============================================================================================================================================================
 
 import sys, os
-from PyQt6.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QWidget, QDialog, QDialogButtonBox, QDockWidget, QLineEdit, QTextEdit, QCalendarWidget, QTreeWidget, QTreeWidgetItem, QPushButton, QFileDialog, QMessageBox, QMenu, QApplication, QScrollArea, QCheckBox, QToolBar
+from PyQt6.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QWidget, QDialog, QDialogButtonBox, QDockWidget, QLineEdit, QTextEdit, QCalendarWidget, QTreeWidget, QTreeWidgetItem, QPushButton, QFileDialog, QMessageBox, QMenu, QApplication, QScrollArea, QCheckBox, QToolBar, QHBoxLayout
 from PyQt6.QtGui import QPixmap, QIcon, QPainter, QPen, QFont, QAction, QMouseEvent
 from PyQt6.QtCore import Qt, pyqtSignal
 
@@ -29,17 +29,36 @@ class Plateau(QWidget):
         self.caseQuadrillage = []  # liste pour mettre toute les pos des cases 
         self.produits_dans_cases = {}  # dictionnaire pour stocker les produits par case
         self.objet_selectionne = None 
+        self.lgn = 0
+        self.cols = 0
+        self.dimX = 0
+        self.dimY = 0
+        self.chemin_image = None  # Ajouter l'attribut pour le chemin de l'image
     
     def setObjetSelectionne(self, objet): 
         self.objet_selectionne = objet
 
     def chargerImage(self, chemin: str):
         if chemin:
+            self.chemin_image = chemin  # Stocker le chemin de l'image
             self.pixmap.load(chemin)
             self.pixmap = self.pixmap.scaled(1200, 720, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
             self.image_label.setPixmap(self.pixmap)
 
+    def rechargerImage(self):
+        """Méthode pour recharger l'image et réinitialiser le quadrillage"""
+        if self.chemin_image:
+            self.pixmap.load(self.chemin_image)
+            self.pixmap = self.pixmap.scaled(1200, 720, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
+            self.image_label.setPixmap(self.pixmap)
+            self.createQuadrillage(self.lgn, self.cols, self.dimX, self.dimY)
+
     def createQuadrillage(self, lgn, cols, dimX, dimY):
+        self.lgn = lgn
+        self.cols = cols
+        self.dimX = dimX
+        self.dimY = dimY
+
         if not self.pixmap.isNull():
             painter = QPainter(self.pixmap)
             pen = QPen(Qt.GlobalColor.black)
@@ -50,7 +69,7 @@ class Plateau(QWidget):
             cellLarge = larg / cols
             cellHaut = haut / lgn
 
-            self.caseQuadrillage = []  # permet d'effacer les dernière pos 
+            self.caseQuadrillage = []  # permet d'effacer les dernières pos 
 
             for i in range(cols):
                 for j in range(lgn):
@@ -65,7 +84,7 @@ class Plateau(QWidget):
             
             for case, produits in self.produits_dans_cases.items():
                 self.mettre_a_jour_case(case, afficher_message=False)
-
+    
     # Permet d'ouvrir la fenêtre (EVENT DE TEST)
     def ouvrirFenetre(self, event): 
         posClick = event.pos()
@@ -307,8 +326,20 @@ class MainWindow(QMainWindow):
         central_widget = QWidget(self)
         layout = QVBoxLayout(central_widget)
         layout.addWidget(self.plateau)
+
+        # Ajout des boutons "+" et "-"
+        self.boutons_layout = QHBoxLayout()
+        self.ajouter_colonnes_button = QPushButton("+")
+        self.retirer_colonnes_button = QPushButton("-")
+        self.boutons_layout.addWidget(self.retirer_colonnes_button)
+        self.boutons_layout.addWidget(self.ajouter_colonnes_button)
+
+        layout.addLayout(self.boutons_layout)
         self.setCentralWidget(central_widget)
         
+        # Connecter les boutons aux fonctions correspondantes
+        self.ajouter_colonnes_button.clicked.connect(self.ajouter_colonnes)
+        self.retirer_colonnes_button.clicked.connect(self.retirer_colonnes)
         # Connecter le signal de sélection d'objet au plateau
         self.objets_widget.itemClicked.connect(self.selectionner_objet)
         
@@ -386,6 +417,23 @@ class MainWindow(QMainWindow):
         # Afficher la fenêtre maximisée
         self.showMaximized()
         
+    # permet d'ajouter des colonnes dans le quadrillage après avoir créer le projet 
+    def ajouter_colonnes(self):
+        self.plateau.cols = self.plateau.cols + 1
+        self.plateau.rechargerImage()
+
+    # permet de retirer des colonnes dans le quadrillage après avoir créer le projet 
+    def retirer_colonnes(self):
+        if self.plateau.cols > 1:
+            self.plateau.cols = self.plateau.cols - 1
+            self.plateau.rechargerImage()
+        else:
+            self.afficher_message_erreur("Impossible de réduire les colonnes", "Le nombre de colonnes ne peut pas être inférieur.")
+
+    # affiche un mess d'erreur (peut etre changer dans le model ?)
+    def afficher_message_erreur(self, titre, message):
+        QMessageBox.critical(self, titre, message)
+
     # Permet de pouvoir sélectionner un objet
     def selectionner_objet(self, item, column):  
         self.objet_selectionne = item.text(0) 
