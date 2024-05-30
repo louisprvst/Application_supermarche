@@ -104,4 +104,4 @@ Utilisation exclusive des bibliothèques vues en cours
 ### 30/05/2024 de 8h30 à 11h30 :
 - Membres présents physiquement : FARDEL Mathéïs, DEMOL Alexis
 - FARDEL Mathéïs : lorsque l'on supprime un projet, il y a aussi la suppression du fichier json + debug affichage plan (en fait le souci venait du fichier json... avec d'autres ça fonctionne)
-- DEMOL Alexis : 
+- DEMOL Alexis : Ajout fonction pour retirer et ajouter des colonnes après la création du projet + modif de quelque détail (Il faudras faire des changements pour modif les bug quand on modifie la taille du quadrillage quand on l'ouvre par exemple)
