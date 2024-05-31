@@ -109,7 +109,7 @@ Utilisation exclusive des bibliothèques vues en cours
 
 ### 31/05/2024 de 10h à 11h30 :
 - Membres présents physiquement : FARDEL Mathéïs, DEMOL Alexis , PREVOST Louis , CAPON Ethan
-- FARDEL Mathéïs :
+- FARDEL Mathéïs : lors de l'enregistrement, un dossier est créé contenant : le plan, un fichier json sur la position des objets, et les autres infos dans un autre fichier json
 - DEMOL Alexis : 
 - PREVOST Louis : Création d'une branche pour ajouter l'ouverture de magasin de l'app 1 ( Pour le moment rien ne fonctionne )
 - CAPON Ethan : Création d'une branche pour ajouter l'autocomplétation ( presque fini ) 
