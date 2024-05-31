@@ -1,0 +1,17 @@
+{
+    "nomProjet": "zd",
+    "auteurProjet": "zdzd",
+    "dateCreationProjet": "2024-05-31",
+    "nomMagasin": "zdzd",
+    "adresse_magasin": "zdz",
+    "lgn": 10,
+    "cols": 10,
+    "dimX": 0,
+    "dimY": 0,
+    "produits_selectionnes": {
+        "L\u00e9gumes": [
+            "Carotte",
+            "C\u00e9leri"
+        ]
+    }
+}

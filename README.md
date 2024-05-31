@@ -106,3 +106,10 @@ Utilisation exclusive des bibliothèques vues en cours
 - FARDEL Mathéïs : lorsque l'on supprime un projet, il y a aussi la suppression du fichier json + debug affichage plan (en fait le souci venait du fichier json... avec d'autres ça fonctionne)
 - DEMOL Alexis : Ajout fonction pour retirer et ajouter des colonnes après la création du projet + modif de quelque détail (Il faudras faire des changements pour modif les bug quand on modifie la taille du quadrillage quand on l'ouvre par exemple)
 - PREVOST Louis : Ajout des styles (sombre / clair /default) et message d'information ; Prochaine séance ajout de l'ouverture des projets issus de l'app 1.
+
+### 31/05/2024 de 10h à 11h30 et 14h30 à 16h :
+- Membres présents physiquement : FARDEL Mathéïs, DEMOL Alexis , PREVOST Louis , CAPON Ethan
+- FARDEL Mathéïs : lors de l'enregistrement, un dossier est créé contenant : le plan, un fichier json sur la position des objets, et les autres infos dans un autre fichier json
+- DEMOL Alexis : 
+- PREVOST Louis : Création d'une branche pour ajouter l'ouverture de magasin de l'app 1 ( Pour le moment rien ne fonctionne )
+- CAPON Ethan : Création d'une branche pour ajouter l'autocomplétation ( presque fini ) 

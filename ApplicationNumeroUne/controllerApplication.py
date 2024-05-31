@@ -3,7 +3,7 @@
 #                                                   Fait par FARDEL Mathéïs et DEMOL Alexis
 #=============================================================================================================================================================
 
-import sys
+import sys, json
 import os
 from PyQt6.QtWidgets import QApplication, QFileDialog, QMessageBox
 from PyQt6.QtGui import QPixmap
@@ -66,13 +66,46 @@ class Controller:
                     self.activer_modifications()  
                     QMessageBox.information(self.view, "Nouveau Projet", "Nouveau projet créé avec succès !")
 
-    # Enregistrer un projet
+   # Enregistrer un projet
     def enregistrer_projet(self):
         if not self.model.details_projet:
             QMessageBox.warning(self.view, "Enregistrement du Projet", "Il n'y a aucun projet à enregistrer !")
             return
         
         # Convertir les clés des cases en listes pour JSON
+        produits_dans_cases_list_keys = {str(k): v for k, v in self.view.plateau.produits_dans_cases.items()}
+        chemin_image = self.model.details_projet.pop('chemin_image', None)  # Retirer chemin_image avant de sauvegarder
+        
+        # Sélectionner le dossier où enregistrer les données du projet
+        chemin_dossier = QFileDialog.getExistingDirectory(self.view, "Sélectionner un dossier pour enregistrer le projet")
+        if chemin_dossier:
+            nom_projet = self.model.details_projet.get('nomProjet', 'projet_sans_nom')
+            chemin_projet = os.path.join(chemin_dossier, nom_projet)
+            
+            # Créer le dossier pour le projet
+            os.makedirs(chemin_projet, exist_ok=True)
+            
+            # Sauvegarder les informations du projet dans un fichier JSON
+            chemin_fichier_projet = os.path.join(chemin_projet, f"{nom_projet}.json")
+            message = self.model.sauvegarder_projet(chemin_fichier_projet)
+            
+            # Copier l'image du plan dans le dossier du projet
+            if chemin_image:
+                chemin_image_cible = os.path.join(chemin_projet, 'plan' + os.path.splitext(chemin_image)[1])
+                if os.path.exists(chemin_image):
+                    with open(chemin_image, 'rb') as lecture:
+                        with open(chemin_image_cible, 'wb') as ecriture:
+                            ecriture.write(lecture.read())
+            
+            # Sauvegarder les données de positionnement
+            chemin_fichier_positionnement = os.path.join(chemin_projet, 'positionnement.json')
+            try:
+                with open(chemin_fichier_positionnement, 'w') as f:
+                    json.dump(produits_dans_cases_list_keys, f, indent=4)
+                QMessageBox.information(self.view, "Enregistrement du Projet", message + " et les données de positionnement ont été enregistrées.")
+            except Exception as e:
+                QMessageBox.critical(self.view, "Enregistrement du Projet", f"Erreur lors de l'enregistrement des données de positionnement: {e}")
+    
         produits_dans_cases_list_keys = {str(k): v for k, v in self.view.plateau.produits_dans_cases.items()} 
         self.model.details_projet['produits_dans_cases'] = produits_dans_cases_list_keys 
         self.model.details_projet['lgn'] = self.view.plateau.lgn
@@ -89,20 +122,31 @@ class Controller:
 
     # Ouvrir un projet
     def ouvrir_projet(self):
-        chemin_fichier, _ = QFileDialog.getOpenFileName(self.view, "Ouvrir le projet", "", "JSON Files (*.json)")
-        if chemin_fichier:
+        chemin_dossier = QFileDialog.getExistingDirectory(self.view, "Sélectionner le dossier du projet à ouvrir")
+        if chemin_dossier:
+            self.chemin_projet = chemin_dossier
             try:
+                nom_projet = os.path.basename(chemin_dossier)
+                chemin_fichier_projet = os.path.join(chemin_dossier, f"{nom_projet}.json")
+                chemin_fichier_positionnement = os.path.join(chemin_dossier, 'positionnement.json')
+                
                 self.reinitialiser_plateau()
-                details_projet = self.model.charger_projet(chemin_fichier)
-                self.view.plateau.chargerImage(details_projet['chemin_image'])
+                details_projet = self.model.charger_projet(chemin_fichier_projet)
+                produits_dans_cases = self.model.charger_projet(chemin_fichier_positionnement)
+                details_projet['produits_dans_cases'] = produits_dans_cases
+
+                chemin_image = os.path.join(chemin_dossier, 'plan' + os.path.splitext(details_projet.get('chemin_image', ''))[1])
+                details_projet['chemin_image'] = chemin_image
+
+                self.view.plateau.chargerImage(chemin_image)
                 self.view.plateau.createQuadrillage(details_projet['lgn'], details_projet['cols'], details_projet['dimX'], details_projet['dimY'])
                 self.view.afficherInfosMagasin(details_projet)
                 self.model.mettre_a_jour_details(details_projet)
                 self.view.listeObjets(details_projet['produits_selectionnes'])
                 
-                # Convertir les clés des cases de chaînes en tuples (sinon impossible d'enregistrer)
-                produits_dans_cases = {eval(k): v for k, v in details_projet.get('produits_dans_cases', {}).items()} 
-                self.view.plateau.produits_dans_cases = produits_dans_cases 
+                # Convertir les clés des cases de chaînes en tuples
+                produits_dans_cases = {eval(k): v for k, v in produits_dans_cases.items()}
+                self.view.plateau.produits_dans_cases = produits_dans_cases
                 for case in self.view.plateau.produits_dans_cases:
                     self.view.plateau.mettre_a_jour_case(case, afficher_message=False)
                     
@@ -135,19 +179,21 @@ class Controller:
         if verif == QMessageBox.StandardButton.No:
             return None
         if verif == QMessageBox.StandardButton.Yes:
-            if self.chemin_projet:
-                try:
-                    if os.path.exists(self.chemin_projet):
-                        os.remove(self.chemin_projet)
-                except IOError as e:
-                    QMessageBox.critical(self.view, "Suppression du Projet", str(e))
-                    return
-                
+            # Supprimer le dossier du projet
+            if self.chemin_projet and os.path.exists(self.chemin_projet):
+                for racine, dossiers, fichiers in os.walk(self.chemin_projet, topdown=False):
+                    for name in fichiers:
+                        os.remove(os.path.join(racine, name))
+                    for name in dossiers:
+                        os.rmdir(os.path.join(racine, name))
+                os.rmdir(self.chemin_projet)
+            
             self.reinitialiser_plateau()
-            self.chemin_projet = None
             self.plan_modifiable = True  
             self.activer_modifications()  
             QMessageBox.information(self.view, "Suppression du Projet", "Le projet a été supprimé avec succès.")
+
+
 
     # Sauvegarder les informations du magasin
     def sauvegarder_infos_magasin(self):
