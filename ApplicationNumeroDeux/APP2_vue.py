@@ -168,6 +168,8 @@ class vueApplication(QMainWindow):
             except FileNotFoundError:
                 print(f"ERREUR : le fichier '{filename}' est introuvable.")
                 return []  # Retourner une liste vide en cas d'erreur
+                    
+
 
         self.dock_list = QDockWidget('Ma liste :', self)
         
@@ -198,6 +200,8 @@ class vueApplication(QMainWindow):
         completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         completer.setFilterMode(Qt.MatchFlags.MatchContains)
         self.user_input.setCompleter(completer)
+        
+          
         
         
         layout = QVBoxLayout()
