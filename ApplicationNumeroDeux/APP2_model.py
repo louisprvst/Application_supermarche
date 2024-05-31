@@ -2,8 +2,18 @@ import json
 
 ################################################### APP2 MODEL ###################################################
 
-class model():
-        
+class model():  
+    
+    def __init__(self):
+        self.details_projet = {}
+
+    def charger_projet(self, chemin_fichier):
+        try:
+            with open(chemin_fichier, 'r') as f:
+                details_projet = json.load(f)
+            return details_projet
+        except Exception as e:
+            raise IOError(f"Erreur lors du chargement du projet: {e}")  
 
     def save_to_json(self , nom , date , filename):
         
