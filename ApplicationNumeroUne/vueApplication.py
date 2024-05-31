@@ -17,9 +17,11 @@ class Image(QLabel):
 
 # -------------------------------------------------------------- classe Plateau -----------------------------------------------------------------------------
 class Plateau(QWidget):
+    articleSelected = pyqtSignal(str) 
+    caseUpdated = pyqtSignal(tuple, list)  
+
     def __init__(self):
         super().__init__()
-        self.articleSelected = pyqtSignal(str)
         self.layout = QVBoxLayout(self)
         self.image_label = QLabel(self)
         self.layout.addWidget(self.image_label, alignment=Qt.AlignmentFlag.AlignCenter)
@@ -33,23 +35,25 @@ class Plateau(QWidget):
         self.cols = 0
         self.dimX = 0
         self.dimY = 0
-        self.chemin_image = None  # Ajouter l'attribut pour le chemin de l'image
+        self.chemin_image = None  
     
     def setObjetSelectionne(self, objet): 
         self.objet_selectionne = objet
+        self.articleSelected.emit(objet)  
 
     def chargerImage(self, chemin: str):
         if chemin:
-            self.chemin_image = chemin  # Stocker le chemin de l'image
+            self.chemin_image = chemin  
             self.pixmap.load(chemin)
-            self.pixmap = self.pixmap.scaled(1200, 720, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
+            self.pixmap = self.pixmap.scaled(900, 700, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
             self.image_label.setPixmap(self.pixmap)
+            self.image_label.setFixedSize(900, 700) 
 
+    # fonction pour recharger l'image et réinitialise son quadrillage 
     def rechargerImage(self):
-        """Méthode pour recharger l'image et réinitialiser le quadrillage"""
         if self.chemin_image:
             self.pixmap.load(self.chemin_image)
-            self.pixmap = self.pixmap.scaled(1200, 720, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
+            self.pixmap = self.pixmap.scaled(900, 700, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
             self.image_label.setPixmap(self.pixmap)
             self.createQuadrillage(self.lgn, self.cols, self.dimX, self.dimY)
 
@@ -105,6 +109,7 @@ class Plateau(QWidget):
                 self.produits_dans_cases[case] = []
             self.produits_dans_cases[case].append(produit)
             self.mettre_a_jour_case(case)
+            self.caseUpdated.emit(case, self.produits_dans_cases[case])  
             self.objet_selectionne = None
 
     # Permet de mettre à jour une case afin d'ajouter un objet dedans et que ça soit à jour
@@ -162,9 +167,16 @@ class Plateau(QWidget):
         if case in self.produits_dans_cases:
             del self.produits_dans_cases[case]
             self.redessiner_case(case)
+            self.caseUpdated.emit(case, [])  
             fenetre.accept()
             QMessageBox.information(self, "Suppression", f"Le contenu de la case ({case[0]}, {case[1]}) a été supprimé.")
-
+    
+    def reinitialiser_plateau(self):
+        self.image_label.clear()
+        self.produits_dans_cases.clear()
+        self.caseQuadrillage.clear()
+        self.pixmap = QPixmap()
+        self.image_label.setPixmap(self.pixmap)
 # --------------------------------------------------- classe FenetreText (EVENT TEST) ---------------------------------------------------------------
 class FenetreTexte(QDialog):
     def __init__(self, text):
@@ -329,10 +341,14 @@ class MainWindow(QMainWindow):
 
         # Ajout des boutons "+" et "-"
         self.boutons_layout = QHBoxLayout()
-        self.ajouter_colonnes_button = QPushButton("+")
-        self.retirer_colonnes_button = QPushButton("-")
-        self.boutons_layout.addWidget(self.retirer_colonnes_button)
+        self.ajouter_colonnes_button = QPushButton("+ Colonne")
+        self.retirer_colonnes_button = QPushButton("- Colonne")
+        self.ajouter_lignes_button = QPushButton("+ Ligne")
+        self.retirer_lignes_button = QPushButton("- Ligne")
         self.boutons_layout.addWidget(self.ajouter_colonnes_button)
+        self.boutons_layout.addWidget(self.retirer_colonnes_button)
+        self.boutons_layout.addWidget(self.ajouter_lignes_button)
+        self.boutons_layout.addWidget(self.retirer_lignes_button)
 
         layout.addLayout(self.boutons_layout)
         self.setCentralWidget(central_widget)
@@ -340,6 +356,9 @@ class MainWindow(QMainWindow):
         # Connecter les boutons aux fonctions correspondantes
         self.ajouter_colonnes_button.clicked.connect(self.ajouter_colonnes)
         self.retirer_colonnes_button.clicked.connect(self.retirer_colonnes)
+        self.ajouter_lignes_button.clicked.connect(self.ajouter_lignes)
+        self.retirer_lignes_button.clicked.connect(self.retirer_lignes)
+        
         # Connecter le signal de sélection d'objet au plateau
         self.objets_widget.itemClicked.connect(self.selectionner_objet)
         
@@ -430,6 +449,19 @@ class MainWindow(QMainWindow):
         else:
             self.afficher_message_erreur("Impossible de réduire les colonnes", "Le nombre de colonnes ne peut pas être inférieur.")
 
+    # permet d'ajouter des lignes dans le quadrillage après avoir créer le projet 
+    def ajouter_lignes(self):
+        self.plateau.lgn = self.plateau.lgn + 1
+        self.plateau.rechargerImage()
+
+    # permet de retirer des lignes dans le quadrillage après avoir créer le projet 
+    def retirer_lignes(self):
+        if self.plateau.lgn > 1:
+            self.plateau.lgn = self.plateau.lgn - 1
+            self.plateau.rechargerImage()
+        else:
+            self.afficher_message_erreur("Impossible de réduire les lignes", "Le nombre de lignes ne peut pas être inférieur.")
+
     # affiche un mess d'erreur (peut etre changer dans le model ?)
     def afficher_message_erreur(self, titre, message):
         QMessageBox.critical(self, titre, message)
@@ -438,6 +470,7 @@ class MainWindow(QMainWindow):
     def selectionner_objet(self, item, column):  
         self.objet_selectionne = item.text(0) 
         self.plateau.setObjetSelectionne(self.objet_selectionne) 
+        self.plateau.articleSelected.emit(self.objet_selectionne)  
 
     # Permet d'afficher les différents Articles (+ amélioration Police)
     def listeObjets(self, produits):

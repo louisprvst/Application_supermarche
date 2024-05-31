@@ -1,0 +1,27 @@
+{
+    "nomProjet": "test",
+    "auteurProjet": "Alexis & Co",
+    "dateCreationProjet": "2024-05-31",
+    "nomMagasin": "AlexisMarket",
+    "adresse_magasin": "rue du test 62100",
+    "lgn": 26,
+    "cols": 12,
+    "dimX": 0,
+    "dimY": 0,
+    "produits_selectionnes": {
+        "L\u00e9gumes": [
+            "Carotte",
+            "C\u00e9leri",
+            "Champignons"
+        ]
+    },
+    "chemin_image": "C:/Users/alexi/OneDrive/Documents/IUT/BUT1-INFO/Sa\u00e9/Sa\u00e9 2.01/Application_supermarche/ApplicationNumeroUne/icones/plan8.jpg",
+    "produits_dans_cases": {
+        "(231, 332, 308, 360)": [
+            "Carotte"
+        ],
+        "(308, 387, 385, 415)": [
+            "Champignons"
+        ]
+    }
+}

@@ -16,6 +16,7 @@ class Controller:
         self.model = ProjetModel()
         self.view = MainWindow()
         self.chemin_projet = None
+        self.plan_modifiable = True
         
         # Connecter les actions de la vue aux méthodes du contrôleur
         self.view.action_new_projet.triggered.connect(self.creer_nouveau_projet)
@@ -25,6 +26,12 @@ class Controller:
         self.view.action_supprimer_projet.triggered.connect(self.supprimer_projet)
         self.view.ajouter_colonnes_button.clicked.connect(self.ajouter_colonnes)
         self.view.retirer_colonnes_button.clicked.connect(self.retirer_colonnes)
+        self.view.ajouter_lignes_button.clicked.connect(self.ajouter_lignes)
+        self.view.retirer_lignes_button.clicked.connect(self.retirer_lignes)
+        
+        # permet de connecter le signal de séléction d'objet sur le plateau pour désactiver les modif 
+        self.view.plateau.articleSelected.connect(self.desactiver_modifications)
+        self.view.plateau.caseUpdated.connect(self.mettre_a_jour_case_dans_modele)
         
         # Charger les données initiales du Modèle
         self.produits = self.charger_produits()
@@ -36,6 +43,7 @@ class Controller:
 
     # Créer un nouveau projet
     def creer_nouveau_projet(self):
+        self.reinitialiser_plateau()
         dialogue = NewProjetDialog(self.produits)
         if dialogue.exec():
             details_projet = dialogue.getProjetDetails()
@@ -43,12 +51,19 @@ class Controller:
                 chemin_image, _ = QFileDialog.getOpenFileName(self.view, "Charger le plan", "", "Images (*.png *.jpg *.jpeg *.gif)")
                 if chemin_image:
                     details_projet['chemin_image'] = chemin_image
+                    lgn = details_projet.get('lgn', 10) or 10
+                    cols = details_projet.get('cols', 10) or 10
+                    details_projet['lgn'] = lgn
+                    details_projet['cols'] = cols
                     self.view.plateau.chargerImage(chemin_image)
-                    self.view.plateau.createQuadrillage(details_projet['lgn'], details_projet['cols'], details_projet['dimX'], details_projet['dimY'])
+                    self.view.plateau.createQuadrillage(lgn, cols, details_projet['dimX'], details_projet['dimY'])
                     self.view.afficherInfosMagasin(details_projet)
                     self.model.mettre_a_jour_details(details_projet)
                     self.view.listeObjets(details_projet['produits_selectionnes'])
-                    self.view.plateau.cols = details_projet['cols']  
+                    self.view.plateau.cols = cols
+                    self.view.plateau.lgn = lgn
+                    self.plan_modifiable = True  
+                    self.activer_modifications()  
                     QMessageBox.information(self.view, "Nouveau Projet", "Nouveau projet créé avec succès !")
 
     # Enregistrer un projet
@@ -60,6 +75,8 @@ class Controller:
         # Convertir les clés des cases en listes pour JSON
         produits_dans_cases_list_keys = {str(k): v for k, v in self.view.plateau.produits_dans_cases.items()} 
         self.model.details_projet['produits_dans_cases'] = produits_dans_cases_list_keys 
+        self.model.details_projet['lgn'] = self.view.plateau.lgn
+        self.model.details_projet['cols'] = self.view.plateau.cols
         
         chemin_fichier, _ = QFileDialog.getSaveFileName(self.view, "Enregistrer le projet", "", "JSON Files (*.json)")
         if chemin_fichier:
@@ -75,6 +92,7 @@ class Controller:
         chemin_fichier, _ = QFileDialog.getOpenFileName(self.view, "Ouvrir le projet", "", "JSON Files (*.json)")
         if chemin_fichier:
             try:
+                self.reinitialiser_plateau()
                 details_projet = self.model.charger_projet(chemin_fichier)
                 self.view.plateau.chargerImage(details_projet['chemin_image'])
                 self.view.plateau.createQuadrillage(details_projet['lgn'], details_projet['cols'], details_projet['dimX'], details_projet['dimY'])
@@ -89,9 +107,18 @@ class Controller:
                     self.view.plateau.mettre_a_jour_case(case, afficher_message=False)
                     
                 self.chemin_projet = chemin_fichier
+                self.plan_modifiable = True  
+                self.desactiver_modifications()  
                 QMessageBox.information(self.view, "Ouverture du Projet", "Projet ouvert avec succès.")
             except IOError as e:
                 QMessageBox.critical(self.view, "Ouverture du Projet", str(e))
+
+    # fonction qui permet de réinitialiser les informations sur le plateau 
+    def reinitialiser_plateau(self):
+        self.view.plateau.reinitialiser_plateau()
+        self.view.info_magasin_texte.clear()
+        self.view.objets_widget.clear()
+        self.model.details_projet = {}
 
     # Fonction qui permet de supprimer un projet             
     def supprimer_projet(self):
@@ -116,15 +143,10 @@ class Controller:
                     QMessageBox.critical(self.view, "Suppression du Projet", str(e))
                     return
                 
-            self.model.details_projet = {}
-            self.view.plateau.image_label.clear()
-            self.view.info_magasin_texte.clear()
-            self.view.objets_widget.clear()
-            self.view.plateau.produits_dans_cases = {}
-            self.view.plateau.caseQuadrillage = []
-            self.view.plateau.pixmap = QPixmap()  
-            self.view.plateau.image_label.setPixmap(self.view.plateau.pixmap)
+            self.reinitialiser_plateau()
             self.chemin_projet = None
+            self.plan_modifiable = True  
+            self.activer_modifications()  
             QMessageBox.information(self.view, "Suppression du Projet", "Le projet a été supprimé avec succès.")
 
     # Sauvegarder les informations du magasin
@@ -139,20 +161,65 @@ class Controller:
         self.model.mettre_a_jour_details(details_projet)
         QMessageBox.information(self.view, "Informations Magasin", "Informations du magasin enregistrées avec succès.")
 
-    # Fonction pour ajouter des colonnes
+    # Fonction pour ajouter des colonnes au plan 
     def ajouter_colonnes(self):
-        self.view.plateau.cols = self.view.plateau.cols + 1
-        self.view.plateau.rechargerImage()
-
-    # Fonction pour retirer des colonnes
-    def retirer_colonnes(self):
-        cols, success = self.model.retirer_colonnes(self.view.plateau.cols)
-        if success:
-            self.view.plateau.cols = cols
+        if self.plan_modifiable:
+            self.view.plateau.cols = self.view.plateau.cols + 1
             self.view.plateau.rechargerImage()
-        else:
-            self.view.afficher_message_erreur("Impossible de réduire les colonnes", "Le nombre de colonnes ne peut pas être inférieur.")
+            self.model.details_projet['cols'] = self.view.plateau.cols
 
+    # Fonction pour retirer des colonnes au plan 
+    def retirer_colonnes(self):
+        if self.plan_modifiable:
+            cols, success = self.model.retirer_colonnes(self.view.plateau.cols)
+            if success:
+                self.view.plateau.cols = cols
+                self.view.plateau.rechargerImage()
+                self.model.details_projet['cols'] = self.view.plateau.cols
+            else:
+                self.view.afficher_message_erreur("Impossible de réduire les colonnes", "Le nombre de colonnes ne peut pas être inférieur.")
+
+    # Fonction pour ajouter des lignes au plan 
+    def ajouter_lignes(self):
+        if self.plan_modifiable:
+            self.view.plateau.lgn += 1
+            self.view.plateau.rechargerImage()
+            self.model.details_projet['lgn'] = self.view.plateau.lgn
+
+    # Fonction pour retirer des lignes au plan 
+    def retirer_lignes(self):
+        if self.plan_modifiable:
+            if self.view.plateau.lgn > 1:
+                self.view.plateau.lgn = self.view.plateau.lgn - 1
+                self.view.plateau.rechargerImage()
+                self.model.details_projet['lgn'] = self.view.plateau.lgn
+            else:
+                self.view.afficher_message_erreur("Impossible de réduire les lignes", "Le nombre de lignes ne peut pas être inférieur.")
+
+    # nous permet de mettre toute les informations des cases dans notre model 
+    def mettre_a_jour_case_dans_modele(self, case, produits):
+        produits_dans_cases = {}
+        for k, v in self.view.plateau.produits_dans_cases.items():
+            produits_dans_cases[str(k)] = v
+        self.model.details_projet['produits_dans_cases'] = produits_dans_cases
+
+
+    # permet de désactiver les modif dans le plan 
+    def desactiver_modifications(self):
+        self.plan_modifiable = False
+        self.view.ajouter_colonnes_button.setEnabled(False)
+        self.view.retirer_colonnes_button.setEnabled(False)
+        self.view.ajouter_lignes_button.setEnabled(False)
+        self.view.retirer_lignes_button.setEnabled(False)
+
+    # permet d'activer les modif dans le plan
+    def activer_modifications(self):
+        self.plan_modifiable = True
+        self.view.ajouter_colonnes_button.setEnabled(True)
+        self.view.retirer_colonnes_button.setEnabled(True)
+        self.view.ajouter_lignes_button.setEnabled(True)
+        self.view.retirer_lignes_button.setEnabled(True)
+        
 # ------------------------------------------------------------------ MAIN ----------------------------------------------------------------------------------
 
 if __name__ == "__main__":

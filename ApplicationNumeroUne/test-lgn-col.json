@@ -1,0 +1,26 @@
+{
+    "nomProjet": "",
+    "auteurProjet": "",
+    "dateCreationProjet": "2024-05-31",
+    "nomMagasin": "",
+    "adresse_magasin": "",
+    "lgn": 1,
+    "cols": 1,
+    "dimX": 0,
+    "dimY": 0,
+    "produits_selectionnes": {
+        "L\u00e9gumes": [
+            "Carotte",
+            "C\u00e9leri"
+        ]
+    },
+    "chemin_image": "C:/Users/alexi/OneDrive/Documents/IUT/BUT1-INFO/Sa\u00e9/Sa\u00e9 2.01/Application_supermarche/ApplicationNumeroUne/icones/plan8.jpg",
+    "produits_dans_cases": {
+        "(163, 240, 217, 320)": [
+            "Carotte"
+        ],
+        "(271, 320, 326, 400)": [
+            "C\u00e9leri"
+        ]
+    }
+}
