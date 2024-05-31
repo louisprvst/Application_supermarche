@@ -1,5 +1,7 @@
 import sys
-from PyQt6.QtWidgets import QApplication,QMainWindow,QToolBar,QFileDialog,QWidget,QVBoxLayout,QLabel,QLineEdit,QDateEdit,QDialogButtonBox,QDockWidget,QTextEdit,QMessageBox
+import json
+import os
+from PyQt6.QtWidgets import QApplication,QMainWindow,QToolBar,QFileDialog,QWidget,QVBoxLayout,QLabel,QLineEdit,QDateEdit,QDialogButtonBox,QDockWidget,QTextEdit,QMessageBox, QCompleter
 from PyQt6.QtGui import QIcon, QAction
 from PyQt6.QtCore import Qt , pyqtSignal
 
@@ -43,7 +45,7 @@ class popup_new_liste(QWidget):
         self.date_label = QLabel('Date de vos courses :')
         self.date_input = QDateEdit()
         
-        self.buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel, Qt.Orientation.Horizontal, self)
+        self.buttons = QDialogButtonBox(QDialogButtonBox.StandardButtons.Ok | QDialogButtonBox.StandardButtons.Cancel, Qt.Orientations.Horizontal, self)
         
         self.buttons.accepted.connect(self.save_to_json)
         self.buttons.rejected.connect(self.close)
@@ -157,6 +159,15 @@ class vueApplication(QMainWindow):
         toolbar.addAction(liste_save)
         
     # Dock :
+        def load_product_names(filename):
+            try:
+                with open(filename, "r") as file:
+                    data = json.load(file)
+                print("JSON loaded successfully:", data)  # Message de débogage
+                return list(data.values())  # Retourner les valeurs
+            except FileNotFoundError:
+                print(f"ERREUR : le fichier '{filename}' est introuvable.")
+                return []  # Retourner une liste vide en cas d'erreur
 
         self.dock_list = QDockWidget('Ma liste :', self)
         
@@ -170,10 +181,24 @@ class vueApplication(QMainWindow):
         
         self.titre = QLabel("Entrez vos articles :")
         
-        self.user_input = QTextEdit()
+        self.user_input = QLineEdit()
         self.user_input.setPlaceholderText("Entrez votre liste ici...")
         self.user_input.setMinimumHeight(700)
         self.user_input.setMaximumHeight(700)
+    
+        fichier = os.path.dirname(__file__)
+        
+
+        # Construire le chemin relatif au fichier JSON
+        fichier_chemin = os.path.join(fichier, 'liste_produitsbis.json')
+        
+        liste = load_product_names(fichier_chemin)
+        
+        completer = QCompleter(liste)
+        completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        completer.setFilterMode(Qt.MatchFlags.MatchContains)
+        self.user_input.setCompleter(completer)
+        
         
         layout = QVBoxLayout()
         layout.addWidget(self.json_display)
@@ -184,7 +209,7 @@ class vueApplication(QMainWindow):
         widget.setLayout(layout)
         self.dock_list.setWidget(widget)
         
-        self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.dock_list)
+        self.addDockWidget(Qt.DockWidgetAreas.LeftDockWidgetArea, self.dock_list)
         self.dock_list.setMinimumWidth(200)
         
         self.showMaximized()

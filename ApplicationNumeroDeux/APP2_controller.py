@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import QApplication
 
 ################################################### APP2 CONTROLLER ###################################################
 
-class controller() :
+class Controller() :
     
 
     # Constructeur : 
@@ -61,6 +61,6 @@ if __name__ == "__main__" :
     
     app = QApplication(sys.argv)
     
-    ctrl = controller()
+    ctrl = Controller()
     
     sys.exit(app.exec())
