@@ -111,5 +111,5 @@ Utilisation exclusive des bibliothèques vues en cours
 - Membres présents physiquement : FARDEL Mathéïs, DEMOL Alexis , PREVOST Louis , CAPON Ethan
 - FARDEL Mathéïs : lors de l'enregistrement, un dossier est créé contenant : le plan, un fichier json sur la position des objets, et les autres infos dans un autre fichier json
 - DEMOL Alexis : ajout de fonction pour ajouter et retirer des lignes et colonnes sur le quadrillage avec des bloquages quand on ouvre ou créer un autre projet + Réglage du bug quand on ouvre une image trop grande et quand on crée un projet sans informations + d'autre petit détail 
-- PREVOST Louis : Création d'une branche pour ajouter l'ouverture de magasin de l'app 1 ( Affiche uniquement le plan et le cadrillage )
+- PREVOST Louis : Création d'une branche pour ajouter l'ouverture de magasin de l'app 1 ( Affiche uniquement le plan et le quadrillage )
 - CAPON Ethan : Création d'une branche pour ajouter l'autocomplétation ( presque fini ) 
