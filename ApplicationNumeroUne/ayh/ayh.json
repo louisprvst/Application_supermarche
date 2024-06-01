@@ -1,0 +1,26 @@
+{
+    "nomProjet": "ayh",
+    "auteurProjet": "ahhah",
+    "dateCreationProjet": "2024-06-01",
+    "nomMagasin": "zhzha",
+    "adresse_magasin": "ahahh",
+    "lgn": 10,
+    "cols": 10,
+    "dimX": 0,
+    "dimY": 0,
+    "produits_selectionnes": {
+        "L\u00e9gumes": [
+            "Champignons",
+            "Champignons chinois",
+            "Chou"
+        ]
+    },
+    "produits_dans_cases": {
+        "(297, 210, 371, 280)": [
+            "Champignons"
+        ],
+        "(371, 210, 445, 280)": [
+            "Chou"
+        ]
+    }
+}

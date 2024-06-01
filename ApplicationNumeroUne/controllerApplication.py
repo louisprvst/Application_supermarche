@@ -72,7 +72,7 @@ class Controller:
             QMessageBox.warning(self.view, "Enregistrement du Projet", "Il n'y a aucun projet à enregistrer !")
             return
         
-        # Convertir les clés des cases en listes pour JSON
+       # Convertir les clés des cases en listes pour JSON
         produits_dans_cases_list_keys = {str(k): v for k, v in self.view.plateau.produits_dans_cases.items()}
         chemin_image = self.model.details_projet.pop('chemin_image', None)  # Retirer chemin_image avant de sauvegarder
         
@@ -90,12 +90,12 @@ class Controller:
             message = self.model.sauvegarder_projet(chemin_fichier_projet)
             
             # Copier l'image du plan dans le dossier du projet
-            if chemin_image:
-                chemin_image_cible = os.path.join(chemin_projet, 'plan' + os.path.splitext(chemin_image)[1])
-                if os.path.exists(chemin_image):
-                    with open(chemin_image, 'rb') as lecture:
-                        with open(chemin_image_cible, 'wb') as ecriture:
-                            ecriture.write(lecture.read())
+        if chemin_image:
+            chemin_image_cible = os.path.join(chemin_projet, 'plan' + os.path.splitext(chemin_image)[1])
+            if os.path.exists(chemin_image):
+                with open(chemin_image, 'rb') as lecture:
+                    with open(chemin_image_cible, 'wb') as ecriture:
+                        ecriture.write(lecture.read())
             
             # Sauvegarder les données de positionnement
             chemin_fichier_positionnement = os.path.join(chemin_projet, 'positionnement.json')
@@ -105,20 +105,6 @@ class Controller:
                 QMessageBox.information(self.view, "Enregistrement du Projet", message + " et les données de positionnement ont été enregistrées.")
             except Exception as e:
                 QMessageBox.critical(self.view, "Enregistrement du Projet", f"Erreur lors de l'enregistrement des données de positionnement: {e}")
-    
-        produits_dans_cases_list_keys = {str(k): v for k, v in self.view.plateau.produits_dans_cases.items()} 
-        self.model.details_projet['produits_dans_cases'] = produits_dans_cases_list_keys 
-        self.model.details_projet['lgn'] = self.view.plateau.lgn
-        self.model.details_projet['cols'] = self.view.plateau.cols
-        
-        chemin_fichier, _ = QFileDialog.getSaveFileName(self.view, "Enregistrer le projet", "", "JSON Files (*.json)")
-        if chemin_fichier:
-            self.chemin_projet = chemin_fichier
-            success, message = self.model.sauvegarder_projet(chemin_fichier)
-            if success:
-                QMessageBox.information(self.view, "Enregistrement du Projet", message)
-            else:
-                QMessageBox.critical(self.view, "Enregistrement du Projet", message)
 
     # Ouvrir un projet
     def ouvrir_projet(self):
@@ -129,7 +115,7 @@ class Controller:
                 nom_projet = os.path.basename(chemin_dossier)
                 chemin_fichier_projet = os.path.join(chemin_dossier, f"{nom_projet}.json")
                 chemin_fichier_positionnement = os.path.join(chemin_dossier, 'positionnement.json')
-                
+            
                 self.reinitialiser_plateau()
                 details_projet = self.model.charger_projet(chemin_fichier_projet)
                 produits_dans_cases = self.model.charger_projet(chemin_fichier_positionnement)
@@ -143,19 +129,19 @@ class Controller:
                 self.view.afficherInfosMagasin(details_projet)
                 self.model.mettre_a_jour_details(details_projet)
                 self.view.listeObjets(details_projet['produits_selectionnes'])
-                
+            
                 # Convertir les clés des cases de chaînes en tuples
                 produits_dans_cases = {eval(k): v for k, v in produits_dans_cases.items()}
                 self.view.plateau.produits_dans_cases = produits_dans_cases
                 for case in self.view.plateau.produits_dans_cases:
                     self.view.plateau.mettre_a_jour_case(case, afficher_message=False)
-                    
-                self.chemin_projet = chemin_fichier
+                
                 self.plan_modifiable = True  
                 self.desactiver_modifications()  
                 QMessageBox.information(self.view, "Ouverture du Projet", "Projet ouvert avec succès.")
             except IOError as e:
                 QMessageBox.critical(self.view, "Ouverture du Projet", str(e))
+
 
     # fonction qui permet de réinitialiser les informations sur le plateau 
     def reinitialiser_plateau(self):
