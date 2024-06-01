@@ -4,18 +4,25 @@ from PyQt6.QtGui import QIcon , QAction , QPixmap , QPainter , QPen
 from PyQt6.QtCore import Qt , pyqtSignal
 
 
-# --------------------------------------------------------------- classe Image ------------------------------------------------------------------------------
+###################################################### CLASS IMAGE ( APP 1 ) ######################################################
+
 class Image(QLabel):
+    
     def __init__(self, chemin: str):
+        
         super().__init__()
         self.image = QPixmap(chemin)
         self.setPixmap(self.image)
 
-# -------------------------------------------------------------- classe Plateau -----------------------------------------------------------------------------
+
+##################################################### CLASS PLATEAU ( APP 1 ) #####################################################
+
 class Plateau(QWidget):
+    
     def __init__(self):
+        
         super().__init__()
-        self.articleSelected = pyqtSignal(str)
+        
         self.layout = QVBoxLayout(self)
         self.image_label = QLabel(self)
         self.layout.addWidget(self.image_label, alignment=Qt.AlignmentFlag.AlignCenter)
@@ -118,19 +125,23 @@ class Plateau(QWidget):
 
 ##################################################### POPUP INFO #####################################################
 
-
 class popup_info(QWidget):
     
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('A propos')
+        self.setWindowTitle('À propos')
         self.setGeometry(100, 100, 300, 150)
         
         self.name = QLabel("Application item finder.")
         
+        layout = QVBoxLayout()
+        layout.addWidget(self.name)
+        self.setLayout(layout)
+              
+        self.show()
+        
 
 ################################################### POPUP NEW LISTE ###################################################
-
 
 class popup_new_liste(QWidget):
     
@@ -180,8 +191,7 @@ class popup_new_liste(QWidget):
     
         
 ################################################### VUE APP2 ###################################################
-
-        
+     
 class vueApplication(QMainWindow):
     
 # Signaux :
@@ -191,6 +201,8 @@ class vueApplication(QMainWindow):
     MAINW_new_liste_signal = pyqtSignal()
     
     MAINW_save_liste_signal = pyqtSignal(list , str)
+    
+    MAINW_open_shop_signal = pyqtSignal()
     
 # Constructeur :
     
@@ -208,9 +220,10 @@ class vueApplication(QMainWindow):
         
         menu_Fichiers = menu_bar.addMenu('&Fichier')
        
-        self.action_ouvrir_projet = QAction(QIcon(sys.path[0] + '/icones/magasin.png'), 'Choisir un magasin', self)
-        self.action_ouvrir_projet.setShortcut('Ctrl+O')
-        menu_Fichiers.addAction(self.action_ouvrir_projet)
+        fic_ouvrir = QAction(QIcon(sys.path[0] + '/icones/magasin.png'), 'Choisir un magasin', self)
+        fic_ouvrir.triggered.connect(self.ouvrir_fichier)
+        fic_ouvrir.setShortcut('Ctrl+O')
+        menu_Fichiers.addAction(fic_ouvrir)
         
     # Menu Listes :
         
@@ -261,7 +274,7 @@ class vueApplication(QMainWindow):
         toolbar = QToolBar('Tool Bar')
         self.addToolBar(toolbar)
         
-        toolbar.addAction(self.action_ouvrir_projet)
+        toolbar.addAction(fic_ouvrir)
         toolbar.addSeparator()
         toolbar.addAction(liste_new)
         toolbar.addAction(liste_open)
@@ -297,19 +310,7 @@ class vueApplication(QMainWindow):
         
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.dock_list)
         self.dock_list.setMinimumWidth(200)
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+ 
         # Contenu du plan dans le widget central
         self.plateau = Plateau()
         central_widget = QWidget(self)
@@ -317,24 +318,15 @@ class vueApplication(QMainWindow):
         layout.addWidget(self.plateau)
     
         self.setCentralWidget(central_widget)
-        
-        
-        
-        
-        
-        
-        
-        
+ 
         self.showMaximized()
-        
-        
-        
-        
-        
-        
-        
-        
+      
 # Envoie des signaux :
+
+    # Cette fonction permet d'ouvrir un fichier contenant un magasin
+
+    def ouvrir_fichier(self):
+        self.MAINW_open_shop_signal.emit()
     
     # Cette fonction permet de créer une nouvelle liste
     
@@ -405,14 +397,8 @@ class vueApplication(QMainWindow):
     
     def new_message_info(self, titre, texte):
         QMessageBox.information(self, titre, texte)
-        
-        
-        
-        
-        
-        
-        
-        
+
+       
 ################################################### MAIN TEST ###################################################
 
 if __name__ == "__main__":

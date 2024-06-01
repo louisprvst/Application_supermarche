@@ -1,12 +1,12 @@
 import sys , APP2_model , APP2_vue
 from PyQt6.QtWidgets import QApplication,QFileDialog,QMessageBox
 
+
 ################################################### APP2 CONTROLLER ###################################################
 
 class controller() :
-    
 
-    # Constructeur : 
+# Constructeur : 
     
     def __init__(self) -> None:
 
@@ -16,9 +16,8 @@ class controller() :
         self.popup_nl = APP2_vue.popup_new_liste()
         
         self.chemin_projet = None
-    
 
-    # Signaux de la fenetre principal :
+# Signaux de la fenetre principal :
     
         self.vue.MAINW_open_liste_signal.connect(self.open_liste)
         
@@ -26,15 +25,11 @@ class controller() :
         
         self.vue.MAINW_save_liste_signal.connect(self.save_liste)
         
-        self.vue.action_ouvrir_projet.triggered.connect(self.ouvrir_projet)
-
-    # Signaux de la popup nouvelle liste :
+        self.vue.MAINW_open_shop_signal.connect(self.ouvrir_projet)
         
         self.popup_nl.POPNL_save_signal.connect(self.save_to_json)
         
-        
-        
-    # Envoie des signaux :
+# Envoie des signaux :
     
     def new_liste(self) :
         self.popup_nl.show()
@@ -48,17 +43,13 @@ class controller() :
         formated_data = self.modele.open_liste(filename)
         self.vue.update_list_vue(formated_data)
         self.vue.new_message_info("Information","Liste ouverte avec succès")
-
-        
+   
     def save_liste(self , new_items , current_file) :
         self.modele.save_liste(new_items , current_file)
         self.vue.new_message_info("Information","Liste sauvegarder avec succès")
         
-        
-        
-        
-        
-        
+
+################################################### CODE DE L'APP 1 ###################################################    
         
     def ouvrir_projet(self):
         chemin_fichier, _ = QFileDialog.getOpenFileName(self.vue, "Ouvrir le projet", "", "JSON Files (*.json)")
@@ -82,11 +73,7 @@ class controller() :
             except IOError as e:
                 QMessageBox.critical(self.vue, "Ouverture du Projet", str(e))
 
-         
-        
-        
-        
-        
+
 ################################################### MAIN CONTROLLER ###################################################
 
 if __name__ == "__main__" :
