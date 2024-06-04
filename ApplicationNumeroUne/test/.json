@@ -1,32 +1,12 @@
 {
     "nomProjet": "",
-    "auteurProjet": "Alexis",
+    "auteurProjet": "",
     "dateCreationProjet": "2024-06-04",
     "nomMagasin": "",
-    "adresse_magasin": "testttt",
-    "lgn": 30,
-    "cols": 30,
+    "adresse_magasin": "",
+    "lgn": 10,
+    "cols": 10,
     "dimX": 0,
     "dimY": 0,
-    "produits_selectionnes": {
-        "L\u00c3\u00a9gumes": [
-            "Betterave",
-            "Blette",
-            "Brocolis"
-        ]
-    },
-    "produits_dans_cases": {
-        "(239, 420, 269, 443)": [
-            "Betterave"
-        ],
-        "(269, 396, 299, 420)": [
-            "Brocolis"
-        ],
-        "(299, 420, 329, 443)": [
-            "Betterave"
-        ],
-        "(269, 443, 299, 466)": [
-            "Brocolis"
-        ]
-    }
+    "produits_selectionnes": {}
 }
