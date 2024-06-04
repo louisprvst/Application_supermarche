@@ -113,3 +113,7 @@ Utilisation exclusive des bibliothèques vues en cours
 - DEMOL Alexis : ajout de fonction pour ajouter et retirer des lignes et colonnes sur le quadrillage avec des bloquages quand on ouvre ou créer un autre projet + Réglage du bug quand on ouvre une image trop grande et quand on crée un projet sans informations + d'autre petit détail 
 - PREVOST Louis : Création d'une branche pour ajouter l'ouverture de magasin de l'app 1 ( Affiche uniquement le plan et le quadrillage )
 - CAPON Ethan : Création d'une branche pour ajouter l'autocomplétation ( presque fini ) 
+
+### 4/06 de 14h30 à 16h :
+- Membres présents physiquement : Aucuns
+- FARDEL Mathéïs : tentative de régler un bug : "can only concatenate tuple (not "str") to tuple" sans réussite pour le moment
