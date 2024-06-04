@@ -18,7 +18,7 @@ class Image(QLabel):
 # -------------------------------------------------------------- classe Plateau -----------------------------------------------------------------------------
 class Plateau(QWidget):
     articleSelected = pyqtSignal(str) 
-    caseUpdated = pyqtSignal(tuple, list)  
+    caseUpdated = pyqtSignal(tuple, list) 
 
     def __init__(self):
         super().__init__()
@@ -411,15 +411,18 @@ class MainWindow(QMainWindow):
         self.action_supprimer_projet.setShortcut('Ctrl+DELETE') 
         menu_fichier.addAction(self.action_supprimer_projet)
         
-        # Barre de menu du haut contenant "Affichage"
-        menu_bar = self.menuBar()
-        menu_fichier = menu_bar.addMenu('&Affichage')
+        # barre menu pour les affichages 
+        menu_affichage = menu_bar.addMenu('&Affichage')
         
-        # Action pour choisir les thémes
-        self.action_thèmes = QAction(QIcon(sys.path[0] + '/icones/themes.png'), 'Thèmes', self)
-        self.action_thèmes.setShortcut('Ctrl+T')
-        menu_fichier.addAction(self.action_thèmes)
-        
+        # le sous menu pour les thèmes 
+        menu_themes = menu_affichage.addMenu("Thèmes")
+        self.action_theme_clair = QAction("Thème clair", self)
+        self.action_theme_sombre = QAction("Thème sombre", self)
+        menu_themes.addAction(self.action_theme_clair)
+        menu_themes.addAction(self.action_theme_sombre)
+        self.action_theme_clair.triggered.connect(self.theme_clair)
+        self.action_theme_sombre.triggered.connect(self.theme_sombre)
+
         #Tool Bar 
         toolbar = QToolBar('Tool Bar')
         self.addToolBar(toolbar)
@@ -533,9 +536,25 @@ class MainWindow(QMainWindow):
             }
         """)
 
-    # Fonction qui permet d'appliquer le thème clair (pas finit)
+    # Fonction qui permet d'appliquer le thème clair 
     def theme_clair(self):
-        self.setStyleSheet("")
+        self.setStyleSheet("""
+            QMainWindow {
+                background-color: #FFFFFF;
+                color: #000000;
+            }
+            QLabel, QLineEdit, QTextEdit, QTreeWidget, QDockWidget, QMenuBar, QMenu, QToolBar, QToolButton {
+                background-color: #FFFFFF;
+                color: #000000;
+            }
+            QPushButton {
+                background-color: #E0E0E0;
+                color: #000000;
+            }
+            QPushButton::hover {
+                background-color: #C0C0C0;
+            }
+        """)
 
 # ------------------------------------------------------------------- MAIN POUR TESTER ------------------------------------------------------------------------
 if __name__ == "__main__":

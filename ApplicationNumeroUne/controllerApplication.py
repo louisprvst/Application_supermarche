@@ -149,6 +149,9 @@ class Controller:
         self.view.info_magasin_texte.clear()
         self.view.objets_widget.clear()
         self.model.details_projet = {}
+        self.chemin_projet = None
+        self.plan_modifiable = True  
+        self.activer_modifications()
 
     # Fonction qui permet de supprimer un projet             
     def supprimer_projet(self):
