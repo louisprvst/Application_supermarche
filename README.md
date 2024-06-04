@@ -114,9 +114,15 @@ Utilisation exclusive des bibliothèques vues en cours
 - PREVOST Louis : Création d'une branche pour ajouter l'ouverture de magasin de l'app 1 ( Affiche uniquement le plan et le quadrillage )
 - CAPON Ethan : Création d'une branche pour ajouter l'autocomplétation ( presque fini ) 
 
+<<<<<<< HEAD
 ### 04/06/2024 de 14h30 à 16h :
 - Membres présents physiquement : DEMOL Alexis
 - FARDEL Mathéïs : 
 - DEMOL Alexis : Ajustement + Ajout du théme sombre et clair 
 - PREVOST Louis : 
 - CAPON Ethan : 
+=======
+### 4/06 de 14h30 à 16h :
+- Membres présents physiquement : Aucuns
+- FARDEL Mathéïs : tentative de régler un bug : "can only concatenate tuple (not "str") to tuple" sans réussite pour le moment
+>>>>>>> c5a02f504d7891c8724177c82b7990d430379ce5
