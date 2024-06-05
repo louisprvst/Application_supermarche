@@ -120,5 +120,6 @@ Utilisation exclusive des bibliothèques vues en cours
 - DEMOL Alexis : Ajustement + Ajout du théme sombre et clair
 
 ### 5/06 de 8h30 à 10h :
-- Membres présents physiquement : FARDEL Mathéïs
+- Membres présents physiquement : FARDEL Mathéïs, Demol Alexis 
 - FARDEL Mathéïs : Ajout de Entrée/Sortie dans les objets, et obligation de les mettre sur le plan pour pouvoir l'enregistrer (car besoin pour app2)
+- Demol Alexis: Tentative d'enregistrer le projet que dans un dossier (le push de ce matin ca n'a pas fonctionné)
