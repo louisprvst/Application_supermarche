@@ -31,6 +31,7 @@ class Controller:
         
         # permet de connecter le signal de séléction d'objet sur le plateau pour désactiver les modif 
         self.view.plateau.articleSelected.connect(self.desactiver_modifications)
+        self.view.plateau.caseUpdated.connect(self.mettre_a_jour_case_dans_modele)
         
         # Charger les données initiales du Modèle
         self.produits = self.charger_produits()
@@ -82,12 +83,7 @@ class Controller:
             return
 
         # Convertir les clés des cases en listes pour JSON
-        try:
-            produits_dans_cases_list_keys = {json.dumps(k): v for k, v in self.view.plateau.produits_dans_cases.items()}
-        except TypeError as e:
-            QMessageBox.critical(self.view, "Erreur de conversion", f"Erreur lors de la conversion des données : {e}")
-            return
-    
+        produits_dans_cases_list_keys = {str(k): v for k, v in self.view.plateau.produits_dans_cases.items()}
         chemin_image = self.model.details_projet.pop('chemin_image', None)  # Retirer chemin_image avant de sauvegarder
 
         # Sélectionner le dossier où enregistrer les données du projet
@@ -219,7 +215,6 @@ class Controller:
             self.view.plateau.cols = self.view.plateau.cols + 1
             self.view.plateau.rechargerImage()
             self.model.details_projet['cols'] = self.view.plateau.cols
-
     # Fonction pour retirer des colonnes au plan 
     def retirer_colonnes(self):
         if self.plan_modifiable:
@@ -230,14 +225,12 @@ class Controller:
                 self.model.details_projet['cols'] = self.view.plateau.cols
             else:
                 self.view.afficher_message_erreur("Impossible de réduire les colonnes", "Le nombre de colonnes ne peut pas être inférieur.")
-
     # Fonction pour ajouter des lignes au plan 
     def ajouter_lignes(self):
         if self.plan_modifiable:
             self.view.plateau.lgn += 1
             self.view.plateau.rechargerImage()
             self.model.details_projet['lgn'] = self.view.plateau.lgn
-
     # Fonction pour retirer des lignes au plan 
     def retirer_lignes(self):
         if self.plan_modifiable:
@@ -247,7 +240,12 @@ class Controller:
                 self.model.details_projet['lgn'] = self.view.plateau.lgn
             else:
                 self.view.afficher_message_erreur("Impossible de réduire les lignes", "Le nombre de lignes ne peut pas être inférieur.")
-
+    # nous permet de mettre toute les informations des cases dans notre model 
+    def mettre_a_jour_case_dans_modele(self, case, produits):
+        produits_dans_cases = {}
+        for k, v in self.view.plateau.produits_dans_cases.items():
+            produits_dans_cases[str(k)] = v
+        self.model.details_projet['produits_dans_cases'] = produits_dans_cases
 
     # permet de désactiver les modif dans le plan 
     def desactiver_modifications(self):
