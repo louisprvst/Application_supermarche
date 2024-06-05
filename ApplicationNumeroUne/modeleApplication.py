@@ -20,6 +20,15 @@ class ProjetModel:
         except Exception as e:
             print(f"Erreur lors du chargement des produits: {e}")
             return {}
+    
+    # Permet d'ajouter Entrée du magasin et sortie du magasin
+    def ajouter_produits_speciaux(self, produits):
+        if "Entrée / Sortie" not in produits:
+            produits["Entrée / Sortie"] = []
+        if "Entrée du magasin" not in produits["Entrée / Sortie"]:
+            produits["Entrée / Sortie"].append("Entrée du magasin")
+        if "Sortie du magasin" not in produits["Entrée / Sortie"]:
+            produits["Entrée / Sortie"].append("Sortie du magasin")
 
     # Permet de mettre à jour les détails du projet
     def mettre_a_jour_details(self, details):

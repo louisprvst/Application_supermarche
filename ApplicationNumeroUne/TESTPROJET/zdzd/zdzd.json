@@ -1,0 +1,31 @@
+{
+    "nomProjet": "zdzd",
+    "auteurProjet": "zddzd",
+    "dateCreationProjet": "2024-06-05",
+    "nomMagasin": "zdzd",
+    "adresse_magasin": "zdzdzd",
+    "lgn": 10,
+    "cols": 10,
+    "dimX": 0,
+    "dimY": 0,
+    "produits_selectionnes": {
+        "L\u00e9gumes": [
+            "Champignons"
+        ],
+        "Entr\u00e9e / Sortie": [
+            "Entr\u00e9e du magasin",
+            "Sortie du magasin"
+        ]
+    },
+    "produits_dans_cases": {
+        "(269, 350, 359, 420)": [
+            "Entr\u00e9e du magasin"
+        ],
+        "(359, 280, 449, 350)": [
+            "L\u00e9gumes"
+        ],
+        "(359, 350, 449, 420)": [
+            "Sortie du magasin"
+        ]
+    }
+}

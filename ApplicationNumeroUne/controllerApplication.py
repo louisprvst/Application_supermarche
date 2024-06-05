@@ -31,7 +31,6 @@ class Controller:
         
         # permet de connecter le signal de séléction d'objet sur le plateau pour désactiver les modif 
         self.view.plateau.articleSelected.connect(self.desactiver_modifications)
-        self.view.plateau.caseUpdated.connect(self.mettre_a_jour_case_dans_modele)
         
         # Charger les données initiales du Modèle
         self.produits = self.charger_produits()
@@ -59,7 +58,12 @@ class Controller:
                     self.view.plateau.createQuadrillage(lgn, cols, details_projet['dimX'], details_projet['dimY'])
                     self.view.afficherInfosMagasin(details_projet)
                     self.model.mettre_a_jour_details(details_projet)
-                    self.view.listeObjets(details_projet['produits_selectionnes'])
+
+                    # Ajouter "Entrée" et "Sortie" aux produits sélectionnés
+                    produits_selectionnes = details_projet['produits_selectionnes']
+                    self.model.ajouter_produits_speciaux(produits_selectionnes)
+                    self.view.listeObjets(produits_selectionnes)
+
                     self.view.plateau.cols = cols
                     self.view.plateau.lgn = lgn
                     self.plan_modifiable = True  
@@ -71,9 +75,19 @@ class Controller:
         if not self.model.details_projet:
             QMessageBox.warning(self.view, "Enregistrement du Projet", "Il n'y a aucun projet à enregistrer !")
             return
+        
+        # Vérifier que "Entrée" et "Sortie" sont placés sur le plan
+        if not self.verifier_entree_sortie():
+            QMessageBox.warning(self.view, "Enregistrement du Projet", "Vous devez placer 'Entrée' et 'Sortie' sur le plan avant d'enregistrer le projet.")
+            return
 
         # Convertir les clés des cases en listes pour JSON
-        produits_dans_cases_list_keys = {str(k): v for k, v in self.view.plateau.produits_dans_cases.items()}
+        try:
+            produits_dans_cases_list_keys = {json.dumps(k): v for k, v in self.view.plateau.produits_dans_cases.items()}
+        except TypeError as e:
+            QMessageBox.critical(self.view, "Erreur de conversion", f"Erreur lors de la conversion des données : {e}")
+            return
+    
         chemin_image = self.model.details_projet.pop('chemin_image', None)  # Retirer chemin_image avant de sauvegarder
 
         # Sélectionner le dossier où enregistrer les données du projet
@@ -142,6 +156,12 @@ class Controller:
                 QMessageBox.critical(self.view, "Ouverture du Projet", str(e))
 
 
+    # Vérifier si "Entrée" et "Sortie" sont placés sur le plan
+    def verifier_entree_sortie(self):
+        produits_dans_cases = self.view.plateau.produits_dans_cases
+        produits_places = [produit for produits in produits_dans_cases.values() for produit in produits]
+        return "Entrée du magasin" in produits_places and "Sortie du magasin" in produits_places
+    
     # fonction qui permet de réinitialiser les informations sur le plateau 
     def reinitialiser_plateau(self):
         self.view.plateau.reinitialiser_plateau()
@@ -199,6 +219,7 @@ class Controller:
             self.view.plateau.cols = self.view.plateau.cols + 1
             self.view.plateau.rechargerImage()
             self.model.details_projet['cols'] = self.view.plateau.cols
+
     # Fonction pour retirer des colonnes au plan 
     def retirer_colonnes(self):
         if self.plan_modifiable:
@@ -209,12 +230,14 @@ class Controller:
                 self.model.details_projet['cols'] = self.view.plateau.cols
             else:
                 self.view.afficher_message_erreur("Impossible de réduire les colonnes", "Le nombre de colonnes ne peut pas être inférieur.")
+
     # Fonction pour ajouter des lignes au plan 
     def ajouter_lignes(self):
         if self.plan_modifiable:
             self.view.plateau.lgn += 1
             self.view.plateau.rechargerImage()
             self.model.details_projet['lgn'] = self.view.plateau.lgn
+
     # Fonction pour retirer des lignes au plan 
     def retirer_lignes(self):
         if self.plan_modifiable:
@@ -224,12 +247,7 @@ class Controller:
                 self.model.details_projet['lgn'] = self.view.plateau.lgn
             else:
                 self.view.afficher_message_erreur("Impossible de réduire les lignes", "Le nombre de lignes ne peut pas être inférieur.")
-    # nous permet de mettre toute les informations des cases dans notre model 
-    def mettre_a_jour_case_dans_modele(self, case, produits):
-        produits_dans_cases = {}
-        for k, v in self.view.plateau.produits_dans_cases.items():
-            produits_dans_cases[str(k)] = v
-        self.model.details_projet['produits_dans_cases'] = produits_dans_cases
+
 
     # permet de désactiver les modif dans le plan 
     def desactiver_modifications(self):

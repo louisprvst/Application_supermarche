@@ -1,0 +1,21 @@
+{
+    "nomProjet": "adzzd",
+    "auteurProjet": "dzdzd",
+    "dateCreationProjet": "2024-06-05",
+    "nomMagasin": "zdzdz",
+    "adresse_magasin": "dzdzd",
+    "lgn": 10,
+    "cols": 10,
+    "dimX": 0,
+    "dimY": 0,
+    "produits_selectionnes": {
+        "L\u00e9gumes": [
+            "Avocat",
+            "Betterave"
+        ],
+        "Entr\u00e9e / Sortie": [
+            "Entr\u00e9e du magasin",
+            "Sortie du magasin"
+        ]
+    }
+}

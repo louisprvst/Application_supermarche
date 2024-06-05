@@ -118,3 +118,7 @@ Utilisation exclusive des bibliothèques vues en cours
 - Membres présents physiquement : Aucuns
 - FARDEL Mathéïs : tentative de régler un bug : "can only concatenate tuple (not "str") to tuple" sans réussite pour le moment
 - DEMOL Alexis : Ajustement + Ajout du théme sombre et clair
+
+### 5/06 de 8h30 à 10h :
+- Membres présents physiquement : FARDEL Mathéïs
+- FARDEL Mathéïs : Ajout de Entrée/Sortie dans les objets, et obligation de les mettre sur le plan pour pouvoir l'enregistrer (car besoin pour app2)
