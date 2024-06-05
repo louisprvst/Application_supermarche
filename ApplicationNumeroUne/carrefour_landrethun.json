@@ -1,0 +1,506 @@
+{
+    "nomProjet": "exemple_carrefour_landrethun",
+    "auteurProjet": "Math\u00e9\u00efs Fardel",
+    "dateCreationProjet": "2024-06-05",
+    "nomMagasin": "Carrefour Contact",
+    "adresse_magasin": "Rue Jean Monnet, 62250 Landrethun-le-Nord",
+    "lgn": 75,
+    "cols": 75,
+    "dimX": 0,
+    "dimY": 0,
+    "produits_selectionnes": {
+        "L\u00e9gumes": [
+            "Ail",
+            "Artichaut",
+            "Asperges",
+            "Aubergine",
+            "Avocat",
+            "Betterave",
+            "Blette",
+            "Brocolis",
+            "Carotte",
+            "C\u00e9leri",
+            "Concombre",
+            "Courge",
+            "Courgette",
+            "Cresson",
+            "\u00c9chalote",
+            "Endive",
+            "\u00c9pinards",
+            "Fenouil",
+            "Petits pois"
+        ],
+        "Poissons": [
+            "Bigorneaux",
+            "Cabillaud",
+            "Colin",
+            "Coques",
+            "Coquille St-Jacques",
+            "Encornet",
+            "Gambas",
+            "Hareng fum\u00e9",
+            "Homard",
+            "Hu\u00eetres"
+        ],
+        "Viandes": [
+            "Agneau",
+            "Aiguillette de boeuf",
+            "Aiguillette de poulet",
+            "Andouille",
+            "Andouillette",
+            "Bacon",
+            "Bavette (boeuf)",
+            "\u00c9chine de porc",
+            "Escalope de veau",
+            "Faux-filet (boeuf)",
+            "Pintade",
+            "Poitrine de porc",
+            "Poulet"
+        ],
+        "\u00c9picerie": [
+            "Bl\u00e9 dur",
+            "Bouillon cube",
+            "Boulgour",
+            "Cannelle",
+            "Chapelure",
+            "Coriandre",
+            "Cornichons",
+            "Cro\u00fbton",
+            "Curry",
+            "Farine",
+            "Mayonnaise",
+            "Millet",
+            "Moutarde",
+            "Polenta",
+            "Pur\u00e9e",
+            "Quinoa",
+            "Riz"
+        ],
+        "\u00c9picerie sucr\u00e9e": [
+            "Abricots secs",
+            "Amandes",
+            "Gingembre confit",
+            "Noisettes",
+            "Noix de cajou",
+            "Orange confite",
+            "Pignons"
+        ],
+        "Petit d\u00e9jeuner": [
+            "Barres chocolat\u00e9es",
+            "Biscottes",
+            "Biscuite",
+            "Brioche",
+            "P\u00e2te \u00e0 tartiner",
+            "Quatre quart",
+            "Th\u00e9"
+        ],
+        "Fruits": [
+            "Brugnon",
+            "Cassis",
+            "Cerises",
+            "Citrons",
+            "Cl\u00e9mentine",
+            "Nectarine",
+            "Oranges",
+            "Pamplemousses"
+        ],
+        "Rayon frais": [
+            "Crudit\u00e9s",
+            "Feuilles de brick",
+            "Pi\u00e9montaise",
+            "Pizzas"
+        ],
+        "Cr\u00e8merie": [
+            "Cr\u00e8me dessert",
+            "Cr\u00e8me fra\u00eeche",
+            "Feta",
+            "Fromage blanc"
+        ],
+        "Conserves": [
+            "Sardine",
+            "Sauce tomate",
+            "Soupes"
+        ],
+        "Ap\u00e9ritifs": [
+            "Tuiles sal\u00e9es",
+            "Tzatziki"
+        ],
+        "Boissons": [
+            "Bi\u00e8re",
+            "Eau gazeuse",
+            "Eau min\u00e9rale",
+            "Jus de fruits"
+        ],
+        "Articles Maison": [
+            "Allumettes",
+            "Anticalcaire",
+            "Bougies",
+            "Produit vitre",
+            "Produits d\u00e9graissant",
+            "Sachets gla\u00e7on"
+        ],
+        "Hygi\u00e8ne": [
+            "Rasoirs",
+            "Savon main"
+        ],
+        "Bureau": [
+            "Papier cadeau",
+            "Papier imprimante",
+            "Scotch",
+            "Souris de correction"
+        ],
+        "Animaux": [
+            "Boites",
+            "Croquettes"
+        ],
+        "Entr\u00e9e / Sortie": [
+            "Entr\u00e9e du magasin",
+            "Sortie du magasin"
+        ]
+    },
+    "chemin_image": "/Users/matheisfardel/IUT/sae_ihm/app_supermarche/Application_supermarche/ApplicationNumeroUne/icones/plan4.png",
+    "produits_dans_cases": {
+        "(307, 690, 317, 700)": [
+            "Entr\u00e9e du magasin"
+        ],
+        "(297, 690, 307, 700)": [
+            "Sortie du magasin"
+        ],
+        "(406, 373, 416, 382)": [
+            "Papier cadeau"
+        ],
+        "(406, 410, 416, 420)": [
+            "Papier imprimante"
+        ],
+        "(406, 457, 416, 466)": [
+            "Scotch"
+        ],
+        "(406, 494, 416, 504)": [
+            "Souris de correction"
+        ],
+        "(406, 532, 416, 541)": [
+            "Papier cadeau"
+        ],
+        "(416, 476, 425, 485)": [
+            "Boites"
+        ],
+        "(416, 438, 425, 448)": [
+            "Croquettes"
+        ],
+        "(465, 532, 475, 541)": [
+            "Papier cadeau"
+        ],
+        "(465, 494, 475, 504)": [
+            "Scotch"
+        ],
+        "(465, 457, 475, 466)": [
+            "Souris de correction"
+        ],
+        "(515, 504, 525, 513)": [
+            "Savon main"
+        ],
+        "(515, 457, 525, 466)": [
+            "Rasoirs"
+        ],
+        "(465, 513, 475, 522)": [
+            "Allumettes"
+        ],
+        "(465, 476, 475, 485)": [
+            "Anticalcaire"
+        ],
+        "(515, 485, 525, 494)": [
+            "Bougies"
+        ],
+        "(515, 522, 525, 532)": [
+            "Produits d\u00e9graissant"
+        ],
+        "(515, 438, 525, 448)": [
+            "Sachets gla\u00e7on"
+        ],
+        "(594, 438, 604, 448)": [
+            "Bi\u00e8re"
+        ],
+        "(604, 438, 614, 448)": [
+            "Eau gazeuse"
+        ],
+        "(614, 438, 624, 448)": [
+            "Eau min\u00e9rale"
+        ],
+        "(624, 438, 634, 448)": [
+            "Jus de fruits"
+        ],
+        "(594, 429, 604, 438)": [
+            "Tuiles sal\u00e9es"
+        ],
+        "(624, 429, 634, 438)": [
+            "Tzatziki"
+        ],
+        "(594, 382, 604, 392)": [
+            "Sardine"
+        ],
+        "(614, 382, 624, 392)": [
+            "Sauce tomate"
+        ],
+        "(634, 382, 643, 392)": [
+            "Soupes"
+        ],
+        "(594, 317, 604, 326)": [
+            "Cr\u00e8me dessert"
+        ],
+        "(643, 317, 653, 326)": [
+            "Cr\u00e8me fra\u00eeche"
+        ],
+        "(643, 270, 653, 280)": [
+            "Feta"
+        ],
+        "(594, 270, 604, 280)": [
+            "Fromage blanc"
+        ],
+        "(128, 74, 138, 84)": [
+            "Crudit\u00e9s"
+        ],
+        "(128, 93, 138, 102)": [
+            "Feuilles de brick"
+        ],
+        "(118, 84, 128, 93)": [
+            "Pi\u00e9montaise"
+        ],
+        "(138, 84, 148, 93)": [
+            "Pizzas"
+        ],
+        "(188, 74, 198, 84)": [
+            "Brugnon"
+        ],
+        "(188, 84, 198, 93)": [
+            "Cassis"
+        ],
+        "(188, 93, 198, 102)": [
+            "Cerises"
+        ],
+        "(188, 102, 198, 112)": [
+            "Citrons"
+        ],
+        "(198, 102, 208, 112)": [
+            "Cl\u00e9mentine"
+        ],
+        "(198, 93, 208, 102)": [
+            "Citrons"
+        ],
+        "(198, 84, 208, 93)": [
+            "Cerises"
+        ],
+        "(198, 74, 208, 84)": [
+            "Citrons"
+        ],
+        "(237, 65, 247, 74)": [
+            "Barres chocolat\u00e9es"
+        ],
+        "(247, 65, 257, 74)": [
+            "Biscottes"
+        ],
+        "(237, 74, 247, 84)": [
+            "Biscuite"
+        ],
+        "(247, 74, 257, 84)": [
+            "Brioche"
+        ],
+        "(247, 84, 257, 93)": [
+            "P\u00e2te \u00e0 tartiner"
+        ],
+        "(237, 84, 247, 93)": [
+            "Quatre quart"
+        ],
+        "(237, 93, 247, 102)": [
+            "Th\u00e9"
+        ],
+        "(297, 65, 307, 74)": [
+            "Abricots secs"
+        ],
+        "(287, 65, 297, 74)": [
+            "Amandes"
+        ],
+        "(287, 74, 297, 84)": [
+            "Gingembre confit"
+        ],
+        "(297, 74, 307, 84)": [
+            "Noisettes"
+        ],
+        "(287, 93, 297, 102)": [
+            "Noix de cajou"
+        ],
+        "(287, 84, 297, 93)": [
+            "Orange confite"
+        ],
+        "(297, 84, 307, 93)": [
+            "Pignons"
+        ],
+        "(188, 149, 198, 158)": [
+            "Bl\u00e9 dur"
+        ],
+        "(188, 158, 198, 168)": [
+            "Bouillon cube"
+        ],
+        "(188, 168, 198, 177)": [
+            "Boulgour"
+        ],
+        "(188, 177, 198, 186)": [
+            "Cannelle"
+        ],
+        "(188, 186, 198, 196)": [
+            "Chapelure"
+        ],
+        "(188, 196, 198, 205)": [
+            "Coriandre"
+        ],
+        "(188, 205, 198, 214)": [
+            "Cornichons"
+        ],
+        "(188, 214, 198, 224)": [
+            "Cro\u00fbton"
+        ],
+        "(188, 224, 198, 233)": [
+            "Curry"
+        ],
+        "(188, 233, 198, 242)": [
+            "Farine"
+        ],
+        "(188, 242, 198, 252)": [
+            "Mayonnaise"
+        ],
+        "(188, 252, 198, 261)": [
+            "Millet"
+        ],
+        "(188, 261, 198, 270)": [
+            "Moutarde"
+        ],
+        "(188, 270, 198, 280)": [
+            "Polenta"
+        ],
+        "(188, 280, 198, 289)": [
+            "Pur\u00e9e"
+        ],
+        "(188, 289, 198, 298)": [
+            "Quinoa"
+        ],
+        "(188, 298, 198, 308)": [
+            "Riz"
+        ],
+        "(188, 373, 198, 382)": [
+            "Agneau"
+        ],
+        "(188, 382, 198, 392)": [
+            "Aiguillette de boeuf"
+        ],
+        "(188, 392, 198, 401)": [
+            "Aiguillette de poulet"
+        ],
+        "(188, 401, 198, 410)": [
+            "Andouille"
+        ],
+        "(188, 410, 198, 420)": [
+            "Andouillette"
+        ],
+        "(188, 420, 198, 429)": [
+            "Bacon"
+        ],
+        "(188, 429, 198, 438)": [
+            "Bavette (boeuf)"
+        ],
+        "(188, 438, 198, 448)": [
+            "\u00c9chine de porc"
+        ],
+        "(188, 457, 198, 466)": [
+            "Escalope de veau"
+        ],
+        "(188, 448, 198, 457)": [
+            "Faux-filet (boeuf)"
+        ],
+        "(188, 466, 198, 476)": [
+            "Pintade"
+        ],
+        "(188, 476, 198, 485)": [
+            "Poitrine de porc"
+        ],
+        "(188, 485, 198, 494)": [
+            "Poulet"
+        ],
+        "(69, 345, 79, 354)": [
+            "Bigorneaux"
+        ],
+        "(79, 345, 89, 354)": [
+            "Cabillaud"
+        ],
+        "(89, 345, 99, 354)": [
+            "Colin"
+        ],
+        "(99, 345, 108, 354)": [
+            "Coques"
+        ],
+        "(108, 345, 118, 354)": [
+            "Coquille St-Jacques"
+        ],
+        "(118, 345, 128, 354)": [
+            "Encornet"
+        ],
+        "(128, 345, 138, 354)": [
+            "Gambas"
+        ],
+        "(138, 345, 148, 354)": [
+            "Hareng fum\u00e9"
+        ],
+        "(99, 354, 108, 364)": [
+            "Homard"
+        ],
+        "(108, 354, 118, 364)": [
+            "Hu\u00eetres"
+        ],
+        "(69, 280, 79, 289)": [
+            "Ail"
+        ],
+        "(79, 280, 89, 289)": [
+            "Artichaut"
+        ],
+        "(89, 280, 99, 289)": [
+            "Asperges"
+        ],
+        "(99, 280, 108, 289)": [
+            "Aubergine"
+        ],
+        "(108, 280, 118, 289)": [
+            "Avocat"
+        ],
+        "(118, 280, 128, 289)": [
+            "Betterave"
+        ],
+        "(128, 280, 138, 289)": [
+            "Blette"
+        ],
+        "(138, 280, 148, 289)": [
+            "Brocolis"
+        ],
+        "(69, 289, 79, 298)": [
+            "Carotte"
+        ],
+        "(79, 289, 89, 298)": [
+            "C\u00e9leri"
+        ],
+        "(89, 289, 99, 298)": [
+            "Concombre"
+        ],
+        "(99, 289, 108, 298)": [
+            "Courge"
+        ],
+        "(108, 289, 118, 298)": [
+            "Courgette"
+        ],
+        "(118, 289, 128, 298)": [
+            "Cresson"
+        ],
+        "(128, 289, 138, 298)": [
+            "Endive"
+        ],
+        "(138, 289, 148, 298)": [
+            "\u00c9pinards"
+        ]
+    }
+}
