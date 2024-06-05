@@ -149,22 +149,20 @@ class Controller:
         yes.setText("Oui")
         no.setText("Non")
         verif = msg.exec()
-
         if verif == QMessageBox.StandardButton.No:
             return None
         if verif == QMessageBox.StandardButton.Yes:
-            # Supprimer le dossier du projet
-            if self.chemin_projet and os.path.exists(self.chemin_projet):
-                for racine, dossiers, fichiers in os.walk(self.chemin_projet, topdown=False):
-                    for name in fichiers:
-                        os.remove(os.path.join(racine, name))
-                    for name in dossiers:
-                        os.rmdir(os.path.join(racine, name))
-                os.rmdir(self.chemin_projet)
-            
+            if self.chemin_projet:
+                try:
+                    if os.path.exists(self.chemin_projet):
+                        os.remove(self.chemin_projet)
+                except IOError as e:
+                    QMessageBox.critical(self.view, "Suppression du Projet", str(e))
+                    return
+
             self.reinitialiser_plateau()
             self.plan_modifiable = True  
-            self.activer_modifications()  
+            self.activer_modifications() 
             QMessageBox.information(self.view, "Suppression du Projet", "Le projet a été supprimé avec succès.")
 
     # Sauvegarder les informations du magasin
