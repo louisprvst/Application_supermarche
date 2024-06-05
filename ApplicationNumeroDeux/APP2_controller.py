@@ -38,10 +38,12 @@ class controller() :
         self.modele.save_to_json(nom , date , filename)
         self.popup_nl.close()
         self.vue.new_message_info("Information","Nouvelle liste créer avec succès")
+        self.open_liste(filename)
         
     def open_liste(self , filename):       
         formated_data = self.modele.open_liste(filename)
-        self.vue.update_list_vue(formated_data)
+        mes_articles = self.modele.open_liste_items(filename)
+        self.vue.update_list_view(formated_data,mes_articles)
         self.vue.new_message_info("Information","Liste ouverte avec succès")
    
     def save_liste(self , new_items , current_file) :
@@ -58,8 +60,6 @@ class controller() :
                 details_projet = self.modele.charger_projet(chemin_fichier)
                 self.vue.plateau.chargerImage(details_projet['chemin_image'])
                 self.vue.plateau.createQuadrillage(details_projet['lgn'], details_projet['cols'], details_projet['dimX'], details_projet['dimY'])
-                self.vue.afficherInfosMagasin(details_projet)
-                self.modele.mettre_a_jour_details(details_projet)
                 
                 
                 # Convertir les clés des cases de chaînes en tuples (sinon impossible d'enregistrer)

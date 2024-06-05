@@ -1,0 +1,36 @@
+{
+    "nomProjet": "d",
+    "auteurProjet": "d",
+    "dateCreationProjet": "2024-06-05",
+    "nomMagasin": "d",
+    "adresse_magasin": "d",
+    "lgn": 40,
+    "cols": 40,
+    "dimX": 10,
+    "dimY": 10,
+    "produits_selectionnes": {
+        "L\u00e9gumes": [
+            "Ail",
+            "Artichaut"
+        ],
+        "Poissons": [
+            "Cabillaud",
+            "Colin"
+        ]
+    },
+    "chemin_image": "/home/louis/Documents/IUT2/SAE4_APP/Application_supermarche/ApplicationNumeroUne/icones/plan6.jpg",
+    "produits_dans_cases": {
+        "(490, 257, 520, 273)": [
+            "Ail"
+        ],
+        "(640, 381, 670, 396)": [
+            "Artichaut"
+        ],
+        "(310, 180, 340, 195)": [
+            "Cabillaud"
+        ],
+        "(700, 180, 730, 195)": [
+            "Colin"
+        ]
+    }
+}

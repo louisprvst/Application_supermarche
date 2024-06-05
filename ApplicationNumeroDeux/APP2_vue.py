@@ -1,7 +1,7 @@
 import sys
 from PyQt6.QtWidgets import QApplication,QVBoxLayout,QMainWindow,QToolBar,QFileDialog,QWidget,QVBoxLayout,QLabel,QLineEdit,QDateEdit,QDialogButtonBox,QDockWidget,QTextEdit,QMessageBox
 from PyQt6.QtGui import QIcon , QAction , QPixmap , QPainter , QPen
-from PyQt6.QtCore import Qt , pyqtSignal
+from PyQt6.QtCore import Qt , pyqtSignal , QPoint
 
 
 ###################################################### CLASS IMAGE ( APP 1 ) ######################################################
@@ -44,6 +44,29 @@ class Plateau(QWidget):
             self.pixmap.load(chemin)
             self.pixmap = self.pixmap.scaled(1200, 720, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
             self.image_label.setPixmap(self.pixmap)
+          
+             
+# Fonction pour tracer un chemin entre les articles qui ne vient pas du code de l'app 1
+
+    def tracerChemin(self):
+        if not self.produits_dans_cases:
+            return
+
+        cases = list(self.produits_dans_cases.keys())
+        points = [QPoint((x1 + x2) // 2, (y1 + y2) // 2) for (x1, y1, x2, y2) in cases]
+
+        if points:
+            painter = QPainter(self.pixmap)
+            pen = QPen(Qt.GlobalColor.red)
+            pen.setWidth(15)
+            painter.setPen(pen)
+
+            for i in range(len(points) - 1):
+                painter.drawLine(points[i], points[i + 1])
+
+            painter.end()
+            self.image_label.setPixmap(self.pixmap)
+            
 
     def rechargerImage(self):
         """Méthode pour recharger l'image et réinitialiser le quadrillage"""
@@ -84,6 +107,8 @@ class Plateau(QWidget):
             
             for case, produits in self.produits_dans_cases.items():
                 self.mettre_a_jour_case(case, afficher_message=False)
+            
+            self.tracerChemin()
     
     # Permet d'ouvrir la fenêtre (EVENT DE TEST)
     def ouvrirFenetre(self, event): 
@@ -341,8 +366,9 @@ class vueApplication(QMainWindow):
     
     # Cette fonction sert a actualiser le texte afficher dans le dock gauche. ( liste des items )
     
-    def update_list_view(self , formated_data):
+    def update_list_view(self , formated_data , mes_articles):
         self.json_display.setPlainText(formated_data)
+        self.user_input.setPlainText(mes_articles)
 
     # Cette fonction permet d'ouvrir une liste
 
