@@ -1,24 +1,147 @@
 import sys
-from PyQt6.QtWidgets import QApplication,QMainWindow,QToolBar,QFileDialog,QWidget,QVBoxLayout,QLabel,QLineEdit,QDateEdit,QDialogButtonBox,QDockWidget,QTextEdit,QMessageBox
-from PyQt6.QtGui import QIcon, QAction
+from PyQt6.QtWidgets import QApplication,QVBoxLayout,QMainWindow,QToolBar,QFileDialog,QWidget,QVBoxLayout,QLabel,QLineEdit,QDateEdit,QDialogButtonBox,QDockWidget,QTextEdit,QMessageBox
+from PyQt6.QtGui import QIcon , QAction , QPixmap , QPainter , QPen
 from PyQt6.QtCore import Qt , pyqtSignal
 
 
-##################################################### POPUP INFO #####################################################
+###################################################### CLASS IMAGE ( APP 1 ) ######################################################
 
+class Image(QLabel):
+    
+    def __init__(self, chemin: str):
+        
+        super().__init__()
+        self.image = QPixmap(chemin)
+        self.setPixmap(self.image)
+
+
+##################################################### CLASS PLATEAU ( APP 1 ) #####################################################
+
+class Plateau(QWidget):
+    
+    def __init__(self):
+        
+        super().__init__()
+        
+        self.layout = QVBoxLayout(self)
+        self.image_label = QLabel(self)
+        self.layout.addWidget(self.image_label, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.setLayout(self.layout)
+        self.pixmap = QPixmap()
+        self.image_label.mousePressEvent = self.ouvrirFenetre
+        self.caseQuadrillage = []  # liste pour mettre toute les pos des cases 
+        self.produits_dans_cases = {}  # dictionnaire pour stocker les produits par case
+        self.objet_selectionne = None 
+        self.lgn = 0
+        self.cols = 0
+        self.dimX = 0
+        self.dimY = 0
+        self.chemin_image = None  # Ajouter l'attribut pour le chemin de l'image
+    
+    def chargerImage(self, chemin: str):
+        if chemin:
+            self.chemin_image = chemin  # Stocker le chemin de l'image
+            self.pixmap.load(chemin)
+            self.pixmap = self.pixmap.scaled(1200, 720, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
+            self.image_label.setPixmap(self.pixmap)
+
+    def rechargerImage(self):
+        """Méthode pour recharger l'image et réinitialiser le quadrillage"""
+        if self.chemin_image:
+            self.pixmap.load(self.chemin_image)
+            self.pixmap = self.pixmap.scaled(1200, 720, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
+            self.image_label.setPixmap(self.pixmap)
+            self.createQuadrillage(self.lgn, self.cols, self.dimX, self.dimY)
+
+    def createQuadrillage(self, lgn, cols, dimX, dimY):
+        self.lgn = lgn
+        self.cols = cols
+        self.dimX = dimX
+        self.dimY = dimY
+
+        if not self.pixmap.isNull():
+            painter = QPainter(self.pixmap)
+            pen = QPen(Qt.GlobalColor.black)
+            pen.setWidth(1)
+            painter.setPen(pen)
+            larg = self.pixmap.width()
+            haut = self.pixmap.height()
+            cellLarge = larg / cols
+            cellHaut = haut / lgn
+
+            self.caseQuadrillage = []  # permet d'effacer les dernières pos 
+
+            for i in range(cols):
+                for j in range(lgn):
+                    x1 = int(dimX + i * cellLarge)
+                    y1 = int(dimY + j * cellHaut)
+                    x2 = int(dimX + (i + 1) * cellLarge)
+                    y2 = int(dimY + (j + 1) * cellHaut)
+                    self.caseQuadrillage.append((x1, y1, x2, y2))
+                    painter.drawRect(x1, y1, x2 - x1, y2 - y1)
+            painter.end()
+            self.image_label.setPixmap(self.pixmap)
+            
+            for case, produits in self.produits_dans_cases.items():
+                self.mettre_a_jour_case(case, afficher_message=False)
+    
+    # Permet d'ouvrir la fenêtre (EVENT DE TEST)
+    def ouvrirFenetre(self, event): 
+        posClick = event.pos()
+        for (x1, y1, x2, y2) in self.caseQuadrillage:
+            if x1 <= posClick.x() <= x2 and y1 <= posClick.y() <= y2:
+                case = (x1, y1, x2, y2)
+                if case in self.produits_dans_cases:
+                    self.afficher_produits_dans_case(case, avec_suppression=True)
+                else:
+                    self.placer_objet_dans_case(case)
+                break
+ 
+    # Permet de mettre à jour une case afin d'ajouter un objet dedans et que ça soit à jour
+    def mettre_a_jour_case(self, case, afficher_message=True): 
+        x1, y1, x2, y2 = case
+        painter = QPainter(self.pixmap)
+        pen = QPen(Qt.GlobalColor.red)
+        pen.setWidth(1)
+        painter.setPen(pen)
+        painter.drawRect(x1, y1, x2 - x1, y2 - y1)
+        painter.end()
+        self.image_label.setPixmap(self.pixmap)
+        if afficher_message:
+            contenu = "\n".join(self.produits_dans_cases[case])
+            QMessageBox.information(self, "Produit placé", f"Produit dans la case ({x1}, {y1}):\n{contenu}")
+
+        
+    def redessiner_case(self, case):
+        x1, y1, x2, y2 = case
+        painter = QPainter(self.pixmap)
+        pen = QPen(Qt.GlobalColor.black)
+        pen.setWidth(1)
+        painter.setPen(pen)
+        painter.drawRect(x1, y1, x2 - x1, y2 - y1)
+        painter.end()
+        self.image_label.setPixmap(self.pixmap)
+
+
+##################################################### POPUP INFO #####################################################
 
 class popup_info(QWidget):
     
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('A propos')
+        self.setWindowTitle('À propos')
         self.setGeometry(100, 100, 300, 150)
         
         self.name = QLabel("Application item finder.")
         
+        layout = QVBoxLayout()
+        layout.addWidget(self.name)
+        self.setLayout(layout)
+              
+        self.show()
+        
 
 ################################################### POPUP NEW LISTE ###################################################
-
 
 class popup_new_liste(QWidget):
     
@@ -68,8 +191,7 @@ class popup_new_liste(QWidget):
     
         
 ################################################### VUE APP2 ###################################################
-
-        
+     
 class vueApplication(QMainWindow):
     
 # Signaux :
@@ -79,6 +201,8 @@ class vueApplication(QMainWindow):
     MAINW_new_liste_signal = pyqtSignal()
     
     MAINW_save_liste_signal = pyqtSignal(list , str)
+    
+    MAINW_open_shop_signal = pyqtSignal()
     
 # Constructeur :
     
@@ -95,10 +219,10 @@ class vueApplication(QMainWindow):
     # Menu Fichiers :
         
         menu_Fichiers = menu_bar.addMenu('&Fichier')
-        
+       
         fic_ouvrir = QAction(QIcon(sys.path[0] + '/icones/magasin.png'), 'Choisir un magasin', self)
-        ##fic_ouvrir.triggered.connect(self.fic_ouvrir)
-        fic_ouvrir.setShortcut("Ctrl+O")
+        fic_ouvrir.triggered.connect(self.ouvrir_fichier)
+        fic_ouvrir.setShortcut('Ctrl+O')
         menu_Fichiers.addAction(fic_ouvrir)
         
     # Menu Listes :
@@ -186,11 +310,23 @@ class vueApplication(QMainWindow):
         
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.dock_list)
         self.dock_list.setMinimumWidth(200)
-        
+ 
+        # Contenu du plan dans le widget central
+        self.plateau = Plateau()
+        central_widget = QWidget(self)
+        layout = QVBoxLayout(central_widget)
+        layout.addWidget(self.plateau)
+    
+        self.setCentralWidget(central_widget)
+ 
         self.showMaximized()
-        
-        
+      
 # Envoie des signaux :
+
+    # Cette fonction permet d'ouvrir un fichier contenant un magasin
+
+    def ouvrir_fichier(self):
+        self.MAINW_open_shop_signal.emit()
     
     # Cette fonction permet de créer une nouvelle liste
     
@@ -236,7 +372,7 @@ class vueApplication(QMainWindow):
                 background-color: #FFFFFF;
                 color: #000000;
             }
-            QLabel, QLineEdit, QTextEdit, QTreeWidget, QDockWidget, QMenuBar, QMenu, QToolBar, QToolButton {
+            QLabel, QLineEdit, QTextEdit, QDockWidget, QMenuBar, QMenu, QToolBar, QToolButton {
                 background-color: #FFFFFF;
                 color: #000000;
             }""")
@@ -248,7 +384,7 @@ class vueApplication(QMainWindow):
                 background-color: #141414;
                 color: #FFFFFF;
             }
-            QLabel, QLineEdit, QTextEdit, QTreeWidget, QDockWidget, QMenuBar, QMenu, QToolBar, QToolButton {
+            QLabel, QLineEdit, QTextEdit, QDockWidget, QMenuBar, QMenu, QToolBar, QToolButton {
                 background-color: #141414;
                 color: #FFFFFF;
             }""")
@@ -261,14 +397,8 @@ class vueApplication(QMainWindow):
     
     def new_message_info(self, titre, texte):
         QMessageBox.information(self, titre, texte)
-        
-        
-        
-        
-        
-        
-        
-        
+
+       
 ################################################### MAIN TEST ###################################################
 
 if __name__ == "__main__":
