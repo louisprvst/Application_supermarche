@@ -8,6 +8,15 @@ from PyQt6.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QWidget, QDialog, 
 from PyQt6.QtGui import QPixmap, QIcon, QPainter, QPen, QFont, QAction, QMouseEvent
 from PyQt6.QtCore import Qt, pyqtSignal
 
+# permet d'ouvrir un pdf 
+def ouvrir_pdf(pdf_path):
+    if sys.platform == "win32": # Windows 
+        os.startfile(pdf_path)
+    elif sys.platform == "linux":
+        os.system(f'xdg-open {pdf_path}') # Linux et ses distrib: Debian, ubuntu etc.. 
+        
+    
+
 # --------------------------------------------------------------- classe Image ------------------------------------------------------------------------------
 class Image(QLabel):
     def __init__(self, chemin: str):
@@ -423,6 +432,12 @@ class MainWindow(QMainWindow):
         self.action_theme_clair.triggered.connect(self.theme_clair)
         self.action_theme_sombre.triggered.connect(self.theme_sombre)
 
+        # Menu "Aide" avec le menu "Notice"
+        menu_aide = menu_bar.addMenu('&Aide')
+        self.action_notice = QAction("Notice", self)
+        menu_aide.addAction(self.action_notice)
+        self.action_notice.triggered.connect(self.afficher_notice)
+
         #Tool Bar 
         toolbar = QToolBar('Tool Bar')
         self.addToolBar(toolbar)
@@ -438,6 +453,14 @@ class MainWindow(QMainWindow):
         
         # Afficher la fenêtre maximisée
         self.showMaximized()
+
+    # permet d'afficher notre notice d'utilisation 
+    def afficher_notice(self):
+        chemin_pdf = os.path.join(sys.path[0], 'notice.pdf')
+        if os.path.exists(chemin_pdf):
+            ouvrir_pdf(chemin_pdf)
+        else:
+            QMessageBox.critical(self, "Erreur", "Le fichier de la notice est introuvable.")
         
     # permet d'ajouter des colonnes dans le quadrillage après avoir créer le projet 
     def ajouter_colonnes(self):
