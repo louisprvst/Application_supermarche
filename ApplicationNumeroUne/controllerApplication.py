@@ -70,6 +70,7 @@ class Controller:
                     self.activer_modifications()  
                     QMessageBox.information(self.view, "Nouveau Projet", "Nouveau projet créé avec succès !")
 
+    # Fonction pour enregistrer le projet
     def enregistrer_projet(self):
         if not self.model.details_projet:
             QMessageBox.warning(self.view, "Enregistrement du Projet", "Il n'y a aucun projet à enregistrer !")
@@ -127,7 +128,7 @@ class Controller:
             QMessageBox.critical(self.view, "Enregistrement du Projet", message)
 
 
-   
+   #Fonction pour ouvrir un projet
     def ouvrir_projet(self):
         chemin_dossier = QFileDialog.getExistingDirectory(self.view, "Sélectionner le dossier du projet à ouvrir")
         if chemin_dossier:
@@ -226,6 +227,7 @@ class Controller:
             self.view.plateau.cols = self.view.plateau.cols + 1
             self.view.plateau.rechargerImage()
             self.model.details_projet['cols'] = self.view.plateau.cols
+
     # Fonction pour retirer des colonnes au plan 
     def retirer_colonnes(self):
         if self.plan_modifiable:
@@ -236,12 +238,14 @@ class Controller:
                 self.model.details_projet['cols'] = self.view.plateau.cols
             else:
                 self.view.afficher_message_erreur("Impossible de réduire les colonnes", "Le nombre de colonnes ne peut pas être inférieur.")
+
     # Fonction pour ajouter des lignes au plan 
     def ajouter_lignes(self):
         if self.plan_modifiable:
             self.view.plateau.lgn += 1
             self.view.plateau.rechargerImage()
             self.model.details_projet['lgn'] = self.view.plateau.lgn
+
     # Fonction pour retirer des lignes au plan 
     def retirer_lignes(self):
         if self.plan_modifiable:
@@ -259,6 +263,7 @@ class Controller:
         self.view.retirer_colonnes_button.setEnabled(False)
         self.view.ajouter_lignes_button.setEnabled(False)
         self.view.retirer_lignes_button.setEnabled(False)
+        
     # permet d'activer les modif dans le plan
     def activer_modifications(self):
         self.plan_modifiable = True
