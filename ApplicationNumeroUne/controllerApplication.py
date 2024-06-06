@@ -16,6 +16,7 @@ class Controller:
         self.view = MainWindow()
         self.chemin_projet = None
         self.plan_modifiable = True
+        self.dossier_projet = None
         
         # Connecter les actions de la vue aux méthodes du contrôleur
         self.view.action_new_projet.triggered.connect(self.creer_nouveau_projet)
@@ -83,39 +84,48 @@ class Controller:
         produits_dans_cases_list_keys = {str(k): v for k, v in self.view.plateau.produits_dans_cases.items()}
         self.model.details_projet['produits_dans_cases'] = produits_dans_cases_list_keys
 
-        # Sélectionner le dossier où enregistrer les données du projet
-        chemin_dossier = QFileDialog.getExistingDirectory(self.view, "Sélectionner un dossier pour enregistrer le projet")
-        if chemin_dossier:
-            nom_projet = self.model.details_projet.get('nomProjet', 'projet_sans_nom')
-            if not nom_projet:
-                nom_projet = "projet_sans_nom"
-            chemin_projet = os.path.join(chemin_dossier, nom_projet)
+        if self.dossier_projet:
+            chemin_projet = self.dossier_projet
+        else:
+            # Sélectionner le dossier où enregistrer les données du projet
+            chemin_dossier = QFileDialog.getExistingDirectory(self.view, "Sélectionner un dossier pour enregistrer le projet")
+            if chemin_dossier:
+                nom_projet = self.model.details_projet.get('nomProjet', 'projet_sans_nom')
+                if not nom_projet:
+                    nom_projet = "projet_sans_nom"
+                chemin_projet = os.path.join(chemin_dossier, nom_projet)
 
-            # Créer le dossier pour le projet
-            os.makedirs(chemin_projet, exist_ok=True)
+                # Créer le dossier pour le projet
+                os.makedirs(chemin_projet, exist_ok=True)
 
-            # Copier l'image dans le dossier du projet
-            chemin_image_source = self.model.details_projet['chemin_image']
-            nom_image = os.path.basename(chemin_image_source)
-            chemin_image_cible = os.path.join(chemin_projet, nom_image)
-            
-            try:
-                with open(chemin_image_source, 'rb') as src_file:
-                    with open(chemin_image_cible, 'wb') as dest_file:
-                        dest_file.write(src_file.read())
-                # Mettre à jour le chemin de l'image dans le fichier JSON pour utiliser un chemin relatif
-                self.model.details_projet['chemin_image'] = nom_image
-            except Exception as e:
-                QMessageBox.critical(self.view, "Enregistrement du Projet", f"Erreur lors de la copie de l'image: {e}")
-                return
+                # Copier l'image dans le dossier du projet
+                chemin_image_source = self.model.details_projet['chemin_image']
+                nom_image = os.path.basename(chemin_image_source)
+                chemin_image_cible = os.path.join(chemin_projet, nom_image)
+                
+                try:
+                    with open(chemin_image_source, 'rb') as src_file:
+                        with open(chemin_image_cible, 'wb') as dest_file:
+                            dest_file.write(src_file.read())
+                    # Mettre à jour le chemin de l'image dans le fichier JSON pour utiliser un chemin relatif
+                    self.model.details_projet['chemin_image'] = nom_image
+                except Exception as e:
+                    QMessageBox.critical(self.view, "Enregistrement du Projet", f"Erreur lors de la copie de l'image: {e}")
+                    return
 
-            # Sauvegarder les informations du projet dans un fichier JSON
-            chemin_fichier_projet = os.path.join(chemin_projet, f"{nom_projet}.json")
-            success, message = self.model.sauvegarder_projet(chemin_fichier_projet)
-            if success:
-                QMessageBox.information(self.view, "Enregistrement du Projet", message)
-            else:
-                QMessageBox.critical(self.view, "Enregistrement du Projet", message)
+                self.dossier_projet = chemin_projet
+
+        # Sauvegarder les informations du projet dans un fichier JSON
+        nom_projet = self.model.details_projet.get('nomProjet', 'projet_sans_nom')
+        chemin_fichier_projet = os.path.join(self.dossier_projet, f"{nom_projet}.json")
+        success, message = self.model.sauvegarder_projet(chemin_fichier_projet)
+        if success:
+            if not self.dossier_projet:
+                self.dossier_projet = chemin_projet
+            QMessageBox.information(self.view, "Enregistrement du Projet", message)
+        else:
+            QMessageBox.critical(self.view, "Enregistrement du Projet", message)
+
 
    
     def ouvrir_projet(self):
@@ -142,6 +152,7 @@ class Controller:
                     self.view.plateau.mettre_a_jour_case(case, afficher_message=False)
 
                 self.chemin_projet = chemin_fichier_projet
+                self.dossier_projet = chemin_dossier
 
                 self.plan_modifiable = True  
                 self.desactiver_modifications()  
@@ -165,6 +176,7 @@ class Controller:
         self.view.objets_widget.clear()
         self.model.details_projet = {}
         self.chemin_projet = None
+        self.dossier_projet = None
         self.plan_modifiable = True  
         self.activer_modifications()
 
