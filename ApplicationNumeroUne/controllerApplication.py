@@ -76,7 +76,6 @@ class Controller:
                         self.activer_modifications()
                         QMessageBox.information(self.view, "Nouveau Projet", "Nouveau projet créé avec succès !")
 
-    # Fonction pour enregistrer le projet
     def enregistrer_projet(self):
         if not self.model.details_projet:
             QMessageBox.warning(self.view, "Enregistrement du Projet", "Il n'y a aucun projet à enregistrer !")
@@ -86,7 +85,7 @@ class Controller:
         if not self.verifier_entree_sortie():
             QMessageBox.warning(self.view, "Enregistrement du Projet", "Vous devez placer 'Entrée' et 'Sortie' sur le plan avant d'enregistrer le projet.")
             return
-        
+        self.sauvegarder_infos_magasin()
         # Convertir les clés des cases en listes pour JSON
         produits_dans_cases_list_keys = {str(k): v for k, v in self.view.plateau.produits_dans_cases.items()}
         self.model.details_projet['produits_dans_cases'] = produits_dans_cases_list_keys
@@ -129,7 +128,7 @@ class Controller:
         # Sauvegarder les informations du projet dans un fichier JSON
         nom_projet = self.model.details_projet.get('nomProjet', 'projet_sans_nom')
         if not nom_projet:
-                    nom_projet = "projet_sans_nom"
+            nom_projet = "projet_sans_nom"
         chemin_fichier_projet = os.path.join(self.dossier_projet, f"{nom_projet}.json")
         success, message = self.model.sauvegarder_projet(chemin_fichier_projet)
         if success:

@@ -322,7 +322,6 @@ class NewProjetDialog(QDialog):
             return None
 
 # -------------------------------------------------------------- classe MainWindow ----------------------------------------------------------------------
-# -------------------------------------------------------------- classe MainWindow ----------------------------------------------------------------------
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -350,7 +349,7 @@ class MainWindow(QMainWindow):
         self.plateau = Plateau()
         central_widget = QWidget(self)
         layout = QVBoxLayout(central_widget)
-        layout.addWidget(self.plateau, alignment=Qt.AlignmentFlag.AlignCenter)  # Center the plateau
+        layout.addWidget(self.plateau, alignment=Qt.AlignmentFlag.AlignCenter)  
 
         # Ajout des boutons "+" et "-"
         self.boutons_layout = QHBoxLayout()
