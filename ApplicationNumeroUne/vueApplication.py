@@ -13,9 +13,9 @@ def ouvrir_pdf(pdf_path):
     if sys.platform == "win32": # Windows 
         os.startfile(pdf_path)
     elif sys.platform == "linux":
-        os.system(f'xdg-open {pdf_path}') # Linux et ses distrib: Debian, ubuntu etc.. 
-        
-    
+        os.system(f'xdg-open {pdf_path}') # Linux et ses distrib: Debian, ubuntu etc..
+    elif sys.platform == "darwin":
+        os.system(f"open '{pdf_path}'") # pour mac 
 
 # --------------------------------------------------------------- classe Image ------------------------------------------------------------------------------
 class Image(QLabel):
@@ -56,7 +56,8 @@ class Plateau(QWidget):
             self.pixmap.load(chemin)
             self.pixmap = self.pixmap.scaled(900, 700, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
             self.image_label.setPixmap(self.pixmap)
-            self.image_label.setFixedSize(900, 700) 
+            self.image_label.setFixedSize(900, 700)
+            self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter) 
 
     # fonction pour recharger l'image et réinitialise son quadrillage 
     def rechargerImage(self):
@@ -64,6 +65,7 @@ class Plateau(QWidget):
             self.pixmap.load(self.chemin_image)
             self.pixmap = self.pixmap.scaled(900, 700, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
             self.image_label.setPixmap(self.pixmap)
+            self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)  
             self.createQuadrillage(self.lgn, self.cols, self.dimX, self.dimY)
 
     def createQuadrillage(self, lgn, cols, dimX, dimY):
@@ -186,6 +188,7 @@ class Plateau(QWidget):
         self.caseQuadrillage.clear()
         self.pixmap = QPixmap()
         self.image_label.setPixmap(self.pixmap)
+
 # --------------------------------------------------- classe FenetreText (EVENT TEST) ---------------------------------------------------------------
 class FenetreTexte(QDialog):
     def __init__(self, text):
@@ -319,6 +322,7 @@ class NewProjetDialog(QDialog):
             return None
 
 # -------------------------------------------------------------- classe MainWindow ----------------------------------------------------------------------
+# -------------------------------------------------------------- classe MainWindow ----------------------------------------------------------------------
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -346,7 +350,7 @@ class MainWindow(QMainWindow):
         self.plateau = Plateau()
         central_widget = QWidget(self)
         layout = QVBoxLayout(central_widget)
-        layout.addWidget(self.plateau)
+        layout.addWidget(self.plateau, alignment=Qt.AlignmentFlag.AlignCenter)  # Center the plateau
 
         # Ajout des boutons "+" et "-"
         self.boutons_layout = QHBoxLayout()

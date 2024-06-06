@@ -54,21 +54,27 @@ class Controller:
                     cols = details_projet.get('cols', 10) or 10
                     details_projet['lgn'] = lgn
                     details_projet['cols'] = cols
-                    self.view.plateau.chargerImage(chemin_image)
-                    self.view.plateau.createQuadrillage(lgn, cols, details_projet['dimX'], details_projet['dimY'])
-                    self.view.afficherInfosMagasin(details_projet)
-                    self.model.mettre_a_jour_details(details_projet)
+                    
+                    # verif pour faire en sorte qu'il n'y a pas trop de ligne ou de colonnes pour éviter de faire planter l'application 
+                    if lgn > 250 or cols > 250:
+                        QMessageBox.information(self.view, "Erreur nouveau projet", "Il y a beaucoup trop de colonnes ou de lignes. Cela pourrait rendre le plan illisible ou causer des problèmes à votre application.")
+                        self.reinitialiser_plateau()
+                    else:
+                        self.view.plateau.chargerImage(chemin_image)
+                        self.view.plateau.createQuadrillage(lgn, cols, details_projet['dimX'], details_projet['dimY'])
+                        self.view.afficherInfosMagasin(details_projet)
+                        self.model.mettre_a_jour_details(details_projet)
 
-                    # Ajouter "Entrée" et "Sortie" aux produits sélectionnés
-                    produits_selectionnes = details_projet['produits_selectionnes']
-                    self.model.ajouter_produits_speciaux(produits_selectionnes)
-                    self.view.listeObjets(produits_selectionnes)
+                        # Ajouter "Entrée" et "Sortie" aux produits sélectionnés
+                        produits_selectionnes = details_projet['produits_selectionnes']
+                        self.model.ajouter_produits_speciaux(produits_selectionnes)
+                        self.view.listeObjets(produits_selectionnes)
 
-                    self.view.plateau.cols = cols
-                    self.view.plateau.lgn = lgn
-                    self.plan_modifiable = True  
-                    self.activer_modifications()  
-                    QMessageBox.information(self.view, "Nouveau Projet", "Nouveau projet créé avec succès !")
+                        self.view.plateau.cols = cols
+                        self.view.plateau.lgn = lgn
+                        self.plan_modifiable = True
+                        self.activer_modifications()
+                        QMessageBox.information(self.view, "Nouveau Projet", "Nouveau projet créé avec succès !")
 
     # Fonction pour enregistrer le projet
     def enregistrer_projet(self):
