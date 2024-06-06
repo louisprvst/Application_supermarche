@@ -124,6 +124,6 @@ Utilisation exclusive des bibliothèques vues en cours
 - FARDEL Mathéïs : Ajout de Entrée/Sortie dans les objets, et obligation de les mettre sur le plan pour pouvoir l'enregistrer (car besoin pour app2)
 - Demol Alexis: Tentative d'enregistrer le projet que dans un dossier (le push de ce matin ca n'a pas fonctionné)
 
-### 6/06 de 10h à 11h30 :
+### 6/06 de 10h à 11h30 et 14h30 à 16h:
 - Membres présents phtsiquement : FARDEL Mathéïs, DEMOL Alexis, PREVOST Louis, CAPON Ethan
 - FARDEL Mathéïs : récupération de la création de dossier afin que le projet soit lisible sur différents PC et ajout qu'en cas de sauvegarde alors que le dossier du projet a déjà été crée, le JSON uniquement soit mis à jour (donc pouvoir enregistrer les avancées d'un projet déjà existant)

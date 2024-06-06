@@ -1,0 +1,175 @@
+{
+    "nomProjet": "carrefour_landrethun",
+    "auteurProjet": "Math\u00e9\u00efs FARDEL",
+    "dateCreationProjet": "2024-06-06",
+    "nomMagasin": "Carrefour Contact",
+    "adresse_magasin": "rue Jean Monnet LANDRETHUN-LE-NORD 62250",
+    "lgn": 75,
+    "cols": 75,
+    "dimX": 0,
+    "dimY": 0,
+    "produits_selectionnes": {
+        "L\u00e9gumes": [
+            "Betterave",
+            "Blette",
+            "Brocolis",
+            "Carotte",
+            "C\u00e9leri",
+            "Champignons",
+            "Champignons chinois",
+            "Navet",
+            "Oignons",
+            "Palmier (coeur)"
+        ],
+        "Poissons": [
+            "Maquereaux",
+            "Moules",
+            "Poissons eau douce",
+            "Sardines",
+            "Saumon",
+            "Saumon fum\u00e9",
+            "Surimi"
+        ],
+        "Viandes": [
+            "Agneau",
+            "Aiguillette de boeuf",
+            "Aiguillette de poulet",
+            "Andouille",
+            "Andouillette",
+            "Bacon",
+            "Bavette (boeuf)",
+            "Bifteck de boeuf"
+        ],
+        "\u00c9picerie": [
+            "Bl\u00e9 dur",
+            "Bouillon cube",
+            "Boulgour",
+            "Cannelle",
+            "Chapelure",
+            "Coriandre"
+        ],
+        "\u00c9picerie sucr\u00e9e": [
+            "Abricots secs",
+            "Amandes",
+            "Beurre de cacahu\u00e8te",
+            "Cassonade"
+        ],
+        "Fruits": [
+            "Abricots",
+            "Ananas",
+            "Framboise",
+            "Fruit de la passion",
+            "Grenade"
+        ],
+        "Cr\u00e8merie": [
+            "Fromages",
+            "Lait",
+            "Margarine",
+            "\u0152ufs",
+            "Petit suisse",
+            "Petits pots b\u00e9b\u00e9"
+        ],
+        "Boissons": [
+            "Alcools fort",
+            "Bi\u00e8re",
+            "Eau gazeuse",
+            "Eau min\u00e9rale",
+            "Jus de fruits"
+        ],
+        "Articles Maison": [
+            "Cirage",
+            "Cure dents",
+            "D\u00e9sodorisant",
+            "D\u00e9tachant",
+            "Savon",
+            "Sel machine"
+        ],
+        "Hygi\u00e8ne": [
+            "Couches b\u00e9b\u00e9",
+            "Cr\u00e8me main",
+            "D\u00e9maquillant",
+            "Dentifrice",
+            "Fil dentaire",
+            "Gel douche"
+        ],
+        "Bureau": [
+            "Souris de correction",
+            "Stylo bille"
+        ],
+        "Animaux": [
+            "Croquettes",
+            "Foins",
+            "Graines"
+        ],
+        "Entr\u00e9e / Sortie": [
+            "Entr\u00e9e du magasin",
+            "Sortie du magasin"
+        ]
+    },
+    "chemin_image": "plan4.png",
+    "produits_dans_cases": {
+        "(297, 690, 307, 700)": [
+            "Entr\u00e9e du magasin"
+        ],
+        "(287, 690, 297, 700)": [
+            "Sortie du magasin"
+        ],
+        "(138, 345, 148, 354)": [
+            "Betterave"
+        ],
+        "(118, 345, 128, 354)": [
+            "Blette"
+        ],
+        "(99, 345, 108, 354)": [
+            "Brocolis"
+        ],
+        "(79, 345, 89, 354)": [
+            "Carotte"
+        ],
+        "(89, 354, 99, 364)": [
+            "C\u00e9leri"
+        ],
+        "(108, 354, 118, 364)": [
+            "Champignons"
+        ],
+        "(128, 354, 138, 364)": [
+            "Champignons chinois"
+        ],
+        "(69, 354, 79, 364)": [
+            "Navet"
+        ],
+        "(108, 345, 118, 354)": [
+            "Oignons"
+        ],
+        "(118, 354, 128, 364)": [
+            "Palmier (coeur)"
+        ],
+        "(69, 401, 79, 410)": [
+            "Maquereaux"
+        ],
+        "(79, 401, 89, 410)": [
+            "Moules"
+        ],
+        "(69, 410, 79, 420)": [
+            "Poissons eau douce"
+        ],
+        "(79, 410, 89, 420)": [
+            "Sardines"
+        ],
+        "(128, 401, 138, 410)": [
+            "Saumon"
+        ],
+        "(138, 401, 148, 410)": [
+            "Saumon fum\u00e9"
+        ],
+        "(128, 410, 138, 420)": [
+            "Surimi"
+        ],
+        "(188, 476, 198, 485)": [
+            "Couches b\u00e9b\u00e9"
+        ],
+        "(188, 485, 198, 494)": [
+            "Cr\u00e8me main"
+        ]
+    }
+}
