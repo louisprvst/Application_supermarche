@@ -108,7 +108,7 @@ class Controller:
                     with open(chemin_image_source, 'rb') as src_file:
                         with open(chemin_image_cible, 'wb') as dest_file:
                             dest_file.write(src_file.read())
-                    # Mettre à jour le chemin de l'image dans le fichier JSON pour utiliser un chemin relatif
+                    # Mettre à jour le chemin de l'image dans le fichier JSON pour utiliser uniquement le nom de l'image
                     self.model.details_projet['chemin_image'] = nom_image
                 except Exception as e:
                     QMessageBox.critical(self.view, "Enregistrement du Projet", f"Erreur lors de la copie de l'image: {e}")
@@ -126,7 +126,6 @@ class Controller:
             QMessageBox.information(self.view, "Enregistrement du Projet", message)
         else:
             QMessageBox.critical(self.view, "Enregistrement du Projet", message)
-
 
    #Fonction pour ouvrir un projet
     def ouvrir_projet(self):
@@ -263,7 +262,7 @@ class Controller:
         self.view.retirer_colonnes_button.setEnabled(False)
         self.view.ajouter_lignes_button.setEnabled(False)
         self.view.retirer_lignes_button.setEnabled(False)
-        
+
     # permet d'activer les modif dans le plan
     def activer_modifications(self):
         self.plan_modifiable = True

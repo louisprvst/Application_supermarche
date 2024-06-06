@@ -1,0 +1,33 @@
+{
+    "nomProjet": "",
+    "auteurProjet": "",
+    "dateCreationProjet": "2024-06-06",
+    "nomMagasin": "",
+    "adresse_magasin": "",
+    "lgn": 10,
+    "cols": 10,
+    "dimX": 0,
+    "dimY": 0,
+    "produits_selectionnes": {
+        "L\u00e9gumes": [
+            "Champignons",
+            "Champignons chinois"
+        ],
+        "Entr\u00e9e / Sortie": [
+            "Entr\u00e9e du magasin",
+            "Sortie du magasin"
+        ]
+    },
+    "chemin_image": "plan2.png",
+    "produits_dans_cases": {
+        "(204, 350, 255, 420)": [
+            "Entr\u00e9e du magasin"
+        ],
+        "(204, 280, 255, 350)": [
+            "Sortie du magasin"
+        ],
+        "(153, 280, 204, 350)": [
+            "Champignons"
+        ]
+    }
+}
