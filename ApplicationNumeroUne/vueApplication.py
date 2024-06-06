@@ -103,8 +103,19 @@ class Plateau(QWidget):
     # Permet d'ouvrir la fenêtre (EVENT DE TEST)
     def ouvrirFenetre(self, event): 
         posClick = event.pos()
+
+        # Calculer le décalage de l'image centrée
+        image_rect = self.image_label.pixmap().rect()
+        label_rect = self.image_label.rect()
+        decalage_x = (label_rect.width() - image_rect.width()) // 2
+        decalage_y = (label_rect.height() - image_rect.height()) // 2
+
+        # Ajuster les coordonnées de clic
+        x_ajuste = posClick.x() - decalage_x
+        y_ajuste = posClick.y() - decalage_y
+
         for (x1, y1, x2, y2) in self.caseQuadrillage:
-            if x1 <= posClick.x() <= x2 and y1 <= posClick.y() <= y2:
+            if x1 <= x_ajuste <= x2 and y1 <= y_ajuste <= y2:
                 case = (x1, y1, x2, y2)
                 if case in self.produits_dans_cases:
                     self.afficher_produits_dans_case(case, avec_suppression=True)

@@ -1,0 +1,26 @@
+{
+    "nomProjet": "",
+    "auteurProjet": "Test",
+    "dateCreationProjet": "2024-06-06",
+    "nomMagasin": "Test",
+    "adresse_magasin": "Test",
+    "lgn": 10,
+    "cols": 10,
+    "dimX": 0,
+    "dimY": 0,
+    "produits_selectionnes": {
+        "Entr\u00e9e / Sortie": [
+            "Entr\u00e9e du magasin",
+            "Sortie du magasin"
+        ]
+    },
+    "chemin_image": "plan8.jpg",
+    "produits_dans_cases": {
+        "(449, 560, 538, 630)": [
+            "Entr\u00e9e du magasin"
+        ],
+        "(538, 560, 628, 630)": [
+            "Sortie du magasin"
+        ]
+    }
+}
