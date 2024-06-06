@@ -1,5 +1,5 @@
 import sys
-from PyQt6.QtWidgets import QApplication,QVBoxLayout,QMainWindow,QToolBar,QFileDialog,QWidget,QVBoxLayout,QLabel,QLineEdit,QDateEdit,QDialogButtonBox,QDockWidget,QTextEdit,QMessageBox
+from PyQt6.QtWidgets import QApplication,QDialog,QVBoxLayout,QMainWindow,QToolBar,QFileDialog,QWidget,QVBoxLayout,QLabel,QLineEdit,QDateEdit,QDialogButtonBox,QDockWidget,QTextEdit,QMessageBox
 from PyQt6.QtGui import QIcon , QAction , QPixmap , QPainter , QPen
 from PyQt6.QtCore import Qt , pyqtSignal
 
@@ -18,11 +18,11 @@ class Image(QLabel):
 ##################################################### CLASS PLATEAU ( APP 1 ) #####################################################
 
 class Plateau(QWidget):
-    
+    articleSelected = pyqtSignal(str) 
+    caseUpdated = pyqtSignal(tuple, list) 
+
     def __init__(self):
-        
         super().__init__()
-        
         self.layout = QVBoxLayout(self)
         self.image_label = QLabel(self)
         self.layout.addWidget(self.image_label, alignment=Qt.AlignmentFlag.AlignCenter)
@@ -36,20 +36,25 @@ class Plateau(QWidget):
         self.cols = 0
         self.dimX = 0
         self.dimY = 0
-        self.chemin_image = None  # Ajouter l'attribut pour le chemin de l'image
+        self.chemin_image = None  
     
+    def setObjetSelectionne(self, objet): 
+        self.objet_selectionne = objet
+        self.articleSelected.emit(objet)  
+
     def chargerImage(self, chemin: str):
         if chemin:
-            self.chemin_image = chemin  # Stocker le chemin de l'image
+            self.chemin_image = chemin  
             self.pixmap.load(chemin)
-            self.pixmap = self.pixmap.scaled(1200, 720, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
+            self.pixmap = self.pixmap.scaled(900, 700, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
             self.image_label.setPixmap(self.pixmap)
+            self.image_label.setFixedSize(900, 700) 
 
+    # fonction pour recharger l'image et réinitialise son quadrillage 
     def rechargerImage(self):
-        """Méthode pour recharger l'image et réinitialiser le quadrillage"""
         if self.chemin_image:
             self.pixmap.load(self.chemin_image)
-            self.pixmap = self.pixmap.scaled(1200, 720, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
+            self.pixmap = self.pixmap.scaled(900, 700, aspectRatioMode=Qt.AspectRatioMode.KeepAspectRatio)
             self.image_label.setPixmap(self.pixmap)
             self.createQuadrillage(self.lgn, self.cols, self.dimX, self.dimY)
 
@@ -92,11 +97,22 @@ class Plateau(QWidget):
             if x1 <= posClick.x() <= x2 and y1 <= posClick.y() <= y2:
                 case = (x1, y1, x2, y2)
                 if case in self.produits_dans_cases:
-                    self.afficher_produits_dans_case(case, avec_suppression=True)
+                    self.afficher_produits_dans_case(case)
                 else:
                     self.placer_objet_dans_case(case)
                 break
- 
+            
+    # Permet de placer un objet dans une case
+    def placer_objet_dans_case(self, case):  
+        if self.objet_selectionne:
+            produit = self.objet_selectionne
+            if case not in self.produits_dans_cases:
+                self.produits_dans_cases[case] = []
+            self.produits_dans_cases[case].append(produit)
+            self.mettre_a_jour_case(case)
+            self.caseUpdated.emit(case, self.produits_dans_cases[case])  
+            self.objet_selectionne = None
+
     # Permet de mettre à jour une case afin d'ajouter un objet dedans et que ça soit à jour
     def mettre_a_jour_case(self, case, afficher_message=True): 
         x1, y1, x2, y2 = case
@@ -111,6 +127,26 @@ class Plateau(QWidget):
             contenu = "\n".join(self.produits_dans_cases[case])
             QMessageBox.information(self, "Produit placé", f"Produit dans la case ({x1}, {y1}):\n{contenu}")
 
+    # Permet d'afficher le produit présent dans la case en cliquant dessus
+    def afficher_produits_dans_case(self, case): 
+        x1, y1, x2, y2 = case
+        produits = self.produits_dans_cases[case]
+        contenu = "\n".join(produits)
+        
+        # Création de la fenêtre modale
+        fenetre = QDialog(self)
+        fenetre.setWindowTitle("Produits dans la case")
+        layout = QVBoxLayout()
+        label = QLabel(f"Produits dans la case ({x1}, {y1}):\n{contenu}")
+        layout.addWidget(label)
+        
+        fenetre.setLayout(layout)
+        fenetre.exec()
+
+    def creation_gestionnaire_suppression_contenu_case(self, case, fenetre):
+        def gestion():
+            self.supprimer_contenu_case(case, fenetre)
+        return gestion
         
     def redessiner_case(self, case):
         x1, y1, x2, y2 = case
@@ -120,6 +156,22 @@ class Plateau(QWidget):
         painter.setPen(pen)
         painter.drawRect(x1, y1, x2 - x1, y2 - y1)
         painter.end()
+        self.image_label.setPixmap(self.pixmap)
+
+
+    def supprimer_contenu_case(self, case, fenetre):
+        if case in self.produits_dans_cases:
+            del self.produits_dans_cases[case]
+            self.redessiner_case(case)
+            self.caseUpdated.emit(case, [])  
+            fenetre.accept()
+            QMessageBox.information(self, "Suppression", f"Le contenu de la case ({case[0]}, {case[1]}) a été supprimé.")
+    
+    def reinitialiser_plateau(self):
+        self.image_label.clear()
+        self.produits_dans_cases.clear()
+        self.caseQuadrillage.clear()
+        self.pixmap = QPixmap()
         self.image_label.setPixmap(self.pixmap)
 
 

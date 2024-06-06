@@ -8,6 +8,19 @@ class model():
     def __init__(self):
         self.details_projet = {}
 
+    def charger_produits(self, chemin_fichier):
+        try:
+            with open(chemin_fichier, 'r') as f:
+                produits = json.load(f)
+            return produits
+        except Exception as e:
+            print(f"Erreur lors du chargement des produits: {e}")
+            return {}
+    
+    # Permet de mettre à jour les détails du projet
+    def mettre_a_jour_details(self, details):
+        self.details_projet.update(details)
+
     def charger_projet(self, chemin_fichier):
         try:
             with open(chemin_fichier, 'r') as f:

@@ -1,5 +1,5 @@
-import sys , APP2_model , APP2_vue
-from PyQt6.QtWidgets import QApplication,QFileDialog,QMessageBox
+import sys , os , APP2_model , APP2_vue
+from PyQt6.QtWidgets import QApplication,QFileDialog
 
 
 ################################################### APP2 CONTROLLER ###################################################
@@ -52,26 +52,31 @@ class controller() :
 ################################################### CODE DE L'APP 1 ###################################################    
         
     def ouvrir_projet(self):
-        chemin_fichier, _ = QFileDialog.getOpenFileName(self.vue, "Ouvrir le projet", "", "JSON Files (*.json)")
-        if chemin_fichier:
-            try:
-                details_projet = self.modele.charger_projet(chemin_fichier)
-                self.vue.plateau.chargerImage(details_projet['chemin_image'])
-                self.vue.plateau.createQuadrillage(details_projet['lgn'], details_projet['cols'], details_projet['dimX'], details_projet['dimY'])
-                self.vue.afficherInfosMagasin(details_projet)
-                self.modele.mettre_a_jour_details(details_projet)
-                
-                
-                # Convertir les clés des cases de chaînes en tuples (sinon impossible d'enregistrer)
-                produits_dans_cases = {eval(k): v for k, v in details_projet.get('produits_dans_cases', {}).items()} 
-                self.vue.plateau.produits_dans_cases = produits_dans_cases 
-                for case in self.vue.plateau.produits_dans_cases:
-                    self.vue.plateau.mettre_a_jour_case(case, afficher_message=False)
-                    
-                self.chemin_projet = chemin_fichier
-                QMessageBox.information(self.vue, "Ouverture du Projet", "Projet ouvert avec succès.")
-            except IOError as e:
-                QMessageBox.critical(self.vue, "Ouverture du Projet", str(e))
+        chemin_dossier = QFileDialog.getExistingDirectory(self.vue, "Sélectionner le dossier du projet à ouvrir")
+        if chemin_dossier:
+            nom_projet = os.path.basename(chemin_dossier)
+            chemin_fichier_projet = os.path.join(chemin_dossier, f"{nom_projet}.json")
+            
+            details_projet = self.modele.charger_projet(chemin_fichier_projet)
+            chemin_image = os.path.join(chemin_dossier, details_projet['chemin_image'])
+            details_projet['chemin_image'] = chemin_image
+
+            self.vue.plateau.chargerImage(chemin_image)
+            self.vue.plateau.createQuadrillage(details_projet['lgn'], details_projet['cols'], details_projet['dimX'], details_projet['dimY'])
+            
+            self.modele.mettre_a_jour_details(details_projet)
+            
+
+            # Convertir les clés des cases de chaînes en tuples
+            produits_dans_cases = {eval(k): v for k, v in details_projet.get('produits_dans_cases', {}).items()}
+            self.vue.plateau.produits_dans_cases = produits_dans_cases
+            for case in self.vue.plateau.produits_dans_cases:
+                self.vue.plateau.mettre_a_jour_case(case, afficher_message=False)
+
+            self.chemin_projet = chemin_fichier_projet
+            self.dossier_projet = chemin_dossier
+
+            self.plan_modifiable = True 
 
 
 ################################################### MAIN CONTROLLER ###################################################

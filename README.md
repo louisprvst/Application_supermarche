@@ -119,13 +119,14 @@ Utilisation exclusive des bibliothèques vues en cours
 - FARDEL Mathéïs : tentative de régler un bug : "can only concatenate tuple (not "str") to tuple" sans réussite pour le moment
 - DEMOL Alexis : Ajustement + Ajout du théme sombre et clair
 
-### 5/06 de 8h30 à 10h :
-- Membres présents physiquement : FARDEL Mathéïs, Demol Alexis 
+### 5/06/2024 de 8h30 à 10h :
+- Membres présents physiquement : FARDEL Mathéïs, Demol Alexis , PREVOST Louis
 - FARDEL Mathéïs : Ajout de Entrée/Sortie dans les objets, et obligation de les mettre sur le plan pour pouvoir l'enregistrer (car besoin pour app2)
 - Demol Alexis: Tentative d'enregistrer le projet que dans un dossier (le push de ce matin ca n'a pas fonctionné)
+- PREVOST Louis : Tentative de tracer un chemin ne fonctionne pas , Ajout de l'ouverture auto des listes après création et bug non chargement des items de la liste.
 
-### 6/06 de 10h à 11h30 et 14h30 à 16h:
+### 6/06/2024 de 10h à 11h30 et 14h30 à 16h:
 - Membres présents phtsiquement : FARDEL Mathéïs, DEMOL Alexis, PREVOST Louis, CAPON Ethan
 - FARDEL Mathéïs : récupération de la création de dossier afin que le projet soit lisible sur différents PC et ajout qu'en cas de sauvegarde alors que le dossier du projet a déjà été crée, le JSON uniquement soit mis à jour (donc pouvoir enregistrer les avancées d'un projet déjà existant) + debug décalage plateau avec le fait de le centrer fait par Alexis + début de la notice (screen tout)
-- FARDEL Mathéïs : récupération de la création de dossier afin que le projet soit lisible sur différents PC et ajout qu'en cas de sauvegarde alors que le dossier du projet a déjà été crée, le JSON uniquement soit mis à jour (donc pouvoir enregistrer les avancées d'un projet déjà existant)
 - DEMOL Alexis: Création de la notice (texte) + permettre d'ouvrir les pdf sur mac + centrer l'image + Test de l'application pour essayer de la faire crash et ajout de vérification anti plantage
+- PREVOST Louis : Ouverture des nouveau fichiers de l'app 1 + consultation du contenu des cases ( Pas dispo sur l'ancienne version ).
