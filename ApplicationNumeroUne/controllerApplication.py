@@ -3,10 +3,9 @@
 #                                                   Fait par FARDEL Mathéïs et DEMOL Alexis
 #=============================================================================================================================================================
 
-import sys, json
+import sys
 import os
-from PyQt6.QtWidgets import QApplication, QFileDialog, QMessageBox
-from PyQt6.QtGui import QPixmap
+from PyQt6.QtWidgets import QFileDialog, QMessageBox
 from modeleApplication import ProjetModel
 from vueApplication import MainWindow, NewProjetDialog
 
@@ -224,10 +223,3 @@ class Controller:
         self.view.ajouter_lignes_button.setEnabled(True)
         self.view.retirer_lignes_button.setEnabled(True)
         
-# ------------------------------------------------------------------ MAIN ----------------------------------------------------------------------------------
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    controller = Controller()
-    controller.view.show()
-    sys.exit(app.exec())
