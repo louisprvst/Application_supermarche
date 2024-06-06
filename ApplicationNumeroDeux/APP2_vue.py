@@ -3,7 +3,7 @@ import json
 import os
 from PyQt6.QtWidgets import QApplication,QMainWindow,QToolBar,QFileDialog,QWidget,QVBoxLayout,QLabel,QLineEdit,QDateEdit,QDialogButtonBox,QDockWidget,QTextEdit,QMessageBox, QCompleter
 from PyQt6.QtGui import QIcon, QAction
-from PyQt6.QtCore import Qt , pyqtSignal
+from PyQt6.QtCore import Qt , pyqtSignal, QStringListModel
 
 
 ##################################################### POPUP INFO #####################################################
@@ -159,15 +159,48 @@ class vueApplication(QMainWindow):
         toolbar.addAction(liste_save)
         
     # Dock :
-        def load_product_names(filename):
+        def autocompletion(filename):
+            # Fonction pour charger les noms des produits à partir d'un fichier JSON
             try:
                 with open(filename, "r") as file:
                     data = json.load(file)
-                print("JSON loaded successfully:", data)  # Message de débogage
-                return list(data.values())  # Retourner les valeurs
+                return list(data.values())  # Retourner les valeurs sous forme de liste
             except FileNotFoundError:
                 print(f"ERREUR : le fichier '{filename}' est introuvable.")
                 return []  # Retourner une liste vide en cas d'erreur
+
+        class ProduitSuivant(QCompleter):
+            def __init__(self, element, parent=None):
+                super(ProduitSuivant, self).__init__(element, parent)
+                # Configurer la complétion pour être insensible à la casse
+                self.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+                # Configurer le mode de filtrage pour correspondre au texte contenu
+                self.setFilterMode(Qt.MatchFlags.MatchContains)
+                self.model = QStringListModel(element, self)
+                self.setModel(self.model)
+
+            def pathFromIndex(self, index):
+                # Obtenir le chemin complet du modèle pour l'index donné
+                path = super(ProduitSuivant, self).pathFromIndex(index)
+                text = self.widget().text()
+                # Trouver la dernière virgule dans le texte
+                virgule = text.rfind(',')
+                if virgule == -1:
+                    # S'il n'y a pas de virgule, retourner le chemin tel quel
+                    return path
+                # Ajouter le texte après la dernière virgule
+                return text[:virgule + 1] + ' ' + path
+
+            def splitPath(self, path):
+                # Trouver la dernière virgule dans le chemin
+                virgule = path.rfind(',')
+                if virgule == -1:
+                    # S'il n'y a pas de virgule, utiliser la méthode de la classe parente
+                    return super(ProduitSuivant, self).splitPath(path)
+                # Retourner le texte après la dernière virgule, en supprimant les espaces
+                return [path[virgule + 1:].strip()]
+
+
                     
 
 
@@ -194,11 +227,12 @@ class vueApplication(QMainWindow):
         # Construire le chemin relatif au fichier JSON
         fichier_chemin = os.path.join(fichier, 'liste_produitsbis.json')
         
-        liste = load_product_names(fichier_chemin)
+        liste = autocompletion(fichier_chemin)
         
         completer = QCompleter(liste)
         completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
         completer.setFilterMode(Qt.MatchFlags.MatchContains)
+        completer = ProduitSuivant(liste)
         self.user_input.setCompleter(completer)
         
           

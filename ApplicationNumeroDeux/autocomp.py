@@ -1,7 +1,7 @@
 import os
 import sys
 import json
-from PyQt6.QtWidgets import QApplication, QLineEdit, QCompleter
+from PyQt6.QtWidgets import QApplication, QLineEdit, QCompleter, QLabel, QVBoxLayout, QWidget
 from PyQt6.QtCore import Qt, QStringListModel
 
 # Fonction pour charger les noms des produits à partir d'un fichier JSON
@@ -15,32 +15,43 @@ def load_product_names(filename):
         print(f"ERREUR : le fichier '{filename}' est introuvable.")
         return []  # Retourner une liste vide en cas d'erreur
 
-# Fonction pour ajouter un élément sélectionné avec une virgule
-# Fonction pour ajouter un élément sélectionné avec une virgule
-# Fonction pour ajouter un élément sélectionné avec une virgule
-def add_completer_text(text):
-    current_text = line_of_text.text()
-    # Supprimer la partie de texte en cours de complétion
-    if ", " in current_text:
-        current_text = current_text.rsplit(", ", 1)[0] + ", "
-    else:
-        current_text = ""
+class MultiCompleter(QCompleter):
+    def __init__(self, words, parent=None):
+        super(MultiCompleter, self).__init__(words, parent)
+        self.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        self.setFilterMode(Qt.MatchFlags.MatchContains)
+        self.model = QStringListModel(words, self)
+        self.setModel(self.model)
 
-    current_text += text
-    line_of_text.setText(current_text)
-    # Positionner le curseur à la fin
-    line_of_text.setCursorPosition(len(line_of_text.text()))
+    def pathFromIndex(self, index):
+        path = super(MultiCompleter, self).pathFromIndex(index)
+        text = self.widget().text()
+        last_comma_index = text.rfind(',')
+        if last_comma_index == -1:
+            return path
+        return text[:last_comma_index + 1] + ' ' + path
 
-    # Réinitialiser le QCompleter pour permettre une nouvelle autocomplétion
-    completer.setCompletionPrefix("")
-    completer.complete()
+    def splitPath(self, path):
+        last_comma_index = path.rfind(',')
+        if last_comma_index == -1:
+            return super(MultiCompleter, self).splitPath(path)
+        return [path[last_comma_index + 1:].strip()]
 
-
+    
 # Initialisation de l'application PyQt6
 app = QApplication(sys.argv)
 
+# Création d'une fenêtre principale
+main_window = QWidget()
+layout = QVBoxLayout(main_window)
+
+# Création d'un QLabel
+label = QLabel("Recherche:")
+layout.addWidget(label)
+
 # Création d'un QLineEdit
 line_of_text = QLineEdit()
+layout.addWidget(line_of_text)
 
 # Obtenir le chemin absolu du répertoire du script
 fichier = os.path.dirname(__file__)
@@ -51,17 +62,12 @@ fichier_chemin = os.path.join(fichier, 'liste_produitsbis.json')
 # Charger les noms de produits depuis le fichier JSON
 liste = load_product_names(fichier_chemin)
 
-# Configuration du QCompleter
-completer = QCompleter(liste)
-completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
-completer.setFilterMode(Qt.MatchFlags.MatchContains)
+# Configuration du QCompleter personnalisé
+completer = MultiCompleter(liste)
 line_of_text.setCompleter(completer)
 
-# Connecter le signal de sélection du QCompleter à la fonction personnalisée
-completer.activated[str].connect(add_completer_text)
-
-# Affichage du QLineEdit
-line_of_text.show()
+# Affichage de la fenêtre principale
+main_window.show()
 
 # Lancement de l'application
 sys.exit(app.exec())
