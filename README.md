@@ -126,4 +126,4 @@ Utilisation exclusive des bibliothèques vues en cours
 
 ### 6/06 de 10h à 11h30 et 14h30 à 16h:
 - Membres présents phtsiquement : FARDEL Mathéïs, DEMOL Alexis, PREVOST Louis, CAPON Ethan
-- FARDEL Mathéïs : récupération de la création de dossier afin que le projet soit lisible sur différents PC et ajout qu'en cas de sauvegarde alors que le dossier du projet a déjà été crée, le JSON uniquement soit mis à jour (donc pouvoir enregistrer les avancées d'un projet déjà existant)
+- FARDEL Mathéïs : récupération de la création de dossier afin que le projet soit lisible sur différents PC et ajout qu'en cas de sauvegarde alors que le dossier du projet a déjà été crée, le JSON uniquement soit mis à jour (donc pouvoir enregistrer les avancées d'un projet déjà existant) + debug décalage plateau avec le fait de le centrer fait par Alexis + début de la notice (screen tout)
