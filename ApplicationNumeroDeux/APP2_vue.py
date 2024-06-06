@@ -393,8 +393,9 @@ class vueApplication(QMainWindow):
     
     # Cette fonction sert a actualiser le texte afficher dans le dock gauche. ( liste des items )
     
-    def update_list_view(self , formated_data):
+    def update_list_view(self , formated_data , mes_articles):
         self.json_display.setPlainText(formated_data)
+        self.user_input.setPlainText(mes_articles)
 
     # Cette fonction permet d'ouvrir une liste
 

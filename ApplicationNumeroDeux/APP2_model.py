@@ -41,13 +41,28 @@ class model():
                   
     def open_liste(self , filename):        
         
-            with open(filename, 'r') as file:
-                
-                self.data = json.load(file)
-                
-                formatted_data = f"\n Nom : {self.data['listname']} \n\n Date : {self.data['listdate']}"
-                
-                return formatted_data
+        with open(filename, 'r') as file:
+            
+            self.data = json.load(file)
+            
+            formatted_data = f"\n Nom : {self.data['listname']} \n\n Date : {self.data['listdate']}"
+            
+            return formatted_data
+            
+    def open_liste_items(self, filename):
+        
+        with open(filename, 'r') as file:
+            
+            self.data = json.load(file)
+            
+            articles = self.data.get('Liste des articles', [])
+            
+            data_items = ""
+            
+            if articles:
+                data_items += ", ".join(articles)
+            
+            return data_items
             
     def save_liste(self , new_items , current_file):
         
