@@ -114,7 +114,7 @@ Utilisation exclusive des bibliothèques vues en cours
 - PREVOST Louis : Création d'une branche pour ajouter l'ouverture de magasin de l'app 1 ( Affiche uniquement le plan et le quadrillage )
 - CAPON Ethan : Création d'une branche pour ajouter l'autocomplétation ( presque fini ) 
 
-### 4/06 de 14h30 à 16h :
+### 4/06/2024 de 14h30 à 16h :
 - Membres présents physiquement : Aucuns
 - FARDEL Mathéïs : tentative de régler un bug : "can only concatenate tuple (not "str") to tuple" sans réussite pour le moment
 - DEMOL Alexis : Ajustement + Ajout du théme sombre et clair
@@ -129,4 +129,4 @@ Utilisation exclusive des bibliothèques vues en cours
 - Membres présents phtsiquement : FARDEL Mathéïs, DEMOL Alexis, PREVOST Louis, CAPON Ethan
 - FARDEL Mathéïs : récupération de la création de dossier afin que le projet soit lisible sur différents PC et ajout qu'en cas de sauvegarde alors que le dossier du projet a déjà été crée, le JSON uniquement soit mis à jour (donc pouvoir enregistrer les avancées d'un projet déjà existant) + debug décalage plateau avec le fait de le centrer fait par Alexis + début de la notice (screen tout)
 - DEMOL Alexis: Création de la notice (texte) + permettre d'ouvrir les pdf sur mac + centrer l'image + Test de l'application pour essayer de la faire crash et ajout de vérification anti plantage
-- PREVOST Louis : Ouverture des nouveau fichiers de l'app 1 + consultation du contenu des cases ( Pas dispo sur l'ancienne version ).
+- PREVOST Louis : Ouverture des nouveau fichiers de l'app 1 + consultation du contenu des cases ( Pas dispo sur l'ancienne version ) et re push du commit d'hier car le merge n'a pas fonctionné ?
