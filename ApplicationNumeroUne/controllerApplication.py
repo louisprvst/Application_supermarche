@@ -116,8 +116,14 @@ class Controller:
 
                 self.dossier_projet = chemin_projet
 
+        # Mettre à jour le chemin de l'image pour utiliser uniquement le nom de l'image
+        nom_image = os.path.basename(self.model.details_projet['chemin_image'])
+        self.model.details_projet['chemin_image'] = nom_image
+
         # Sauvegarder les informations du projet dans un fichier JSON
         nom_projet = self.model.details_projet.get('nomProjet', 'projet_sans_nom')
+        if not nom_projet:
+                    nom_projet = "projet_sans_nom"
         chemin_fichier_projet = os.path.join(self.dossier_projet, f"{nom_projet}.json")
         success, message = self.model.sauvegarder_projet(chemin_fichier_projet)
         if success:
