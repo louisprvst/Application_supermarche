@@ -1,0 +1,33 @@
+{
+    "nomProjet": "",
+    "auteurProjet": "",
+    "dateCreationProjet": "2024-06-06",
+    "nomMagasin": "",
+    "adresse_magasin": "",
+    "lgn": 10,
+    "cols": 10,
+    "dimX": 0,
+    "dimY": 0,
+    "produits_selectionnes": {
+        "L\u00e9gumes": [
+            "C\u00e9leri",
+            "Champignons"
+        ],
+        "Entr\u00e9e / Sortie": [
+            "Entr\u00e9e du magasin",
+            "Sortie du magasin"
+        ]
+    },
+    "chemin_image": "plan1.jpg",
+    "produits_dans_cases": {
+        "(360, 316, 450, 379)": [
+            "C\u00e9leri"
+        ],
+        "(360, 379, 450, 442)": [
+            "Entr\u00e9e du magasin"
+        ],
+        "(270, 442, 360, 505)": [
+            "Sortie du magasin"
+        ]
+    }
+}

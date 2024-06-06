@@ -87,6 +87,8 @@ class Controller:
         chemin_dossier = QFileDialog.getExistingDirectory(self.view, "Sélectionner un dossier pour enregistrer le projet")
         if chemin_dossier:
             nom_projet = self.model.details_projet.get('nomProjet', 'projet_sans_nom')
+            if not nom_projet:
+                nom_projet = "projet_sans_nom"
             chemin_projet = os.path.join(chemin_dossier, nom_projet)
 
             # Créer le dossier pour le projet
