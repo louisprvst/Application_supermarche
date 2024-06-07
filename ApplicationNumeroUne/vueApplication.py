@@ -470,7 +470,7 @@ class MainWindow(QMainWindow):
 
     # permet d'afficher notre notice d'utilisation 
     def afficher_notice(self):
-        chemin_pdf = os.path.join(sys.path[0], 'notice.pdf')
+        chemin_pdf = os.path.join(sys.path[0], 'Notice-MarketPlanEditor.pdf')
         if os.path.exists(chemin_pdf):
             ouvrir_pdf(chemin_pdf)
         else:
