@@ -1,4 +1,4 @@
-import sys
+import sys , json
 from PyQt6.QtWidgets import QApplication,QDialog,QVBoxLayout,QMainWindow,QToolBar,QFileDialog,QWidget,QVBoxLayout,QLabel,QLineEdit,QDateEdit,QDialogButtonBox,QDockWidget,QTextEdit,QMessageBox
 from PyQt6.QtGui import QIcon , QAction , QPixmap , QPainter , QPen
 from PyQt6.QtCore import Qt , pyqtSignal
@@ -18,6 +18,7 @@ class Image(QLabel):
 ##################################################### CLASS PLATEAU ( APP 1 ) #####################################################
 
 class Plateau(QWidget):
+    
     articleSelected = pyqtSignal(str) 
     caseUpdated = pyqtSignal(tuple, list) 
 
@@ -173,6 +174,63 @@ class Plateau(QWidget):
         self.caseQuadrillage.clear()
         self.pixmap = QPixmap()
         self.image_label.setPixmap(self.pixmap)
+        
+    # Tentative de chemin :
+    
+    def create_adjacency_list(self):
+        adj_list = {}
+        for idx, case in enumerate(self.caseQuadrillage):
+            adj_list[idx] = self.get_adjacent_cases(idx)
+        return adj_list
+
+    def get_adjacent_cases(self, idx):
+        adjacents = []
+        lgn, cols = self.lgn, self.cols
+        row, col = divmod(idx, cols)
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # haut, bas, gauche, droite
+
+        for dr, dc in directions:
+            r, c = row + dr, col + dc
+            if 0 <= r < lgn and 0 <= c < cols:
+                adjacents.append(r * cols + c)
+        return adjacents
+
+    def bfs_shortest_path(self, start_idx, end_idx, adj_list):
+        queue = [(start_idx, [start_idx])]
+        visited = set()
+
+        while queue:
+            current, path = queue.pop(0)
+            if current == end_idx:
+                return path
+
+            if current not in visited:
+                visited.add(current)
+                for neighbor in adj_list[current]:
+                    if neighbor not in visited:
+                        queue.append((neighbor, path + [neighbor]))
+        return []
+
+    def highlight_path(self, path):
+        if not self.pixmap.isNull():
+            painter = QPainter(self.pixmap)
+            pen = QPen(Qt.GlobalColor.blue)
+            pen.setWidth(2)
+            painter.setPen(pen)
+
+            for idx in path:
+                x1, y1, x2, y2 = self.caseQuadrillage[idx]
+                painter.drawRect(x1, y1, x2 - x1, y2 - y1)
+
+            painter.end()
+            self.image_label.setPixmap(self.pixmap)
+
+    def find_and_highlight_path(self, start_pos, end_pos):
+        adj_list = self.create_adjacency_list()
+        start_idx = self.caseQuadrillage.index(start_pos)
+        end_idx = self.caseQuadrillage.index(end_pos)
+        path = self.bfs_shortest_path(start_idx, end_idx, adj_list)
+        self.highlight_path(path)
 
 
 ##################################################### POPUP INFO #####################################################
@@ -276,6 +334,10 @@ class vueApplication(QMainWindow):
         fic_ouvrir.triggered.connect(self.ouvrir_fichier)
         fic_ouvrir.setShortcut('Ctrl+O')
         menu_Fichiers.addAction(fic_ouvrir)
+        
+        charger_produits = QAction(QIcon(sys.path[0] + '/icones/open.png'), 'Charger produits', self)
+        charger_produits.triggered.connect(self.chargerProduits)
+        menu_Fichiers.addAction(charger_produits)
         
     # Menu Listes :
         
@@ -450,6 +512,12 @@ class vueApplication(QMainWindow):
     
     def new_message_info(self, titre, texte):
         QMessageBox.information(self, titre, texte)
+        
+    def chargerProduits(self):
+        chemin_fichier, _ = QFileDialog.getOpenFileName(self, "Ouvrir un fichier JSON", "", "JSON Files (*.json);;All Files (*)")
+        if chemin_fichier:
+            self.plateau.chargerProduitsDepuisJson(chemin_fichier)
+
 
        
 ################################################### MAIN TEST ###################################################

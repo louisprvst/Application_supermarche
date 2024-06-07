@@ -1,4 +1,4 @@
-import sys , os , APP2_model , APP2_vue
+import sys , os , APP2_model , APP2_vue ,json
 from PyQt6.QtWidgets import QApplication,QFileDialog
 
 
@@ -69,6 +69,13 @@ class controller() :
             
             self.modele.mettre_a_jour_details(details_projet)
             
+            
+            # Obtenez les coordonnées des cases correspondant à l'entrée et à la sortie du magasin
+            start_pos = (297, 690, 307, 700)  # Coordonnées de l'entrée du magasin
+            end_pos = (287, 690, 297, 700)    # Coordonnées de la sortie du magasin
+
+            # Appelez la fonction pour trouver et mettre en surbrillance le chemin entre l'entrée et la sortie
+            self.vue.plateau.find_and_highlight_path(start_pos, end_pos)
 
             # Convertir les clés des cases de chaînes en tuples
             produits_dans_cases = {eval(k): v for k, v in details_projet.get('produits_dans_cases', {}).items()}
@@ -80,8 +87,7 @@ class controller() :
             self.dossier_projet = chemin_dossier
 
             self.plan_modifiable = True 
-
-
+            
 ################################################### MAIN CONTROLLER ###################################################
 
 if __name__ == "__main__" :
