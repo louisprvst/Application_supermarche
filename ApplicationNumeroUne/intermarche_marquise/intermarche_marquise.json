@@ -1,0 +1,441 @@
+{
+    "nomProjet": "intermarche_marquise",
+    "auteurProjet": "Intermarch\u00e9",
+    "dateCreationProjet": "2024-06-07",
+    "nomMagasin": "Intermarch\u00e9 SUPER Marquise",
+    "adresse_magasin": "All. des Poissonniers, 62250 Marquise",
+    "lgn": 75,
+    "cols": 75,
+    "dimX": 0,
+    "dimY": 0,
+    "produits_selectionnes": {
+        "L\u00e9gumes": [
+            "Ail",
+            "Artichaut",
+            "Asperges",
+            "Aubergine",
+            "Avocat",
+            "Betterave",
+            "Blette",
+            "Brocolis",
+            "Carotte",
+            "C\u00e9leri",
+            "Champignons",
+            "Champignons chinois",
+            "Chou",
+            "Chou de Bruxelles",
+            "Choucroute",
+            "Chou-fleur",
+            "Chou-rouge",
+            "Ciboulette",
+            "Citrouille",
+            "Coeur de palmier",
+            "Concombre",
+            "Courge",
+            "Flageolets"
+        ],
+        "Viandes": [
+            "Croc's jambon",
+            "Cuisses poulet r\u00f4ti",
+            "Dinde",
+            "\u00c9chine de porc",
+            "Escalope de veau",
+            "Faux-filet (boeuf)",
+            "Filet de poulet",
+            "Filet mignon",
+            "Foie gras",
+            "Jambon fum\u00e9",
+            "Jambonneau",
+            "Jarret",
+            "Petit sal\u00e9",
+            "Pigeon",
+            "Pintade",
+            "Poitrine de porc",
+            "Steak hach\u00e9",
+            "Tripes",
+            "Veau"
+        ],
+        "\u00c9picerie": [
+            "Sauce nuoc mam",
+            "Sauces fondue",
+            "Sel",
+            "Semoule"
+        ],
+        "\u00c9picerie sucr\u00e9e": [
+            "Noisettes",
+            "Noix coco r\u00e2p\u00e9e",
+            "Noix de cajou"
+        ],
+        "Petit d\u00e9jeuner": [
+            "Dosettes de caf\u00e9",
+            "Gaufres",
+            "Madeleines"
+        ],
+        "Fruits": [
+            "Cl\u00e9mentine",
+            "Figue",
+            "Fraises",
+            "Framboise",
+            "Fruit de la passion",
+            "Grenade",
+            "Prunes",
+            "Raisin",
+            "Rhubarbe"
+        ],
+        "Rayon frais": [
+            "Galettes",
+            "P\u00e2tes \u00e0 tarte",
+            "P\u00e2tes fra\u00eeches",
+            "Pi\u00e9montaise"
+        ],
+        "Conserves": [
+            "Bolognaise",
+            "Compote",
+            "Gaspacho"
+        ],
+        "Ap\u00e9ritifs": [
+            "Chips",
+            "Fruits secs",
+            "Guacamole",
+            "Mini-feuillet\u00e9s",
+            "\u0152ufs de poisson"
+        ],
+        "Boissons": [
+            "Jus de fruits",
+            "Sirop",
+            "Soda",
+            "Vin"
+        ],
+        "Articles Maison": [
+            "Allume barbecue",
+            "Cirage",
+            "Cure dents",
+            "D\u00e9sodorisant",
+            "D\u00e9tachant",
+            "Filtre \u00e0 caf\u00e9",
+            "Gants de m\u00e9nage",
+            "Sel machine",
+            "Serviettes papier"
+        ],
+        "Hygi\u00e8ne": [
+            "Apr\u00e8s rasage",
+            "Brosse \u00e0 dents",
+            "Cire \u00e9pilation",
+            "Coton \u00e0 d\u00e9maquiller",
+            "Coton tiges",
+            "Couches b\u00e9b\u00e9",
+            "Cr\u00e8me main"
+        ],
+        "Bureau": [
+            "Calculatrice",
+            "Chemises carton",
+            "Ciseau \u00e0 papier",
+            "Colle",
+            "Crayons \u00e0 papier",
+            "Crayons de couleur",
+            "Encre Imprimante",
+            "Stylo bille",
+            "Surligneur",
+            "Taille-crayon",
+            "Timbres",
+            "Trombones"
+        ],
+        "Animaux": [
+            "Croquettes",
+            "Foins",
+            "Graines"
+        ],
+        "Entr\u00e9e / Sortie": [
+            "Entr\u00e9e du magasin",
+            "Sortie du magasin"
+        ]
+    },
+    "chemin_image": "plan8.jpg",
+    "produits_dans_cases": {
+        "(299, 140, 311, 149)": [
+            "Ail"
+        ],
+        "(299, 149, 311, 158)": [
+            "Artichaut"
+        ],
+        "(287, 158, 299, 168)": [
+            "Asperges"
+        ],
+        "(287, 149, 299, 158)": [
+            "Aubergine"
+        ],
+        "(287, 140, 299, 149)": [
+            "Avocat"
+        ],
+        "(299, 158, 311, 168)": [
+            "Betterave"
+        ],
+        "(299, 168, 311, 177)": [
+            "Blette"
+        ],
+        "(287, 168, 299, 177)": [
+            "Brocolis"
+        ],
+        "(287, 177, 299, 186)": [
+            "C\u00e9leri"
+        ],
+        "(299, 177, 311, 186)": [
+            "Carotte"
+        ],
+        "(299, 186, 311, 196)": [
+            "Champignons chinois"
+        ],
+        "(287, 186, 299, 196)": [
+            "Chou"
+        ],
+        "(347, 149, 359, 158)": [
+            "Croc's jambon"
+        ],
+        "(347, 158, 359, 168)": [
+            "Cuisses poulet r\u00f4ti"
+        ],
+        "(359, 149, 371, 158)": [
+            "Dinde"
+        ],
+        "(359, 158, 371, 168)": [
+            "\u00c9chine de porc"
+        ],
+        "(347, 168, 359, 177)": [
+            "Escalope de veau"
+        ],
+        "(359, 168, 371, 177)": [
+            "Faux-filet (boeuf)"
+        ],
+        "(347, 177, 359, 186)": [
+            "Filet de poulet"
+        ],
+        "(359, 177, 371, 186)": [
+            "Filet mignon"
+        ],
+        "(347, 186, 359, 196)": [
+            "Foie gras"
+        ],
+        "(359, 186, 371, 196)": [
+            "Jambon fum\u00e9"
+        ],
+        "(347, 196, 359, 205)": [
+            "Jambonneau"
+        ],
+        "(359, 196, 371, 205)": [
+            "Jarret"
+        ],
+        "(347, 205, 359, 214)": [
+            "Petit sal\u00e9"
+        ],
+        "(359, 205, 371, 214)": [
+            "Pigeon"
+        ],
+        "(251, 373, 263, 382)": [
+            "Sauce nuoc mam"
+        ],
+        "(263, 382, 275, 392)": [
+            "Sauces fondue"
+        ],
+        "(263, 392, 275, 401)": [
+            "Sauces fondue"
+        ],
+        "(263, 401, 275, 410)": [
+            "Sel"
+        ],
+        "(275, 410, 287, 420)": [
+            "Semoule"
+        ],
+        "(263, 457, 275, 466)": [
+            "Noisettes"
+        ],
+        "(251, 466, 263, 476)": [
+            "Noix coco r\u00e2p\u00e9e"
+        ],
+        "(239, 476, 251, 485)": [
+            "Noix de cajou"
+        ],
+        "(718, 336, 730, 345)": [
+            "Dosettes de caf\u00e9"
+        ],
+        "(718, 354, 730, 364)": [
+            "Gaufres"
+        ],
+        "(730, 364, 742, 373)": [
+            "Madeleines"
+        ],
+        "(778, 289, 790, 298)": [
+            "Cl\u00e9mentine"
+        ],
+        "(790, 289, 802, 298)": [
+            "Figue"
+        ],
+        "(71, 644, 83, 653)": [
+            "Entr\u00e9e du magasin"
+        ],
+        "(71, 634, 83, 644)": [
+            "Sortie du magasin"
+        ],
+        "(790, 298, 802, 308)": [
+            "Fraises"
+        ],
+        "(778, 298, 790, 308)": [
+            "Framboise"
+        ],
+        "(802, 289, 814, 298)": [
+            "Fruit de la passion"
+        ],
+        "(802, 298, 814, 308)": [
+            "Grenade"
+        ],
+        "(766, 289, 778, 298)": [
+            "Prunes"
+        ],
+        "(766, 298, 778, 308)": [
+            "Raisin"
+        ],
+        "(766, 280, 778, 289)": [
+            "Rhubarbe"
+        ],
+        "(778, 158, 790, 168)": [
+            "Galettes"
+        ],
+        "(790, 158, 802, 168)": [
+            "P\u00e2tes \u00e0 tarte"
+        ],
+        "(790, 168, 802, 177)": [
+            "P\u00e2tes fra\u00eeches"
+        ],
+        "(778, 177, 790, 186)": [
+            "Pi\u00e9montaise"
+        ],
+        "(299, 84, 311, 93)": [
+            "Bolognaise"
+        ],
+        "(287, 84, 299, 93)": [
+            "Compote"
+        ],
+        "(275, 84, 287, 93)": [
+            "Gaspacho"
+        ],
+        "(107, 205, 119, 214)": [
+            "Chips"
+        ],
+        "(107, 214, 119, 224)": [
+            "Fruits secs"
+        ],
+        "(107, 224, 119, 233)": [
+            "Guacamole"
+        ],
+        "(107, 233, 119, 242)": [
+            "Mini-feuillet\u00e9s"
+        ],
+        "(107, 242, 119, 252)": [
+            "\u0152ufs de poisson"
+        ],
+        "(454, 429, 466, 438)": [
+            "Jus de fruits"
+        ],
+        "(454, 448, 466, 457)": [
+            "Sirop"
+        ],
+        "(454, 466, 466, 476)": [
+            "Soda"
+        ],
+        "(490, 429, 502, 438)": [
+            "Vin"
+        ],
+        "(718, 420, 730, 429)": [
+            "Allume barbecue"
+        ],
+        "(718, 429, 730, 438)": [
+            "Cirage"
+        ],
+        "(730, 438, 742, 448)": [
+            "Cure dents"
+        ],
+        "(730, 448, 742, 457)": [
+            "D\u00e9sodorisant"
+        ],
+        "(730, 457, 742, 466)": [
+            "D\u00e9tachant"
+        ],
+        "(742, 466, 754, 476)": [
+            "Filtre \u00e0 caf\u00e9"
+        ],
+        "(742, 420, 754, 429)": [
+            "Gants de m\u00e9nage"
+        ],
+        "(742, 429, 754, 438)": [
+            "Sel machine"
+        ],
+        "(754, 438, 766, 448)": [
+            "Serviettes papier"
+        ],
+        "(562, 429, 574, 438)": [
+            "Apr\u00e8s rasage"
+        ],
+        "(550, 429, 562, 438)": [
+            "Brosse \u00e0 dents"
+        ],
+        "(538, 438, 550, 448)": [
+            "Cire \u00e9pilation"
+        ],
+        "(574, 438, 586, 448)": [
+            "Coton \u00e0 d\u00e9maquiller"
+        ],
+        "(574, 448, 586, 457)": [
+            "Coton tiges"
+        ],
+        "(574, 466, 586, 476)": [
+            "Couches b\u00e9b\u00e9"
+        ],
+        "(574, 457, 586, 466)": [
+            "Cr\u00e8me main"
+        ],
+        "(419, 140, 431, 149)": [
+            "Calculatrice"
+        ],
+        "(407, 140, 419, 149)": [
+            "Chemises carton"
+        ],
+        "(419, 149, 431, 158)": [
+            "Ciseau \u00e0 papier"
+        ],
+        "(407, 149, 419, 158)": [
+            "Colle"
+        ],
+        "(419, 158, 431, 168)": [
+            "Crayons \u00e0 papier"
+        ],
+        "(407, 158, 419, 168)": [
+            "Crayons de couleur"
+        ],
+        "(419, 168, 431, 177)": [
+            "Encre Imprimante"
+        ],
+        "(407, 168, 419, 177)": [
+            "Stylo bille"
+        ],
+        "(419, 177, 431, 186)": [
+            "Surligneur"
+        ],
+        "(407, 177, 419, 186)": [
+            "Taille-crayon"
+        ],
+        "(407, 186, 419, 196)": [
+            "Timbres"
+        ],
+        "(419, 196, 431, 205)": [
+            "Trombones"
+        ],
+        "(371, 448, 383, 457)": [
+            "Croquettes"
+        ],
+        "(383, 438, 395, 448)": [
+            "Foins"
+        ],
+        "(395, 448, 407, 457)": [
+            "Graines"
+        ]
+    }
+}
