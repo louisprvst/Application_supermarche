@@ -211,15 +211,20 @@ class vueApplication(QMainWindow):
         self.json_display.setReadOnly(True)
         
         self.dock_list.setWidget(self.json_display)
+        self.json_display.setMinimumHeight(100)
+        self.json_display.setMaximumHeight(100)
         
         self.dock_list.setMaximumWidth(200)
         
+        
         self.titre = QLabel("Entrez vos articles :")
+        self.titre.setMinimumHeight(25)
+        self.titre.setMaximumHeight(25)
         
         self.user_input = QLineEdit()
         self.user_input.setPlaceholderText("Entrez votre liste ici...")
-        self.user_input.setMinimumHeight(700)
-        self.user_input.setMaximumHeight(700)
+        self.user_input.setMinimumHeight(100)
+        self.user_input.setMaximumHeight(100)
     
         fichier = os.path.dirname(__file__)
         
@@ -235,6 +240,8 @@ class vueApplication(QMainWindow):
         completer = ProduitSuivant(liste)
         self.user_input.setCompleter(completer)
         
+        self.comble_widget = QLabel()
+        
           
         
         
@@ -242,6 +249,7 @@ class vueApplication(QMainWindow):
         layout.addWidget(self.json_display)
         layout.addWidget(self.titre)
         layout.addWidget(self.user_input)
+        layout.addWidget(self.comble_widget)
         
         widget = QWidget()
         widget.setLayout(layout)
