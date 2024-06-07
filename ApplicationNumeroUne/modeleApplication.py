@@ -62,12 +62,12 @@ class ProjetModel:
         produits : Dictionnaire des produits.
 
         """
-        if "Entrée / Sortie" not in produits:
-            produits["Entrée / Sortie"] = []
-        if "Entrée du magasin" not in produits["Entrée / Sortie"]:
-            produits["Entrée / Sortie"].append("Entrée du magasin")
-        if "Sortie du magasin" not in produits["Entrée / Sortie"]:
-            produits["Entrée / Sortie"].append("Sortie du magasin")
+        if "Entree / Sortie" not in produits:
+            produits["Entree / Sortie"] = []
+        if "Entree du magasin" not in produits["Entree / Sortie"]:
+            produits["Entree / Sortie"].append("Entree du magasin")
+        if "Sortie du magasin" not in produits["Entree / Sortie"]:
+            produits["Entree / Sortie"].append("Sortie du magasin")
 
     def mettre_a_jour_details(self, details):
         """
