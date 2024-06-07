@@ -8,27 +8,97 @@ from PyQt6.QtWidgets import QMainWindow, QLabel, QVBoxLayout, QWidget, QDialog, 
 from PyQt6.QtGui import QPixmap, QIcon, QPainter, QPen, QFont, QAction, QMouseEvent
 from PyQt6.QtCore import Qt, pyqtSignal
 
-# permet d'ouvrir un pdf 
+
 def ouvrir_pdf(pdf_path):
-    if sys.platform == "win32": # Windows 
+    """
+    Ouvre un fichier PDF en utilisant l'application par défaut du système.
+
+    Parametre:
+    ----------
+    pdf_path : Le chemin vers le fichier PDF à ouvrir.
+
+    """
+    if sys.platform == "win32": # Ouvre le pdf sous Windows 
         os.startfile(pdf_path)
     elif sys.platform == "linux":
-        os.system(f'xdg-open {pdf_path}') # Linux et ses distrib: Debian, ubuntu etc..
+        os.system(f'xdg-open {pdf_path}') # Ouvre le pdf sous Linux et ses distrib: Debian, ubuntu etc..
     elif sys.platform == "darwin":
-        os.system(f"open '{pdf_path}'") # pour mac 
+        os.system(f"open '{pdf_path}'") # Ouvre le pdf sous mac 
 
 # --------------------------------------------------------------- classe Image ------------------------------------------------------------------------------
 class Image(QLabel):
+    """
+    Classe Image qui hérite de QLabel pour afficher une image.
+
+    Résumé des attributs et méthodes de la class:
+
+    Attributs:
+    ----------
+    -image : L'objet QPixmap contenant l'image chargée à partir du chemin fourni.
+
+    Méthodes:
+    -------
+    -__init__(chemin): Initialise l'objet Image avec le chemin de l'image à charger.
+
+    """
+
     def __init__(self, chemin: str):
+        """
+        Initialise l'objet Image.
+
+        Parametre:
+        ----------
+        chemin : Le chemin vers l'image à afficher.
+        """
         super().__init__()
         self.image = QPixmap(chemin)
         self.setPixmap(self.image)
 
 # -------------------------------------------------------------- classe Plateau -----------------------------------------------------------------------------
 class Plateau(QWidget):
+    """
+    Classe Plateau permettant de représenter notre plan avec un quadrillage et une gestion des cases dans celui ci.
+
+    Résumé des attributs et méthodes de la class:
+
+    Attributs:
+    ----------
+    -articleSelected : Signal émis lorsqu'un article est sélectionné.
+    -caseUpdated : Signal émis lorsqu'une case est mise à jour.
+    -layout : Layout vertical pour permettre d'organiser nos widgets.
+    -image_label : Label pour afficher l'image du plateau.
+    -pixmap : Contient l'image chargée.
+    -caseQuadrillage : Liste des coordonnées des cases du quadrillage.
+    -produits_dans_cases : Dictionnaire des produits placés dans les cases.
+    -objet_selectionne : L'objet qui est actuellement sélectionné.
+    -lgn : Nombre de lignes dans le quadrillage.
+    -cols : Nombre de colonnes dans le quadrillage.
+    -dimX : Dimension X des cases.
+    -dimY : Dimension Y des cases.
+    -chemin_image : Chemin de l'image chargée.
+
+    Méthodes:
+    -------
+    -__init__(): Initialise le Plateau. 
+    -setObjetSelectionne(objet): Définit l'objet que l'ou souhaite sélectionné.
+    -chargerImage(chemin): Charge une image à partir d'un chemin quelconque.
+    -rechargerImage(): Fonction pour recharger l'image et réinitialiser son quadrillage 
+    -createQuadrillage(lgn, cols, dimX, dimY): Crée un quadrillage sur l'image de notre plan de magasins.
+    -ouvrirFenetre(event): Ouvre une fenetre modal.
+    -placer_objet_dans_case(case): Place un objet dans une case que l'on veut.
+    -mettre_a_jour_case(case, afficher_message): Met a jour la case pour ajouter un bojet dedans.
+    -afficher_produits_dans_case(case, avec_suppression): Affiche le produit présent dans une case quand on clique dessus.
+    -creation_gestionnaire_suppression_contenu_case(case, fenetre): Crée un gestionnaire pour gérer la suppresion du contenu d'une de nos case.
+    -redessiner_case(case): Redessine la case rouge en noir après avoir était supprimer.
+    -supprimer_contenu_case(case, fenetre): Supprime le contenu de la case.
+    -reinitialiser_plateau(): Réinitialise le plateau en effacant l'image et les produits. 
+
+    """
+
     articleSelected = pyqtSignal(str) 
     caseUpdated = pyqtSignal(tuple, list) 
 
+    # Initialise le Plateau. 
     def __init__(self):
         super().__init__()
         self.layout = QVBoxLayout(self)
@@ -37,8 +107,8 @@ class Plateau(QWidget):
         self.setLayout(self.layout)
         self.pixmap = QPixmap()
         self.image_label.mousePressEvent = self.ouvrirFenetre
-        self.caseQuadrillage = []  # liste pour mettre toute les pos des cases 
-        self.produits_dans_cases = {}  # dictionnaire pour stocker les produits par case
+        self.caseQuadrillage = []  
+        self.produits_dans_cases = {}  
         self.objet_selectionne = None 
         self.lgn = 0
         self.cols = 0
@@ -47,10 +117,26 @@ class Plateau(QWidget):
         self.chemin_image = None  
     
     def setObjetSelectionne(self, objet): 
+        """
+        Définit l'objet que l'ou souhaite sélectionné.
+
+        Parametre:
+        ----------
+        objet : Le nom de l'objet sélectionné.
+
+        """
         self.objet_selectionne = objet
         self.articleSelected.emit(objet)  
 
     def chargerImage(self, chemin: str):
+        """
+        Charge une image à partir d'un chemin quelconque.
+
+        Parametre:
+        ----------
+        chemin : Le chemin de l'image à charger.
+
+        """
         if chemin:
             self.chemin_image = chemin  
             self.pixmap.load(chemin)
@@ -59,7 +145,7 @@ class Plateau(QWidget):
             self.image_label.setFixedSize(900, 700)
             self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter) 
 
-    # fonction pour recharger l'image et réinitialise son quadrillage 
+    # Fonction pour recharger l'image et réinitialiser son quadrillage 
     def rechargerImage(self):
         if self.chemin_image:
             self.pixmap.load(self.chemin_image)
@@ -69,6 +155,17 @@ class Plateau(QWidget):
             self.createQuadrillage(self.lgn, self.cols, self.dimX, self.dimY)
 
     def createQuadrillage(self, lgn, cols, dimX, dimY):
+        """
+        Crée un quadrillage sur l'image de notre plan de magasins.
+
+        Parametre:
+        ----------
+        lgn : Nombre de lignes du quadrillage.
+        cols : Nombre de colonnes du quadrillage.
+        dimX : Dimension X des cases.
+        dimY : Dimension Y des cases.
+
+        """
         self.lgn = lgn
         self.cols = cols
         self.dimX = dimX
@@ -84,7 +181,7 @@ class Plateau(QWidget):
             cellLarge = larg / cols
             cellHaut = haut / lgn
 
-            self.caseQuadrillage = []  # permet d'effacer les dernières pos 
+            self.caseQuadrillage = [] 
 
             for i in range(cols):
                 for j in range(lgn):
@@ -100,8 +197,15 @@ class Plateau(QWidget):
             for case, produits in self.produits_dans_cases.items():
                 self.mettre_a_jour_case(case, afficher_message=False)
     
-    # Permet d'ouvrir la fenêtre (EVENT DE TEST)
     def ouvrirFenetre(self, event): 
+        """
+        Ouvre une fenetre modal. 
+
+        Parametre:
+        ----------
+        event : L'événement de clic de la souris.
+
+        """
         posClick = event.pos()
 
         # Calculer le décalage de l'image centrée
@@ -122,9 +226,16 @@ class Plateau(QWidget):
                 else:
                     self.placer_objet_dans_case(case)
                 break
-            
-    # Permet de placer un objet dans une case
+    
     def placer_objet_dans_case(self, case):  
+        """
+        Place un objet dans une case que l'on veut.
+
+        Parametre:
+        ----------
+        case: Les coordonnées de la case.
+
+        """
         if self.objet_selectionne:
             produit = self.objet_selectionne
             if case not in self.produits_dans_cases:
@@ -134,8 +245,16 @@ class Plateau(QWidget):
             self.caseUpdated.emit(case, self.produits_dans_cases[case])  
             self.objet_selectionne = None
 
-    # Permet de mettre à jour une case afin d'ajouter un objet dedans et que ça soit à jour
     def mettre_a_jour_case(self, case, afficher_message=True): 
+        """
+        Met a jour la case pour ajouter un bojet dedans.
+
+        Parametre:
+        ----------
+        case: Les coordonnées de la case.
+        afficher_message : Indique si un message doit être affiché (par défaut True).
+
+        """
         x1, y1, x2, y2 = case
         painter = QPainter(self.pixmap)
         pen = QPen(Qt.GlobalColor.red)
@@ -148,8 +267,16 @@ class Plateau(QWidget):
             contenu = "\n".join(self.produits_dans_cases[case])
             QMessageBox.information(self, "Produit placé", f"Produit dans la case ({x1}, {y1}):\n{contenu}")
 
-    # Permet d'afficher le produit présent dans la case en cliquant dessus
     def afficher_produits_dans_case(self, case, avec_suppression=False): 
+        """
+        Affiche le produit présent dans une case quand on clique dessus.
+
+        Parametre:
+        ----------
+        case: Les coordonnées de la case.
+        avec_suppression : Indique si l'option de suppression doit être affichée (par défaut False).
+
+        """
         x1, y1, x2, y2 = case
         produits = self.produits_dans_cases[case]
         contenu = "\n".join(produits)
@@ -170,11 +297,32 @@ class Plateau(QWidget):
         fenetre.exec()
 
     def creation_gestionnaire_suppression_contenu_case(self, case, fenetre):
+        """
+        Crée un gestionnaire pour gérer la suppresion du contenu d'une de nos case.
+
+        Parametre:
+        ----------
+        case: Les coordonnées de la case.
+        fenetre : La fenêtre de dialogue pour la suppression.
+
+        Returns:
+        -------
+        La fonction de gestion de la suppression.
+
+        """
         def gestion():
             self.supprimer_contenu_case(case, fenetre)
         return gestion
         
     def redessiner_case(self, case):
+        """
+        Redessine la case rouge en noir après avoir était supprimer.
+
+        Parametre:
+        ----------
+        case: Les coordonnées de la case.
+
+        """
         x1, y1, x2, y2 = case
         painter = QPainter(self.pixmap)
         pen = QPen(Qt.GlobalColor.black)
@@ -184,8 +332,16 @@ class Plateau(QWidget):
         painter.end()
         self.image_label.setPixmap(self.pixmap)
 
-
     def supprimer_contenu_case(self, case, fenetre):
+        """
+        Supprime le contenu de la case.
+
+        Parametre:
+        ----------
+        case: Les coordonnées de la case.
+        fenetre : La fenêtre de dialogue pour la suppression.
+
+        """
         if case in self.produits_dans_cases:
             del self.produits_dans_cases[case]
             self.redessiner_case(case)
@@ -193,6 +349,7 @@ class Plateau(QWidget):
             fenetre.accept()
             QMessageBox.information(self, "Suppression", f"Le contenu de la case ({case[0]}, {case[1]}) a été supprimé.")
     
+    # Réinitialise le plateau en effacant l'image et les produits. 
     def reinitialiser_plateau(self):
         self.image_label.clear()
         self.produits_dans_cases.clear()
@@ -200,20 +357,35 @@ class Plateau(QWidget):
         self.pixmap = QPixmap()
         self.image_label.setPixmap(self.pixmap)
 
-# --------------------------------------------------- classe FenetreText (EVENT TEST) ---------------------------------------------------------------
-class FenetreTexte(QDialog):
-    def __init__(self, text):
-        super().__init__()
-        self.setWindowTitle("Fenetre texte test")
-        label = QLabel(text)
-        layout = QVBoxLayout()
-        layout.addWidget(label)
-        self.setLayout(layout)
-        self.setFixedSize(800, 400)
-
 # ------------------------------------------------------- classe SelectionProduitsDialog ------------------------------------------------------------------------
 class SelectionProduitsDialog(QDialog):
+    """
+    Classe SelectionProduitsDialog pour afficher une fenetre de sélection des produits.
+
+    Résumé des attributs et méthodes de la class:
+
+    Attributs:
+    ----------
+    -produits : Dictionnaire des produits disponibles dans le magasins.
+    -checkboxes : Dictionnaire des cases à cocher pour les produits qui sont séléctionné pour etre dans le magasins.
+
+    Méthodes:
+    -------
+    -get_selected_produits(): Récupérer les produits sélectionnés.
+    -find_categorie(article: str): Permet de savoir la catégorie d'un produit
+
+    """
+
     def __init__(self, produits, parent=None):
+        """
+        Initialise l'objet SelectionProduitsDialog.
+
+        Parametre:
+        ----------
+        produits : Le dictionnaire des produits disponibles.
+        parent : Le widget parent (par défaut None).
+
+        """
         super().__init__(parent)
         self.setWindowTitle("Sélection des produits")
         self.produits = produits
@@ -242,8 +414,15 @@ class SelectionProduitsDialog(QDialog):
         buttons.rejected.connect(self.reject)
         layout.addWidget(buttons)
         
-    # Récupérer les produits sélectionnés
     def get_selected_produits(self):
+        """
+        Récupérer les produits sélectionnés.
+
+        Returns:
+        -------
+        Le dictionnaire des produits sélectionnés.
+
+        """
         selected_produits = {}
         for article, checkbox in self.checkboxes.items():
             if checkbox.isChecked():
@@ -253,8 +432,19 @@ class SelectionProduitsDialog(QDialog):
                 selected_produits[categorie].append(article)
         return selected_produits
     
-    #Permet de savoir la catégorie d'un produit
     def find_categorie(self, article):
+        """
+        Permet de savoir la catégorie d'un produit.
+
+        Parametre:
+        ----------
+        article : Le nom de l'article.
+
+        Returns:
+        -------
+        La catégorie de l'article.
+
+        """
         for categorie, articles in self.produits.items():
             if article in articles:
                 return categorie
@@ -262,7 +452,43 @@ class SelectionProduitsDialog(QDialog):
 
 # ------------------------------------------------------- classe NewProjetDialog ------------------------------------------------------------------------
 class NewProjetDialog(QDialog):
+    """
+    Classe NewProjetDialog pour créer un nouveau projet.
+
+    Résumé des attributs et méthodes de la class:
+
+    Attributs:
+    ----------
+    -produits : Dictionnaire des produits disponibles.
+    -produits_selectionnes : Dictionnaire des produits sélectionnés du magasins.
+    -nomProjet : Permet de saisir le nom du projet.
+    -auteurProjet : Permet de saisir l'auteur du projet.
+    -dateCreationProjet : Widget pour sélectionner la date de création du projet.
+    -nomMagasin : Permet de saisir le nom du magasin.
+    -adresseMagasin : Permet de saisir l'adresse du magasin.
+    -lgn : Permet de saisir le nombre de lignes du quadrillage.
+    -cols : Permet de saisir le nombre de colonnes du quadrillage.
+    -dimX : Permet de saisir les dimensions X des cases.
+    -dimY : Permet de saisir les dimensions Y des cases.
+    -choisir_produits_button : Bouton pour ouvrir la sélection des produits.
+
+    Méthodes:
+    -------
+    ouvrir_selection_produits(): Permet d'ouvrir la page pour sélectionner ses produits
+    getProjetDetails(): Récupere tout les détails important a garder du projet.
+
+    """
+
     def __init__(self, produits, parent=None):
+        """
+        Initialise l'objet NewProjetDialog.
+
+        Parametre:
+        ----------
+        produits : Le dictionnaire des produits disponibles.
+        parent : Le widget parent (qui est par défaut en None).
+
+        """
         super().__init__(parent)
         self.setWindowTitle("Nouveau Projet")
         self.produits = produits
@@ -313,8 +539,15 @@ class NewProjetDialog(QDialog):
         if dialog.exec():
             self.produits_selectionnes = dialog.get_selected_produits()
             
-    # Récupérer les détails du projet
     def getProjetDetails(self):
+        """
+        Récupere tout les détails important a garder du projet.
+
+        Returns:
+        -------
+        Le dictionnaire des détails du projet.
+
+        """
         try:
             return {
                 'nomProjet': self.nomProjet.text(),
@@ -334,9 +567,56 @@ class NewProjetDialog(QDialog):
 
 # -------------------------------------------------------------- classe MainWindow ----------------------------------------------------------------------
 class MainWindow(QMainWindow):
+    """
+    Classe MainWindow permettant d'afficher la fenêtre principale de l'application MarketPlan Editor.
+
+    Résumé des attributs et méthodes de la class:
+
+    Attributs:
+    ----------
+    -dock_articles : Dock widget pour afficher les articles (celui de gauche).
+    -objets_widget : Widget pour afficher les objets sous forme d'arborescence (des sous listes).
+    -objet_selectionne : L'objet actuellement sélectionné.
+    -plateau : Widget du plateau central.
+    -boutons_layout : Layout horizontal pour les boutons de gestion des colonnes et lignes.
+    -ajouter_colonnes_button : Bouton pour ajouter des colonnes.
+    -retirer_colonnes_button : Bouton pour retirer des colonnes.
+    -ajouter_lignes_button : Bouton pour ajouter des lignes.
+    -retirer_lignes_button : Bouton pour retirer des lignes.
+    -dock_info_magasin : Dock widget pour afficher les informations du magasin.
+    -info_magasin_texte : Widget de texte pour afficher les informations du magasin.
+    -modifier_button : Bouton pour activer la modification des informations du magasin.
+    -valider_button : Bouton pour valider les modifications des informations du magasin.
+    -action_new_projet : Action pour créer un nouveau projet.
+    -action_engresitrer_projet : Action pour enregistrer un projet.
+    -action_ouvrir_projet : Action pour ouvrir un projet.
+    -action_supprimer_projet : Action pour supprimer un projet.
+    -action_theme_clair : Action pour appliquer le thème clair.
+    -action_theme_sombre : Action pour appliquer le thème sombre.
+    -action_notice : Action pour afficher la notice d'utilisation de l'application MarketPlan Editor.
+
+    Méthodes:
+    -------
+    -afficher_notice(): Affiche la notice d'utilisation de l'application MarketPlan Editor 
+    -ajouter_colonnes(): Permet d'ajouter des colonnes dans le quadrillage après avoir créer le projet 
+    -retirer_colonnes(): Permet de retirer des colonnes dans le quadrillage après avoir créer le projet 
+    -ajouter_lignes(): Permet d'ajouter des lignes dans le quadrillage après avoir créer le projet 
+    -retirer_lignes(): Permet de retirer des lignes dans le quadrillage après avoir créer le projet 
+    -afficher_message_erreur(titre, message): Permet d'afficher un message d'erreur.
+    -selectionner_objet(item, column): Permet de pouvoir sélectionner un objet.
+    -listeObjets(produits): Permet d'afficher les différents Articles.
+    -afficherInfosMagasin(details_projet): Affiche les informations du magasin.
+    -activerModificationInfosMagasin(): Active la modification des informations du magasin.
+    -desactiverModificationInfosMagasin(): Désactive la modification des informations du magasin.
+    -modifierInfosMagasin(activer): Active ou désactive la modification des informations du magasin.
+    -theme_sombre(): Fonction qui permet d'appliquer le thème sombre.
+    -theme_clair(): Fonction qui permet d'appliquer le thème clair.
+
+    """
+
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Application supermarché")
+        self.setWindowTitle("MarketPlan Editor")
         self.setWindowIcon(QIcon(sys.path[0] + '/icones/logo_app.png'))
         self.setGeometry(100, 100, 500, 300)
         
@@ -434,10 +714,10 @@ class MainWindow(QMainWindow):
         self.action_supprimer_projet.setShortcut('Ctrl+DELETE') 
         menu_fichier.addAction(self.action_supprimer_projet)
         
-        # barre menu pour les affichages 
+        # Barre menu pour les affichages 
         menu_affichage = menu_bar.addMenu('&Affichage')
         
-        # le sous menu pour les thèmes 
+        # Sous-menu pour les thèmes 
         menu_themes = menu_affichage.addMenu("Thèmes")
         self.action_theme_clair = QAction("Thème clair", self)
         self.action_theme_sombre = QAction("Thème sombre", self)
@@ -468,7 +748,7 @@ class MainWindow(QMainWindow):
         # Afficher la fenêtre maximisée
         self.showMaximized()
 
-    # permet d'afficher notre notice d'utilisation 
+    # Affiche la notice d'utilisation de l'application MarketPlan Editor 
     def afficher_notice(self):
         chemin_pdf = os.path.join(sys.path[0], 'Notice-MarketPlanEditor.pdf')
         if os.path.exists(chemin_pdf):
@@ -476,44 +756,55 @@ class MainWindow(QMainWindow):
         else:
             QMessageBox.critical(self, "Erreur", "Le fichier de la notice est introuvable.")
         
-    # permet d'ajouter des colonnes dans le quadrillage après avoir créer le projet 
+    # Permet d'ajouter des colonnes dans le quadrillage après avoir créer le projet 
     def ajouter_colonnes(self):
         self.plateau.cols = self.plateau.cols + 1
         self.plateau.rechargerImage()
 
-    # permet de retirer des colonnes dans le quadrillage après avoir créer le projet 
+    # Permet de retirer des colonnes dans le quadrillage après avoir créer le projet 
     def retirer_colonnes(self):
         if self.plateau.cols > 1:
             self.plateau.cols = self.plateau.cols - 1
             self.plateau.rechargerImage()
-        else:
-            self.afficher_message_erreur("Impossible de réduire les colonnes", "Le nombre de colonnes ne peut pas être inférieur.")
 
-    # permet d'ajouter des lignes dans le quadrillage après avoir créer le projet 
+    # Permet d'ajouter des lignes dans le quadrillage après avoir créer le projet 
     def ajouter_lignes(self):
         self.plateau.lgn = self.plateau.lgn + 1
         self.plateau.rechargerImage()
 
-    # permet de retirer des lignes dans le quadrillage après avoir créer le projet 
+    # Permet de retirer des lignes dans le quadrillage après avoir créer le projet 
     def retirer_lignes(self):
         if self.plateau.lgn > 1:
             self.plateau.lgn = self.plateau.lgn - 1
             self.plateau.rechargerImage()
-        else:
-            self.afficher_message_erreur("Impossible de réduire les lignes", "Le nombre de lignes ne peut pas être inférieur.")
 
-    # affiche un mess d'erreur (peut etre changer dans le model ?)
+    # Permet d'afficher un message d'erreur !
     def afficher_message_erreur(self, titre, message):
         QMessageBox.critical(self, titre, message)
 
-    # Permet de pouvoir sélectionner un objet
     def selectionner_objet(self, item, column):  
+        """
+        Permet de pouvoir sélectionner un objet.
+
+        Parametre:
+        ----------
+        item : L'élément sélectionné dans le docker.
+        column : La colonne de l'élément sélectionné.
+
+        """
         self.objet_selectionne = item.text(0) 
         self.plateau.setObjetSelectionne(self.objet_selectionne) 
         self.plateau.articleSelected.emit(self.objet_selectionne)  
 
-    # Permet d'afficher les différents Articles (+ amélioration Police)
     def listeObjets(self, produits):
+        """
+        Permet d'afficher les différents Articles.
+
+        Parametre:
+        ----------
+        produits : Le dictionnaire des produits.
+
+        """
         self.objets_widget.clear()
         for categorie, articles in produits.items():
             parent = QTreeWidgetItem([categorie])
@@ -524,8 +815,15 @@ class MainWindow(QMainWindow):
                 parent.addChild(child)
             self.objets_widget.addTopLevelItem(parent)
 
-    # Contenu de l'affichage des informations du magasin
     def afficherInfosMagasin(self, details_projet):
+        """
+        Affiche les informations du magasin.
+
+        Parametre:
+        ----------
+        details_projet : Le dictionnaire des détails du projet.
+
+        """
         info_magasin = (
             f"Nom du magasin: {details_projet['nomMagasin']}\n"
             f"Adresse du magasin: {details_projet['adresse_magasin']}\n"
@@ -544,6 +842,14 @@ class MainWindow(QMainWindow):
         
     # Méthode unique pour activer ou désactiver la modification des informations du magasin
     def modifierInfosMagasin(self, activer):
+        """
+        Active ou désactive la modification des informations du magasin.
+
+        Parametre:
+        ----------
+        activer : Indique si la modification doit être activée ou désactivée.
+
+        """
         if not activer:
             self.info_magasin_texte.setReadOnly(False)
             self.modifier_button.hide()
