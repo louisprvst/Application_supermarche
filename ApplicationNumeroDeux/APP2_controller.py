@@ -26,7 +26,7 @@ class controller() :
         self.vue.MAINW_save_liste_signal.connect(self.save_liste)
         
         self.vue.MAINW_open_shop_signal.connect(self.ouvrir_projet)
-        
+                
         self.popup_nl.POPNL_save_signal.connect(self.save_to_json)
         
 # Envoie des signaux :
@@ -77,6 +77,8 @@ class controller() :
 
             self.chemin_projet = chemin_fichier_projet
             self.dossier_projet = chemin_dossier
+            
+            self.vue.currentshop = chemin_fichier_projet
 
             self.plan_modifiable = True 
             

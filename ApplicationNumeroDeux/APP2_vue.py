@@ -130,6 +130,9 @@ class Plateau(QWidget):
 
     # Permet d'afficher le produit présent dans la case en cliquant dessus
     def afficher_produits_dans_case(self, case): 
+        
+        print("test")
+        
         x1, y1, x2, y2 = case
         produits = self.produits_dans_cases[case]
         contenu = "\n".join(produits)
@@ -143,12 +146,7 @@ class Plateau(QWidget):
         
         fenetre.setLayout(layout)
         fenetre.exec()
-
-    def creation_gestionnaire_suppression_contenu_case(self, case, fenetre):
-        def gestion():
-            self.supprimer_contenu_case(case, fenetre)
-        return gestion
-        
+ 
     def redessiner_case(self, case):
         x1, y1, x2, y2 = case
         painter = QPainter(self.pixmap)
@@ -159,15 +157,6 @@ class Plateau(QWidget):
         painter.end()
         self.image_label.setPixmap(self.pixmap)
 
-
-    def supprimer_contenu_case(self, case, fenetre):
-        if case in self.produits_dans_cases:
-            del self.produits_dans_cases[case]
-            self.redessiner_case(case)
-            self.caseUpdated.emit(case, [])  
-            fenetre.accept()
-            QMessageBox.information(self, "Suppression", f"Le contenu de la case ({case[0]}, {case[1]}) a été supprimé.")
-    
     def reinitialiser_plateau(self):
         self.image_label.clear()
         self.produits_dans_cases.clear()
@@ -231,17 +220,12 @@ class Plateau(QWidget):
             painter.end()
             self.image_label.setPixmap(self.pixmap)
 
-    def main_chemin(self):
+    def main_chemin(self,list,shop):
         
-        script_directory = sys.path[0]
-        json_file_path = os.path.join(script_directory,'b.json')
-        
-        with open(json_file_path, 'r', encoding='utf-8') as f:
+        with open(list, 'r', encoding='utf-8') as f:
             articles_data = json.load(f)
-
-        json_file_path = os.path.join(script_directory, 'a/a.json')
-        
-        with open(json_file_path, 'r', encoding='utf-8') as f:
+        print(shop)
+        with open(shop, 'r', encoding='utf-8') as f:
             coordinates_data = json.load(f)
 
         articles_data["Liste des articles"].append("Entree du magasin")
@@ -356,6 +340,8 @@ class vueApplication(QMainWindow):
 
         self.setWindowTitle("Ma liste de course")
         
+        self.currentshop = ""
+        
     # Menu Bar :
 
         menu_bar = self.menuBar()
@@ -369,8 +355,9 @@ class vueApplication(QMainWindow):
         fic_ouvrir.setShortcut('Ctrl+O')
         menu_Fichiers.addAction(fic_ouvrir)
         
-        charger_produits = QAction(QIcon(sys.path[0] + '/icones/open.png'), 'Charger produits', self)
+        charger_produits = QAction(QIcon(sys.path[0] + '/icones/carte.png'), 'Générer un chemin', self)
         charger_produits.triggered.connect(self.chargerProduits)
+        fic_ouvrir.setShortcut('Ctrl+H')
         menu_Fichiers.addAction(charger_produits)
         
     # Menu Listes :
@@ -423,6 +410,7 @@ class vueApplication(QMainWindow):
         self.addToolBar(toolbar)
         
         toolbar.addAction(fic_ouvrir)
+        toolbar.addAction(charger_produits)
         toolbar.addSeparator()
         toolbar.addAction(liste_new)
         toolbar.addAction(liste_open)
@@ -534,11 +522,6 @@ class vueApplication(QMainWindow):
       
 # Envoie des signaux :
 
-    # Cette fonction permet de récuperer le fichier de list actuellement utlisé
-
-    def get_currentlist(self):
-        return(self.currentfile)
-
     # Cette fonction permet d'ouvrir un fichier contenant un magasin
 
     def ouvrir_fichier(self):
@@ -616,7 +599,7 @@ class vueApplication(QMainWindow):
         QMessageBox.information(self, titre, texte)
         
     def chargerProduits(self):
-        self.plateau.main_chemin()
+        self.plateau.main_chemin(self.currentfile , self.currentshop)
 
 
        

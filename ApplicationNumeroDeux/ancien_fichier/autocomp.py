@@ -13,7 +13,7 @@ def load_product_names(filename):
         return list(data.values())  # Retourner les valeurs
     except FileNotFoundError:
         print(f"ERREUR : le fichier '{filename}' est introuvable.")
-        return []  # Retourner une liste vide en cas d'erreur
+        return []  # Retourner une liste vide en cas d'erreur 
 
 # Initialisation de l'application PyQt6
 app = QApplication(sys.argv)
