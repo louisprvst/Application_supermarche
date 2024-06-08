@@ -324,7 +324,7 @@ class vueApplication(QMainWindow):
     
 # Signaux :
     
-    MAINW_open_liste_signal = pyqtSignal(str)
+    MAINW_open_liste_signal = pyqtSignal(str,bool)
     
     MAINW_new_liste_signal = pyqtSignal()
     
@@ -543,6 +543,11 @@ class vueApplication(QMainWindow):
     def update_list_view(self , formated_data , mes_articles):
         self.json_display.setPlainText(formated_data)
         self.user_input.text(mes_articles)
+        
+    # Cette fonction permet de mettre a jour le dock mais uniquement le titre et la date
+        
+    def update_list_view_title(self , formated_data):
+        self.json_display.setPlainText(formated_data)
 
     # Cette fonction permet d'ouvrir une liste
 
@@ -553,7 +558,7 @@ class vueApplication(QMainWindow):
             
             self.currentfile : str = filename
             
-            self.MAINW_open_liste_signal.emit(filename)
+            self.MAINW_open_liste_signal.emit(filename,False)
             
     # Cette fonction permet de sauvegarder une liste
         
