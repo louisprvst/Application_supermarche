@@ -164,19 +164,27 @@ class Plateau(QWidget):
         self.pixmap = QPixmap()
         self.image_label.setPixmap(self.pixmap)
         
-    # ALGO CHEMIN LOUIS:
+        
+# ALGO CHEMIN LOUIS:
+
+
+    # Cette fonction permet retourner les coordonnées d'un produit precis , ne renvoie rien s'il n'est pas dans le magasin
     
     def trouver_index(self,produit, produits_dans_cases):
         for coord, produits in produits_dans_cases.items():
             if produit in produits:
                 return coord
         return None
+    
+    # Permet de faire une liste des voisins de chaque case un dictionnaire
 
     def liste_voisins(self):
         adj_list = {}
-        for index, case in enumerate(self.caseQuadrillage):
-            adj_list[index] = self.get_voisins(index)
+        for i, case in enumerate(self.caseQuadrillage):
+            adj_list[i] = self.get_voisins(i)
         return adj_list
+    
+    # Cette fonction permet d'obtenir les 4 voisins d'une case
 
     def get_voisins(self, index):
         adjacents = []
@@ -189,6 +197,8 @@ class Plateau(QWidget):
             if 0 <= r < lgn and 0 <= c < cols:
                 adjacents.append(r * cols + c)
         return adjacents
+    
+    # Cette fonction est la principal qui permet d'élaborer le chemin et renvoie le chemin une fois avoir visité chaque articles voulu
 
     def chemin(self, start_index, end_index, adj_list):
         queue = [(start_index, [start_index])]
@@ -205,6 +215,8 @@ class Plateau(QWidget):
                     if neighbor not in visited:
                         queue.append((neighbor, path + [neighbor]))
         return []
+    
+    # Cette fonction permet de dessiner le chemin sur le plan :
 
     def dessiner_chemin(self, path):
         if not self.pixmap.isNull():
@@ -219,24 +231,36 @@ class Plateau(QWidget):
 
             painter.end()
             self.image_label.setPixmap(self.pixmap)
+            
+    # Fonction pour lancer la création du chemin 
 
     def main_chemin(self,list,shop):
+        
+        # Ouverture des json :
         
         with open(list, 'r', encoding='utf-8') as f:
             articles_data = json.load(f)
         print(shop)
         with open(shop, 'r', encoding='utf-8') as f:
             coordinates_data = json.load(f)
+            
+        # On ajoute l'entrée a la main sinon elle ne se fait pas automatiquement
 
         articles_data["Liste des articles"].append("Entree du magasin")
         
+        # On récupère uniquement certaines categorie dans les json ouvert 
+        
         articles_list = articles_data["Liste des articles"]
         produits_dans_cases = coordinates_data["produits_dans_cases"]
+        
+        # On met les produits sous forme de tuple afin de faciliter la lecture
 
         produits_dans_cases_tuples = {
             tuple(map(int, key.strip("()").split(", "))): value
             for key, value in produits_dans_cases.items()
         }
+        
+        # On defini tout les articles a voir ( start_positions ) et la sortie du magasin ( end_psoitions )
 
         start_positions = [self.trouver_index(article, produits_dans_cases_tuples) for article in articles_list]
         end_positions = [self.trouver_index("Sortie du magasin", produits_dans_cases_tuples)] * len(start_positions)
@@ -250,7 +274,6 @@ class Plateau(QWidget):
                 self.dessiner_chemin(path)
 
 
-
 ##################################################### POPUP INFO #####################################################
 
 class popup_info(QWidget):
@@ -260,10 +283,12 @@ class popup_info(QWidget):
         self.setWindowTitle('À propos')
         self.setGeometry(100, 100, 300, 150)
         
-        self.name = QLabel("Application item finder.")
+        self.name = QLabel("Application market item finder.")
+        self.info = QLabel("Par Louis PREVOST & Ethan CAPON")
         
         layout = QVBoxLayout()
         layout.addWidget(self.name)
+        layout.addWidget(self.info)
         self.setLayout(layout)
               
         self.show()
@@ -283,7 +308,7 @@ class popup_new_liste(QWidget):
         
         super().__init__()
         
-        self.setWindowTitle('Création de liste')
+        self.setWindowTitle('Market Item Finder')
         self.setGeometry(100, 100, 300, 150)
 
         layout = QVBoxLayout()
@@ -341,6 +366,7 @@ class vueApplication(QMainWindow):
         self.setWindowTitle("Ma liste de course")
         
         self.currentshop = ""
+        self.currentfile = ""
         
     # Menu Bar :
 
@@ -431,6 +457,7 @@ class vueApplication(QMainWindow):
                 return []  # Retourner une liste vide en cas d'erreur
 
         class ProduitSuivant(QCompleter):
+            
             def __init__(self, element, parent=None):
                 super(ProduitSuivant, self).__init__(element, parent)
                 # Configurer la complétion pour être insensible à la casse
@@ -473,13 +500,12 @@ class vueApplication(QMainWindow):
         
         self.dock_list.setMaximumWidth(200)
         
-        
         self.titre = QLabel("Entrez vos articles :")
         self.titre.setMinimumHeight(25)
         self.titre.setMaximumHeight(25)
         
         self.user_input = QLineEdit()
-        self.user_input.setPlaceholderText("Entrez votre liste ici...")
+        self.user_input.setPlaceholderText("Veuillez entrer vos articles séparés par des virgules, sans espaces.")
         self.user_input.setMinimumHeight(100)
         self.user_input.setMaximumHeight(100)
     
@@ -510,7 +536,8 @@ class vueApplication(QMainWindow):
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, self.dock_list)
         self.dock_list.setMinimumWidth(200)
         
-        # Contenu du plan dans le widget central
+    # Contenu du plan dans le widget central
+    
         self.plateau = Plateau()
         central_widget = QWidget(self)
         layout = QVBoxLayout(central_widget)
@@ -557,22 +584,22 @@ class vueApplication(QMainWindow):
         
         if filename:
             
-            self.currentfile : str = filename
+            self.currentfile = filename
             
             self.MAINW_open_liste_signal.emit(filename,False)
             
     # Cette fonction permet de sauvegarder une liste
         
     def save_liste(self):
-        
-        new_items = [item.strip() for item in self.user_input.text().split(",")]
-        
-        self.MAINW_save_liste_signal.emit(new_items , self.currentfile)
+        if(self.currentfile):
+            new_items = [item.strip() for item in self.user_input.text().split(",")]
+            self.MAINW_save_liste_signal.emit(new_items , self.currentfile)
+        else : 
+            self.new_message_erreur("Erreur","Veuillez ouvrir ou créer une liste avant de sauvegarder.")
             
     # Les fonctions suivante servent a changer de theme.
         
-    def change_theme_clair(self):
-            
+    def change_theme_clair(self):  
         self.setStyleSheet("""
             QMainWindow {
                 background-color: #FFFFFF;
@@ -583,8 +610,7 @@ class vueApplication(QMainWindow):
                 color: #000000;
             }""")
     
-    def change_theme_sombre(self):
-        
+    def change_theme_sombre(self): 
         self.setStyleSheet("""
             QMainWindow {
                 background-color: #141414;
@@ -595,8 +621,7 @@ class vueApplication(QMainWindow):
                 color: #FFFFFF;
             }""")
                 
-    def change_theme_default(self):
-        
+    def change_theme_default(self):    
         self.setStyleSheet('')
         
     # Cette fonction permet de communiquer un message à l'utilisateur
@@ -604,9 +629,18 @@ class vueApplication(QMainWindow):
     def new_message_info(self, titre, texte):
         QMessageBox.information(self, titre, texte)
         
+    # Cette fonction permet de communiquer une erreur à l'utilisateur
+        
+    def new_message_erreur(self, titre, texte):
+        QMessageBox.critical(self, titre, texte)
+        
+    # Cette fonction permet de lancer les fonctions pour tracer le chemin le plus rapide
+        
     def chargerProduits(self):
-        self.plateau.main_chemin(self.currentfile , self.currentshop)
-
+        if(self.currentfile and self.currentshop):
+            self.plateau.main_chemin(self.currentfile , self.currentshop)
+        else : 
+            self.new_message_erreur("Fichier(s) manquant(s)","Assurez-vous d'avoir bien sélectionné un magasin et une liste, puis d'avoir enregistré cette liste.")
 
        
 ################################################### MAIN TEST ###################################################
