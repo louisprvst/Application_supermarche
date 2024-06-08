@@ -83,13 +83,3 @@ class controller() :
             self.vue.currentshop = chemin_fichier_projet
 
             self.plan_modifiable = True 
-            
-################################################### MAIN CONTROLLER ###################################################
-
-if __name__ == "__main__" :
-    
-    app = QApplication(sys.argv)
-    
-    ctrl = controller()
-    
-    sys.exit(app.exec())
