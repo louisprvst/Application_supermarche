@@ -130,3 +130,6 @@ Utilisation exclusive des bibliothèques vues en cours
 - FARDEL Mathéïs : récupération de la création de dossier afin que le projet soit lisible sur différents PC et ajout qu'en cas de sauvegarde alors que le dossier du projet a déjà été crée, le JSON uniquement soit mis à jour (donc pouvoir enregistrer les avancées d'un projet déjà existant) + debug décalage plateau avec le fait de le centrer fait par Alexis + début de la notice (screen tout)
 - DEMOL Alexis: Création de la notice (texte) + permettre d'ouvrir les pdf sur mac + centrer l'image + Test de l'application pour essayer de la faire crash et ajout de vérification anti plantage
 - PREVOST Louis : Ouverture des nouveau fichiers de l'app 1 + consultation du contenu des cases ( Pas dispo sur l'ancienne version ) et re push du commit d'hier car le merge n'a pas fonctionné ?
+
+### Fin du projet : 
+- PREVOST Louis : Fin de l'algo du chemin , ajout d'un main , commentaires + messages d'erreurs ( Gros bug avec l'autocomplétion , quand on ouvre une liste , les items ne s'affichent pas mais ils sont bien comptabilisé dans le calcul de chemin )
