@@ -525,6 +525,7 @@ class vueApplication(QMainWindow):
     # Cette fonction permet d'ouvrir un fichier contenant un magasin
 
     def ouvrir_fichier(self):
+        self.plateau.reinitialiser_plateau()
         self.MAINW_open_shop_signal.emit()
     
     # Cette fonction permet de créer une nouvelle liste
