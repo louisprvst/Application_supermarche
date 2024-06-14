@@ -2,10 +2,10 @@
 
 ### Membres :
 
-- PREVOST Louis
-- FARDEL Mathéïs
-- DEMOL Alexis
-- CAPON Ethan
+- PREVOST Louis = louisprvst
+- FARDEL Mathéïs = maatixx
+- DEMOL Alexis = 4lexiiissss
+- CAPON Ethan = ethancapon
 
 # Objectifs des deux applications
 
