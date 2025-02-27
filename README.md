@@ -1,25 +1,68 @@
 # Projet Application supermarche
 
-### Membres :
+## Description du projet
+Ce projet comprend deux applications permettant d'optimiser la gestion des supermarchés et d'améliorer l'efficacité du parcours d'achat.
 
+- **Application 1 : Gestion du magasin**
+  - Création et enregistrement d'un magasin avec son plan interactif.
+  - Personnalisation de la grille en fonction de l'agencement du magasin.
+  - Ajout et positionnement des articles sur la grille.
+  - Sauvegarde, ouverture et suppression des projets de magasin.
+
+- **Application 2 : Optimisation du parcours d'achat**
+  - Chargement d'un magasin préalablement créé.
+  - Ajout d'une liste de produits à collecter.
+  - Génération du chemin le plus court pour récupérer les articles de la liste en optimisant le trajet dans le magasin.
+
+## Objectifs
+- Améliorer la gestion et l'organisation des supermarchés.
+- Réduire le temps de parcours pour les courses.
+- Assurer une navigation fluide et intuitive.
+
+## Contraintes de conception
+- **Architecture MVC** pour une meilleure séparation des responsabilités.
+- **Utilisation de PyQt** pour l'interface graphique.
+- **Respect des bibliothèques vues en cours**.
+
+## Installation et utilisation
+1. Cloner le dépôt :
+   ```bash
+   git clone https://github.com/louisprvst/Application_supermarche.git
+   cd Application_supermarche
+   ```
+2. Installer les dépendances nécessaires (si besoin) :
+   ```bash
+   pip install PyQt5
+   ```
+3. Se déplacer dans les différents dossier selon le projet :
+   ```bash
+   cd ApplicationNuméroDeux 
+   ```
+   ou
+   
+   ```bash
+   cd ApplicationNuméroUne
+   ```
+5. Lancer l'application de gestion du magasin :
+   ```bash
+   python main.py
+   ```
+6. Lancer l'application d'optimisation du parcours :
+   ```bash
+   python APP2_main.py
+   ```
+
+## Technologies utilisées
+- **Python**
+- **PyQt5** pour l'interface graphique
+- **Algorithmes de recherche de chemin** pour l'optimisation du trajet
+
+## Auteurs :
+
+- DEMOL Alexis = 4lexiiissss
 - PREVOST Louis = louisprvst
 - FARDEL Mathéïs = maatixx
-- DEMOL Alexis = 4lexiiissss
 - CAPON Ethan = ethancapon
-
-# Objectifs des deux applications
-
-Positionner les produits sur un plan de magasin
-
-Traçer un chemin efficace pour collecter les produits d'une liste de courses
-
-# Contraintes de conception
-
-Architecture MVC
-
-Utilisation de PyQt
-
-Utilisation exclusive des bibliothèques vues en cours
 
 # Compte-rendu des séances
 
